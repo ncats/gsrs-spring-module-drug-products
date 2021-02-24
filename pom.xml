@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>gov.nih.ncats</groupId>
-    <artifactId>gsrs-spring-drug-products</artifactId>
+    <artifactId>gsrs-spring-module-drug-products</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gsrs-spring-drug-products</name>
+    <name>gsrs-spring-module-drug-products</name>
     <description>GSRS Drug Product Entity</description>
 
     <parent>
