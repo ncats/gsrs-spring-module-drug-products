@@ -1,4 +1,4 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
@@ -39,11 +39,11 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_COMPANY")
+@Table(name="SRSCID_PRODUCT_COMPANY", schema = "srscid")
 public class ProductCompany extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodCompanySeq", sequenceName="SRSCID_SQ_PRODUCT_COMPANY_ID",allocationSize=1)
+    @SequenceGenerator(name="prodCompanySeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_COMPANY_ID",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCompanySeq")
     @Column(name="PRODUCT_COMPANY_ID")
     public Long id;

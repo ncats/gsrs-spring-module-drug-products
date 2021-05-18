@@ -1,4 +1,4 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
@@ -39,23 +39,23 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_NAME")
-public class ProductName extends AbstractGsrsEntity {
+@Table(name="SRSCID_PRODUCT_TERM_PART", schema = "srscid")
+public class ProductTermAndPart extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodNameSeq", sequenceName="SRSCID_SQ_PRODUCT_NAME_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodNameSeq")
-    @Column(name="PRODUCT_NAME_ID")
+    @SequenceGenerator(name="prodTermSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_TERM_ID",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodTermSeq")
+    @Column(name="PRODUCT_TERM_ID")
     public Long id;
 
-    @Column(name="PRODUCT_NAME")
-    public String productName;
+    @Column(name="PRODUCT_TERM")
+    public String productTerm;
 
-    @Column(name="PRODUCT_NAME_TYPE")
-    public String productNameType;
+    @Column(name="PRODUCT_TERM_PART")
+    public String productTermPart;
 
   //  @Version
-  // public Long internalVersion;
+  //  public Long internalVersion;
 
     @Column(name = "CREATED_BY")
     public String createdBy;
@@ -77,8 +77,12 @@ public class ProductName extends AbstractGsrsEntity {
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
 
-    @JoinColumn(name = "PRODUCT_NAME_ID", referencedColumnName = "PRODUCT_NAME_ID")
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<ProductTermAndPart> productTermAndTermPartList = new ArrayList<ProductTermAndPart>();
+    /*
+    @Indexable(indexed=false)
+    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="PRODUCT_ID")
+    public ApplicationProduct productFromName;
+     */
 
 }

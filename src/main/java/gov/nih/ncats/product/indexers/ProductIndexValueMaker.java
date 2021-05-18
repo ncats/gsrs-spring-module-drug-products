@@ -1,6 +1,6 @@
 package gov.nih.ncats.product.indexers;
 
-import gov.nih.ncats.product.model.Product;
+import gov.nih.ncats.product.models.Product;
 import ix.core.search.text.IndexValueMaker;
 import ix.core.search.text.IndexableValue;
 import org.springframework.stereotype.Component;

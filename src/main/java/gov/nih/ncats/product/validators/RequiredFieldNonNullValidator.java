@@ -1,6 +1,7 @@
 package gov.nih.ncats.product.validators;
 
-import gov.nih.ncats.product.model.Product;
+import gov.nih.ncats.product.models.Product;
+
 import gsrs.validator.ValidatorConfig;
 import ix.core.validator.GinasProcessingMessage;
 import ix.core.validator.ValidatorCallback;

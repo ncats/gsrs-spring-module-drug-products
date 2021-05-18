@@ -1,8 +1,11 @@
 package gov.nih.ncats.product;
 
-import gov.nih.ncats.product.model.Product;
+import gov.nih.ncats.product.models.Product;
+import gov.nih.ncats.product.repositories.ProductRepository;
+
 import gsrs.legacy.LegacyGsrsSearchService;
 import gsrs.repository.GsrsRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

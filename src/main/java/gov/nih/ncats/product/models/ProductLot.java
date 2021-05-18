@@ -1,4 +1,4 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.Entity;
@@ -39,50 +40,30 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_COMPONENT")
-public class ProductComponent extends AbstractGsrsEntity {
+@Table(name="SRSCID_PRODUCT_LOT", schema = "srscid")
+public class ProductLot extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodCompSeq", sequenceName="SRSCID_SQ_PRODUCT_COMPONENT_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCompSeq")
-    @Column(name="PRODUCT_COMPONENT_ID")
+    @SequenceGenerator(name="prodLotSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_LOT_ID",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodLotSeq")
+    @Column(name="PRODUCT_LOT_ID")
     public Long id;
 
-    @Column(name="CHAR_SIZE")
-    public String charSize;
+    @Column(name="LOT_NO")
+    public String lotNo;
 
-    @Column(name="CHAR_IMPRINTTEXT")
-    public String charImprintText;
+    @Column(name="LOT_SIZE")
+    public String lotSize;
 
-    @Column(name="CHAR_COLOR")
-    public String charColor;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
+    @Column(name="EXPIRY_DATE")
+    public Date expiryDate;
 
-    @Column(name="CHAR_FLAVOR")
-    public String charFlavor;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
+    @Column(name="MANUFACTURE_DATE")
+    public Date manufactureDate;
 
-    @Column(name="CHAR_SHAPE")
-    public String charShape;
-
-    @Column(name="CHAR_NUM_FRAGMENTS")
-    public String charNumFragments;
-
-    @Column(name="DOSAGE_FORM")
-    public String dosageForm;
-
-    @Column(name="AMOUNT")
-    public Double amount;
-
-    @Column(name="UNIT")
-    public String unit;
-
-    @Column(name="MANUFACTURE_CODE")
-    public String manufactureCode;
-
-    @Column(name="MANUFACTURE_CODE_TYPE")
-    public String manufactureCodeType;
-
-
-    //  @Version
+  //  @Version
   //  public Long internalVersion;
 
     @Column(name = "CREATED_BY")
@@ -105,8 +86,7 @@ public class ProductComponent extends AbstractGsrsEntity {
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
 
-    @JoinColumn(name = "PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
+    @JoinColumn(name = "PRODUCT_LOT_ID", referencedColumnName = "PRODUCT_LOT_ID")
     @OneToMany(cascade = CascadeType.ALL)
-    public List<ProductLot> productLotList = new ArrayList<ProductLot>();
-
+    public List<ProductIngredient> productIngredientList = new ArrayList<ProductIngredient>();
 }

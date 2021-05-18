@@ -1,4 +1,4 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
@@ -39,25 +39,50 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_CODE")
-public class ProductCode extends AbstractGsrsEntity {
+@Table(name="SRSCID_PRODUCT_COMPONENT", schema = "srscid")
+public class ProductComponent extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodCodeSeq", sequenceName="SRSCID_SQ_PRODUCT_CODE_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCodeSeq")
-    @Column(name="PRODUCT_CODE_ID")
+    @SequenceGenerator(name="prodCompSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_COMPONENT_ID",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCompSeq")
+    @Column(name="PRODUCT_COMPONENT_ID")
     public Long id;
 
-    @Column(name="PRODUCT_CODE")
-    public String productCode;
+    @Column(name="CHAR_SIZE")
+    public String charSize;
 
-    @Column(name="PRODUCT_CODE_TYPE")
-    public String productCodeType;
+    @Column(name="CHAR_IMPRINTTEXT")
+    public String charImprintText;
 
-    @Column(name="COUNTRY_CODE")
-    public String countryCode;
+    @Column(name="CHAR_COLOR")
+    public String charColor;
 
-  //  @Version
+    @Column(name="CHAR_FLAVOR")
+    public String charFlavor;
+
+    @Column(name="CHAR_SHAPE")
+    public String charShape;
+
+    @Column(name="CHAR_NUM_FRAGMENTS")
+    public String charNumFragments;
+
+    @Column(name="DOSAGE_FORM")
+    public String dosageForm;
+
+    @Column(name="AMOUNT")
+    public Double amount;
+
+    @Column(name="UNIT")
+    public String unit;
+
+    @Column(name="MANUFACTURE_CODE")
+    public String manufactureCode;
+
+    @Column(name="MANUFACTURE_CODE_TYPE")
+    public String manufactureCodeType;
+
+
+    //  @Version
   //  public Long internalVersion;
 
     @Column(name = "CREATED_BY")
@@ -79,5 +104,9 @@ public class ProductCode extends AbstractGsrsEntity {
     @Indexable( name = "Last Modified Date", sortable=true)
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
+
+    @JoinColumn(name = "PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<ProductLot> productLotList = new ArrayList<ProductLot>();
 
 }

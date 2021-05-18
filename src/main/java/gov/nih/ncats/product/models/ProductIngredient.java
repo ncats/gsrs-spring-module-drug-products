@@ -1,5 +1,6 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
 import gsrs.model.AbstractGsrsManualDirtyEntity;
@@ -18,20 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.EntityListeners;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Version;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
+import javax.persistence.*;
 
 import java.util.Date;
 import java.util.List;
@@ -39,11 +27,11 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_INGREDIENT")
+@Table(name="SRSCID_PRODUCT_INGREDIENT", schema = "srscid")
 public class ProductIngredient extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodIngredSeq", sequenceName="SRSCID_SQ_PRODUCT_INGRED_ID",allocationSize=1)
+    @SequenceGenerator(name="prodIngredSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_INGRED_ID",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodIngredSeq")
     @Column(name="PRODUCT_INGRED_ID")
     public Long id;
@@ -56,6 +44,20 @@ public class ProductIngredient extends AbstractGsrsEntity {
 
     @Column(name="BASIS_OF_STRENGTH")
     public String basisOfStrengthBdnum;
+
+    @Indexable(facet = true, name = "Substance Key")
+    @Column(name="SUBSTANCE_KEY")
+    public String substanceKey;
+
+    @Column(name="SUBSTANCE_KEY_TYPE")
+    public String substanceKeyType;
+
+    @Indexable(name = "Basis Of Strength Substance Key")
+    @Column(name="BOS_SUBSTANCE_KEY")
+    public String basisOfStrengthSubstanceKey ;
+
+    @Column(name="BOS_SUBSTANCE_KEY_TYPE")
+    public String basisOfStrengthSubstanceKeyType;
 
     @Column(name="AVERAGE")
     public Double average;
@@ -104,4 +106,27 @@ public class ProductIngredient extends AbstractGsrsEntity {
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
 
+    @Transient
+    @JsonProperty("_substanceUuid")
+    public String _substanceUuid;
+
+    @Transient
+    @JsonProperty("_approvalID")
+    public String _approvalID;
+
+    @Transient
+    @JsonProperty("_name")
+    public String _name;
+
+    @Transient
+    @JsonProperty("_basisOfStrengthSubstanceUuid")
+    public String _basisOfStrengthSubstanceUuid;
+
+    @Transient
+    @JsonProperty("_basisOfStrengthApprovalID")
+    public String _basisOfStrengthApprovalID;
+
+    @Transient
+    @JsonProperty("_basisOfStrengthName")
+    public String _basisOfStrengthName;
 }

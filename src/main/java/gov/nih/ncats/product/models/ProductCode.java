@@ -1,4 +1,4 @@
-package gov.nih.ncats.product.model;
+package gov.nih.ncats.product.models;
 
 import gsrs.GsrsEntityProcessorListener;
 import gsrs.model.AbstractGsrsEntity;
@@ -17,7 +17,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.EntityListeners;
 import javax.persistence.Entity;
@@ -40,28 +39,23 @@ import java.util.ArrayList;
 
 @Data
 @Entity
-@Table(name="SRSCID_PRODUCT_LOT")
-public class ProductLot extends AbstractGsrsEntity {
+@Table(name="SRSCID_PRODUCT_CODE", schema = "srscid")
+public class ProductCode extends AbstractGsrsEntity {
 
     @Id
-    @SequenceGenerator(name="prodLotSeq", sequenceName="SRSCID_SQ_PRODUCT_LOT_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodLotSeq")
-    @Column(name="PRODUCT_LOT_ID")
+    @SequenceGenerator(name="prodCodeSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_CODE_ID",allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCodeSeq")
+    @Column(name="PRODUCT_CODE_ID")
     public Long id;
 
-    @Column(name="LOT_NO")
-    public String lotNo;
+    @Column(name="PRODUCT_CODE")
+    public String productCode;
 
-    @Column(name="LOT_SIZE")
-    public String lotSize;
+    @Column(name="PRODUCT_CODE_TYPE")
+    public String productCodeType;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
-    @Column(name="EXPIRY_DATE")
-    public Date expiryDate;
-
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
-    @Column(name="MANUFACTURE_DATE")
-    public Date manufactureDate;
+    @Column(name="COUNTRY_CODE")
+    public String countryCode;
 
   //  @Version
   //  public Long internalVersion;
@@ -86,7 +80,4 @@ public class ProductLot extends AbstractGsrsEntity {
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
 
-    @JoinColumn(name = "PRODUCT_LOT_ID", referencedColumnName = "PRODUCT_LOT_ID")
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<ProductIngredient> productIngredientList = new ArrayList<ProductIngredient>();
 }

@@ -23,26 +23,6 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.DataSource;
 
-// @Configuration
-// public class DataSourceConfiguration {
-
-    /*
-    @Bean(name="customDataSource")
-    @ConfigurationProperties("spring.datasource")
-    public DataSource customDataSource() {
-        return DataSourceBuilder.create().build();
-    }
-    */
-
-    /*
-    @Bean
-    @ConfigurationProperties("spring.datasource")
-    public HikariDataSource dataSource() {
-        return DataSourceBuilder.create().type(HikariDataSource.class).build();
-    }
-
-     */
-
     @Configuration
     @PropertySource("classpath:application.properties")
     public class DataSourceConfiguration {
@@ -57,8 +37,10 @@ import javax.sql.DataSource;
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
             dataSource.setDriverClassName("oracle.jdbc.OracleDriver");
             dataSource.setUrl("jdbc:oracle:thin:@//D15311532.fda.gov:1532/SRSIDDEV");
-            dataSource.setUsername("SRSCID");
-            dataSource.setPassword("App4gsrs!");
+          //  dataSource.setUsername("SRSCID");
+          //  dataSource.setPassword("App4gsrs!");
+            dataSource.setUsername("GSRS_PROD");
+            dataSource.setPassword("prd_JAN_2016");
             return dataSource;
 
             /*
