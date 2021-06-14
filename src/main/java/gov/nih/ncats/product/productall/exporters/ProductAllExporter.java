@@ -243,7 +243,7 @@ public class ProductAllExporter implements Exporter<ProductMainAll> {
                             sb.append((ingred.substanceName != null) ? ingred.substanceName : "(No Ingredient Name)");
                             break;
                         case APPROVAL_ID:
-                            sb.append((ingred.ingredientApprovalId != null) ? ingred.ingredientApprovalId : "(No Approval ID)");
+                            sb.append((ingred.substanceApprovalId != null) ? ingred.substanceApprovalId : "(No Approval ID)");
                             break;
                         case SUBSTANCE_KEY:
                             sb.append((ingred.substanceKey != null) ? ingred.substanceKey : "(No Substance Key)");

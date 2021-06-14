@@ -1,14 +1,18 @@
 package gov.nih.ncats.product.product.models;
 
+import ix.core.models.*;
+import ix.core.models.Principal;
+import ix.core.models.Indexable;
+import ix.core.models.IxModel;
+
 import gsrs.GsrsEntityProcessorListener;
+import gsrs.security.GsrsSecurityUtils;
 import gsrs.model.AbstractGsrsEntity;
 import gsrs.model.AbstractGsrsManualDirtyEntity;
 import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
-import ix.core.models.Principal;
-import ix.core.models.Indexable;
-import ix.core.models.IxModel;
+
 
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,6 +22,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import sun.plugin.util.UserProfile;
 
 import javax.persistence.*;
 
@@ -28,15 +33,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 @MappedSuperclass
-public class ProductCommanData extends AbstractGsrsEntity {
+public class ProductCommonData extends AbstractGsrsEntity {
 
   //  @Id
   //  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appSeq")
   //  public Long id;
 
+   // @CreatedBy
     @Column(name = "CREATED_BY")
     public String createdBy;
 
+    //@LastModifiedBy
     @Column(name = "MODIFIED_BY")
     public String modifiedBy;
 
@@ -56,9 +63,9 @@ public class ProductCommanData extends AbstractGsrsEntity {
 
     @Version
     @Column(name = "INTERNAL_VERSION")
-    public Long internalVersion;
+    public Long internalVersion = 0L; // or 1L if you want to start at 1
 
-    public ProductCommanData () {
+    public ProductCommonData() {
     }
 
     @PrePersist
@@ -81,6 +88,11 @@ public class ProductCommanData extends AbstractGsrsEntity {
                 this.createdBy = p1.username;
             }
              */
+      //     UserProfile userProfile = GsrsSecurityUtils.getCurrentUser().toString();
+
+      //  this.modifiedBy = GsrsSecurityUtils.getCurrentUser().toString();
+         // String username = GsrsSecurityUtils.getCurrentUser();
+
             this.createdBy = "ADMIN";
             this.modifiedBy = "ADMIN";
     }
@@ -177,9 +189,13 @@ public class ProductCommanData extends AbstractGsrsEntity {
     //    }
     }
 
-   // public Date getLastModifiedDate() {
-     //   return this.lastModifiedDate;
-   // }
+    public Date getCreationDate() {
+        return this.creationDate;
+    }
+
+    public Date getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
 
     /*
     public void setModifyDate(Date modifyDate) {

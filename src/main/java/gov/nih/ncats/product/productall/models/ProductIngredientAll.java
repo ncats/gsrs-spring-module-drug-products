@@ -58,7 +58,7 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
 
     @Indexable(facet=true, name= "Ingredient Approval ID")
     @Column(name="SUBSTANCE_APPROVAL_ID")
-    public String ingredientApprovalId;
+    public String substanceApprovalId;
 
     @Indexable
     @Column(name="SUBSTANCE_UUID")

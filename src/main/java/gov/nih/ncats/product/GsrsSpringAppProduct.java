@@ -18,6 +18,9 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
 
@@ -33,10 +36,9 @@ import javax.sql.DataSource;
 @ComponentScan(basePackages = "gov.nih.ncats.application")
 */
 
-/*
-June 4, 2021
+/* June 4, 2021 */
 @SpringBootApplication
-@EnableGsrsApi
+@EnableGsrsApi(indexValueMakerDetector = EnableGsrsApi.IndexValueMakerDetector.CONF)
 @EnableGsrsJpaEntities
 @EnableGsrsLegacyAuthentication
 @EnableGsrsLegacyCache
@@ -45,10 +47,10 @@ June 4, 2021
 @EnableGsrsLegacyStructureSearch
 @EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
 @EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-@EnableGsrsScheduler
+//@EnableGsrsScheduler
 @EnableGsrsBackup
-public class GsrsModuleSubstanceApplication {
- */
+
+/*
 @SpringBootApplication
 @EnableGsrsApi
 @EnableGsrsJpaEntities
@@ -60,10 +62,21 @@ public class GsrsModuleSubstanceApplication {
 @EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
 //@EnableGsrsScheduler
 //EnableGsrsBackup
+*/
 
 public class GsrsSpringAppProduct {
 
     public static void main(String[] args) {
         SpringApplication.run(GsrsSpringAppProduct.class, args);
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**");
+            }
+        };
     }
 }

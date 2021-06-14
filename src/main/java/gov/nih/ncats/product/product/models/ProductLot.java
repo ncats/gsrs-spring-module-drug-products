@@ -1,22 +1,7 @@
 package gov.nih.ncats.product.product.models;
 
-import gsrs.GsrsEntityProcessorListener;
-import gsrs.model.AbstractGsrsEntity;
-import gsrs.model.AbstractGsrsManualDirtyEntity;
-import ix.core.models.Indexable;
-import ix.core.models.IxModel;
-import ix.core.search.text.TextIndexerEntityListener;
-import ix.ginas.models.serialization.GsrsDateDeserializer;
-import ix.ginas.models.serialization.GsrsDateSerializer;
-
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
@@ -28,7 +13,7 @@ import java.util.ArrayList;
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_LOT", schema = "srscid")
-public class ProductLot extends ProductCommanData {
+public class ProductLot extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodLotSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_LOT_ID",allocationSize=1)

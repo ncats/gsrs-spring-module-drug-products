@@ -27,7 +27,7 @@ import java.util.ArrayList;
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_CODE", schema = "srscid")
-public class ProductCode extends AbstractGsrsEntity {
+public class ProductCode extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodCodeSeq", sequenceName="SRSCID.SRSCID_SQ_PRODUCT_CODE_ID",allocationSize=1)
