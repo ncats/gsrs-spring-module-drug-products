@@ -22,7 +22,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import sun.plugin.util.UserProfile;
 
 import javax.persistence.*;
 
