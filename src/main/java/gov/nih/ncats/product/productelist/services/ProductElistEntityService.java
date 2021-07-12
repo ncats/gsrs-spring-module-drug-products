@@ -28,21 +28,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ix.utils.Util;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductElistEntityService extends AbstractGsrsEntityService<ProductElist, String> {
-    public static final String  CONTEXT = "productelist";
+    public static final String CONTEXT = "productelist";
 
     public ProductElistEntityService() {
-        super(CONTEXT,  IdHelpers.STRING_NO_WHITESPACE, null, null, null);
+        super(CONTEXT, IdHelpers.STRING_NO_WHITESPACE, null, null, null);
     }
 
     @Autowired
@@ -78,7 +81,7 @@ public class ProductElistEntityService extends AbstractGsrsEntityService<Product
     protected ProductElist create(ProductElist product) {
         try {
             return repository.saveAndFlush(product);
-        }catch(Throwable t){
+        } catch (Throwable t) {
             t.printStackTrace();
             throw t;
         }
@@ -115,14 +118,6 @@ public class ProductElistEntityService extends AbstractGsrsEntityService<Product
         return null;
     }
 
-    /*
-    @Override
-    protected Application fixUpdatedIfNeeded(Application oldEntity, Application updatedEntity) {
-        //force the "owner" on all the updated fields to point to the old version so the uuids are correct
-        return updatedEntity;
-    }
-    */
-
     @Override
     protected ProductElist fromUpdatedJson(JsonNode json) throws IOException {
         //TODO should we make any edits to remove fields?
@@ -132,13 +127,6 @@ public class ProductElistEntityService extends AbstractGsrsEntityService<Product
     @Override
     protected List<ProductElist> fromUpdatedJsonList(JsonNode list) throws IOException {
         return null;
-        /*
-        List<Application> substances = new ArrayList<>(list.size());
-        for(JsonNode n : list){
-            substances.add(fromUpdatedJson(n));
-        }
-        return substances;
-         */
     }
 
     @Override
@@ -153,25 +141,51 @@ public class ProductElistEntityService extends AbstractGsrsEntityService<Product
 
     @Override
     public Optional<ProductElist> get(String id) {
-        return repository.findById(id);
+        // Elist table has multiple records for same Product Id. Combing multiple columns/rows into one row.
+        // returning only one record here.
+        return productCombineMultipleRows(id);
+      //  List<ProductElist> prodList = repository.findByProductId(id);
     }
 
     @Override
     public Optional<ProductElist> flexLookup(String someKindOfId) {
-        if (someKindOfId == null){
+        if (someKindOfId == null) {
             return Optional.empty();
         }
-        return repository.findById(someKindOfId);
+        return productCombineMultipleRows(someKindOfId);
+       // return repository.findById(someKindOfId);
     }
 
     @Override
     protected Optional<String> flexLookupIdOnly(String someKindOfId) {
         //easiest way to avoid deduping data is to just do a full flex lookup and then return id
         Optional<ProductElist> found = flexLookup(someKindOfId);
-        if(found.isPresent()){
+        if (found.isPresent()) {
             return Optional.of(found.get().productId);
         }
         return Optional.empty();
+    }
+
+    public Optional<ProductElist> productCombineMultipleRows(String id) {
+        ProductElist prodFirst = null;
+        StringBuilder status = new StringBuilder();
+
+        List<ProductElist> productList = repository.findByProductId(id);
+
+        if (productList.size() > 0) {
+            for (int i = 0; i < productList.size(); i++) {
+                ProductElist prod = productList.get(i);
+                if (status.length() != 0) {
+                    status.append("|");
+                }
+                status.append((prod.marketingStatus != null) ? prod.marketingStatus : "");
+            }
+            // Store all the combined data of each row in the first row.ProductElist prod = productList.get(i);
+            prodFirst = productList.get(0);
+            prodFirst.marketingStatus = status.toString();
+            productList.set(0, prodFirst);
+        }
+        return Optional.ofNullable(prodFirst);
     }
 
 }

@@ -26,30 +26,32 @@ import java.util.ArrayList;
 
 @Data
 @Entity
+@IdClass(ProductInactiveCompositePrimaryKeyId.class)
 @Table(name="ELIST_PROD_INACTIVE_INGRED_MV", schema = "srscid")
 public class ProductInactiveElist extends AbstractGsrsEntity {
 
     @Id
-    @Column(name="PRODUCTID")
     public String productId;
 
-    @Column(name="SUBSTANCEUNII")
-    public String unii;
+    @Id
+    public String documentId;
 
-    @Column(name="SUBSTANCENAME")
+    @Id
     public String name;
 
     @Column(name="STRENGTHNUMBER")
     public String strengthNumber;
 
+    //public String originalNumeratorNumber;
+
+    @Column(name="STRENGTHDENOMINATORUNIT")
+    public String strengthDenominatorUnit;
+
     @Column(name="STRENGTHNUMERATORUNIT")
     public String strengthNumeratorUnit;
 
-    @Transient
-    public String substanceId;
-
-    @Transient
-    public String structure;
+    @Column(name="SUBSTANCEUNII")
+    public String unii;
 
     public ProductInactiveElist() {}
 }

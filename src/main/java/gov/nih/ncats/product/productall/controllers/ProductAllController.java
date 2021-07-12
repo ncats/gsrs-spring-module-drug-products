@@ -101,7 +101,7 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
             return new ResponseEntity("could not find etag with Id " + etagId, this.gsrsControllerConfiguration.getHttpStatusFor(HttpStatus.BAD_REQUEST, parameters));
         } else {
             ExportMetaData emd = new ExportMetaData(etagId, ((ETag) etagObj.get()).uri, "admin", publicOnly, format);
-            Stream<ProductMainAll> mstream = (Stream) (new EtagExportGenerator(this.entityManager)).generateExportFrom("productmainall", (ETag) etagObj.get()).get();
+            Stream<ProductMainAll> mstream = (Stream)(new EtagExportGenerator(this.entityManager, this.transactionManager)).generateExportFrom(this.getEntityService().getContext(), (ETag)etagObj.get()).get();
             Stream<ProductMainAll> effectivelyFinalStream = this.filterStream(mstream, publicOnly, parameters);
 
             if (fileName != null) {

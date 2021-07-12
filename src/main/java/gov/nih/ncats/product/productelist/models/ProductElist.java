@@ -23,6 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,11 +31,17 @@ import java.util.ArrayList;
 @Data
 @Entity
 @Table(name="ELIST_PRODUCT_MV", schema = "srscid")
-public class ProductElist extends AbstractGsrsEntity {
+public class ProductElist implements Serializable {
 
     @Id
     @Column(name="PRODUCTID")
     public String productId;
+
+    @Column(name="IS_LISTED")
+    public String isListed;
+
+    @Column(name="STARTMARKETINGDATE")
+    public String startmarketingdate;
 
     @Column(name="PRODUCTNDC")
     public String productNDC;
@@ -75,23 +82,11 @@ public class ProductElist extends AbstractGsrsEntity {
     @Column(name="MARKETINGSTATUS")
     public String marketingStatus;
 
-    @Column(name="STARTMARKETINGDATE")
-    public String startMarketingDate;
-
     @Column(name="ENDMARKETINGDATE")
     public String endMarketingDate;
 
-    @Column(name="IS_LISTED")
-    public String isListed;
-
     @Column(name="DOCUMENTID")
     public String documentId;
-
-    @Transient
-    public String appType;
-
-    @Transient
-    public String appNumber;
 
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
     @OneToMany(cascade = CascadeType.ALL)

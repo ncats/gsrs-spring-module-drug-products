@@ -26,14 +26,15 @@ import java.util.ArrayList;
 
 @Data
 @Entity
+@IdClass(ProductRouteCompositePrimaryKeyId.class)
 @Table(name="ELIST_PROD_ADMIN_ROUTE_MV", schema = "srscid")
 public class ProductRouteElist extends AbstractGsrsEntity {
 
     @Id
-    @Column(name="PRODUCTID")
+  //  @Column(name="PRODUCTID")
     public String productId;
 
-    @Column(name="ROUTE_CODE")
+    @Id
     public String routeCode;
 
     @Column(name="ROUTENAME")

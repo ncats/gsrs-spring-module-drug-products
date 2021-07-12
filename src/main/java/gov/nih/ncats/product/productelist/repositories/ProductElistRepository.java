@@ -7,10 +7,11 @@ import gsrs.repository.GsrsRepository;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public interface ProductElistRepository extends GsrsVersionedRepository<ProductElist, String> {
 
-    Optional<ProductElist> findById(String id);
+    List<ProductElist> findByProductId(String productId);
 }

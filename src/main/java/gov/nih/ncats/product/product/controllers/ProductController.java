@@ -101,12 +101,11 @@ public class ProductController extends EtagLegacySearchEntityController<ProductC
             return new ResponseEntity("could not find etag with Id " + etagId, this.gsrsControllerConfiguration.getHttpStatusFor(HttpStatus.BAD_REQUEST, parameters));
         } else {
             ExportMetaData emd = new ExportMetaData(etagId, ((ETag) etagObj.get()).uri, "admin", publicOnly, format);
-            Stream<Product> mstream = (Stream) (new EtagExportGenerator(this.entityManager)).generateExportFrom("application", (ETag) etagObj.get()).get();
+            Stream<Product> mstream = (Stream)(new EtagExportGenerator(this.entityManager, this.transactionManager)).generateExportFrom(this.getEntityService().getContext(), (ETag)etagObj.get()).get();
             Stream<Product> effectivelyFinalStream = this.filterStream(mstream, publicOnly, parameters);
 
             if (fileName != null) {
                 emd.setDisplayFilename(fileName);
-                System.out.println("FILE NAME: " + fileName);
             }
 
             ExportProcess<Product> p = this.exportService.createExport(emd, () -> {

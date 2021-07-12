@@ -11,30 +11,9 @@ import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.boot.context.properties.*;
-// import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.boot.jdbc.DataSourceBuilder;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-import javax.sql.DataSource;
-
-/*
-@SpringBootApplication
-@EnableGsrsApi(indexerType = EnableGsrsApi.IndexerType.LEGACY,
-        entityProcessorDetector = EnableGsrsApi.EntityProcessorDetector.CONF)
-@EnableGsrsJpaEntities
-// @EnableGsrsLegacyAuthentication
-@EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-@EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-@EnableAutoConfiguration (exclude = {  DataSourceAutoConfiguration.class })
-@ComponentScan(basePackages = "gov.nih.ncats.application")
-*/
 
 /* June 4, 2021 */
 @SpringBootApplication
@@ -47,22 +26,8 @@ import javax.sql.DataSource;
 @EnableGsrsLegacyStructureSearch
 @EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
 @EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-//@EnableGsrsScheduler
+@EnableGsrsScheduler
 @EnableGsrsBackup
-
-/*
-@SpringBootApplication
-@EnableGsrsApi
-@EnableGsrsJpaEntities
-//@EnableGsrsLegacyAuthentication
-@EnableGsrsLegacyCache
-@EnableGsrsLegacyPayload
-@EnableGsrsLegacySequenceSearch
-@EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-@EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-//@EnableGsrsScheduler
-//EnableGsrsBackup
-*/
 
 public class GsrsSpringAppProduct {
 
