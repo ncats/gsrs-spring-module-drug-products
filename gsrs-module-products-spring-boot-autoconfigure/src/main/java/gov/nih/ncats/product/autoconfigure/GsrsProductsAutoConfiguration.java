@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
          SubstanceModuleService.class
-        //searchcount
-        //  SearchCountEntityService.class, LegacySearchCountSearcher.class}
 })
 public class GsrsProductsAutoConfiguration {
 }
