@@ -1,4 +1,4 @@
-package gov.nih.ncats.product;
+package gov.hhs.gsrs.products;
 
 // import org.junit.jupiter.api.Test;
 // import org.springframework.boot.test.context.SpringBootTest;
