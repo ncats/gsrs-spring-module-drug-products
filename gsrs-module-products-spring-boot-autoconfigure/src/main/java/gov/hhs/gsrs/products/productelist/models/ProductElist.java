@@ -3,16 +3,22 @@ package gov.hhs.gsrs.products.productelist.models;
 import gov.hhs.gsrs.products.productall.models.ProductNameAll;
 import gov.hhs.gsrs.products.productelist.models.*;
 
+import gsrs.BackupEntityProcessorListener;
 import gsrs.GsrsEntityProcessorListener;
+import gsrs.indexer.IndexerEntityListener;
 import gsrs.model.AbstractGsrsEntity;
 import gsrs.model.AbstractGsrsManualDirtyEntity;
+import ix.core.models.Backup;
 import ix.core.models.Indexable;
+import ix.core.models.IndexableRoot;
 import ix.core.models.IxModel;
 import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +34,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+@EntityListeners({AuditingEntityListener.class, GsrsEntityProcessorListener.class, IndexerEntityListener.class, BackupEntityProcessorListener.class})
+@Backup
+@IndexableRoot
 @Data
 @Entity
 @Table(name="ELIST_PRODUCT_MV")
@@ -89,23 +98,27 @@ public class ProductElist implements Serializable {
     public String documentId;
 
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     public List<ProductActiveElist> prodActiveElistList = new ArrayList<ProductActiveElist>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     public List<ProductInactiveElist> prodInactiveElistList = new ArrayList<ProductInactiveElist>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     public List<ProductRouteElist> prodRouteElistList = new ArrayList<ProductRouteElist>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     public List<ProductEstablishmentElist> prodEstablishmentElistList = new ArrayList<ProductEstablishmentElist>();
 
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "PRODUCTID", referencedColumnName = "PRODUCTID")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     public ProductCharacterElist prodCharElist;
 
     public ProductElist () {}

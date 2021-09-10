@@ -1,14 +1,23 @@
 package gov.hhs.gsrs.products.product.models;
 
+import gsrs.BackupEntityProcessorListener;
+import gsrs.GsrsEntityProcessorListener;
+import gsrs.indexer.IndexerEntityListener;
+import ix.core.models.Backup;
+import ix.core.models.IndexableRoot;
 import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
+@EntityListeners({AuditingEntityListener.class, GsrsEntityProcessorListener.class, IndexerEntityListener.class, BackupEntityProcessorListener.class})
+@Backup
+@IndexableRoot
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT")

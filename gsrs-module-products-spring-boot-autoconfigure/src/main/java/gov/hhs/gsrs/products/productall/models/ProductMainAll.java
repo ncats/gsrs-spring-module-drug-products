@@ -1,9 +1,13 @@
 package gov.hhs.gsrs.products.productall.models;
 
+import gsrs.BackupEntityProcessorListener;
 import gsrs.GsrsEntityProcessorListener;
+import gsrs.indexer.IndexerEntityListener;
 import gsrs.model.AbstractGsrsEntity;
 import gsrs.model.AbstractGsrsManualDirtyEntity;
+import ix.core.models.Backup;
 import ix.core.models.Indexable;
+import ix.core.models.IndexableRoot;
 import ix.core.models.IxModel;
 import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
@@ -26,6 +30,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
+@EntityListeners({AuditingEntityListener.class, GsrsEntityProcessorListener.class, IndexerEntityListener.class, BackupEntityProcessorListener.class})
+@Backup
+@IndexableRoot
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_ALL_TWO_MV")

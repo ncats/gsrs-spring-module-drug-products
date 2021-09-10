@@ -55,19 +55,22 @@ public class ProductElistController extends EtagLegacySearchEntityController<Pro
     private ETagRepository eTagRepository;
 
     @PersistenceContext(unitName = ProductDataSourceConfig.NAME_ENTITY_MANAGER)
-    @Autowired
     private EntityManager entityManager;
+
     @Autowired
     private GsrsControllerConfiguration gsrsControllerConfiguration;
+
     @Autowired
     private PlatformTransactionManager transactionManager;
+
     @Autowired
     private ExportService exportService;
+
     @Autowired
     private TaskExecutor taskExecutor;
+
     @Autowired
     private GsrsExportConfiguration gsrsExportConfiguration;
-
 
     @Autowired
     private ProductElistEntityService productEntityService;
