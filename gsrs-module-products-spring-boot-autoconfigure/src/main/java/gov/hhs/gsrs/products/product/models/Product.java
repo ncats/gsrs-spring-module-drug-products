@@ -15,9 +15,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.ArrayList;
 
-@EntityListeners({AuditingEntityListener.class, GsrsEntityProcessorListener.class, IndexerEntityListener.class, BackupEntityProcessorListener.class})
-@Backup
 @IndexableRoot
+@Backup
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT")

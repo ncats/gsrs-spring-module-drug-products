@@ -68,149 +68,51 @@ public class ProductCommonData extends AbstractGsrsEntity {
 
     @PrePersist
     public void prePersist() {
-      //  Date currentDate = TimeUtil.getCurrentDate();
-     /*
-        Principal p1=UserFetcher.getActingUser();
-        if (p1 != null) {
-            this.createdBy = p1.username;
-        }
-
-        this.createDate = currentDate;
-      */
-       // this.createdBy = "ADMIN";
-      //  if (createdBy == null) {
-            // TO DO: Connect to Pricipal Object to get username
-            /*
-            Principal p1 = UserFetcher.getActingUser();
-            if (p1 != null) {
-                this.createdBy = p1.username;
+        try {
+            UserProfile profile = (UserProfile) GsrsSecurityUtils.getCurrentUser();
+            if (profile != null) {
+                Principal p = profile.user;
+                if (p != null) {
+                    this.createdBy = p.username;
+                    this.modifiedBy = p.username;
+                }
             }
-             */
-      //     UserProfile userProfile = GsrsSecurityUtils.getCurrentUser().toString();
-
-      //  this.modifiedBy = GsrsSecurityUtils.getCurrentUser().toString();
-         // String username = GsrsSecurityUtils.getCurrentUser();
-
-            this.createdBy = "ADMIN";
-            this.modifiedBy = "ADMIN";
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @PreUpdate
     public void preUpdate() {
-        /*
-        Date currentDate = TimeUtil.getCurrentDate();
-        Principal p1=UserFetcher.getActingUser();
-        if (p1 != null) {
-            this.modifiedBy = p1.username;
-        }
-
-        this.modifyDate = currentDate;
-         */
-       // this.modifiedBy = "ADMIN";
-
-       // if (modifiedBy == null) {
-            // TO DO: Connect to Pricipal Object to get username
-            /*
-            Principal p1 = UserFetcher.getActingUser();
-            if (p1 != null) {
-                this.createdBy = p1.username;
+        try {
+            UserProfile profile = (UserProfile) GsrsSecurityUtils.getCurrentUser();
+            if (profile != null) {
+                Principal p = profile.user;
+                if (p != null) {
+                    this.modifiedBy = p.username;
+                }
             }
-             */
-            this.modifiedBy = "ADMIN";
-     //   }
-     //   else {
-      //      this.modifiedBy = modifiedBy;
-     //   }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    /*
     public String getCreatedBy () {
-        //Get from Database
         return this.createdBy;
     }
-    */
-    public void setCreatedBy (String createdBy) {
-        //Store to Database
-    //    if (createdBy == null) {
-            // TO DO: Connect to Pricipal Object to get username
-            /*
-            Principal p1 = UserFetcher.getActingUser();
-            if (p1 != null) {
-                this.createdBy = p1.username;
-            }
-      //       */
-      //      this.createdBy = "ADMIN";
-     //   }
-     //   else {
-     //       this.createdBy = createdBy;
-     //   }
-    }
 
-    /*
     public Date getCreationDate() {
         //Get from Database
         return this.creationDate;
     }
-    */
 
-    /*
-    public void setCreateDate(Date createDate) {
-
-        if (createDate == null) {
-            this.createDate = TimeUtil.getCurrentDate();
-        }
-        else {
-            this.createDate = createDate;
-        }
-    }
-    */
-
-   // public String getModifiedBy () {
-    //    return this.modifiedBy;
-  //  }
-
-    public void setModifiedBy (String modifiedBy) {
-    //    System.out.println("******************** INSIDE Modify By " + modifiedBy);
-        //Store to Database
-    //    if (modifiedBy == null) {
-            // TO DO: Connect to Pricipal Object to get username
-            /*
-            Principal p1 = UserFetcher.getActingUser();
-            if (p1 != null) {
-                this.createdBy = p1.username;
-            }
-             */
-      //      this.modifiedBy = "ADMIN";
-      //  }
-     //   else {
-     //       this.modifiedBy = modifiedBy;
-    //    }
-    }
-
-    public Date getCreationDate() {
-        return this.creationDate;
+    public String getModifiedBy () {
+        return this.modifiedBy;
     }
 
     public Date getLastModifiedDate() {
         return this.lastModifiedDate;
     }
-
-    /*
-    public void setModifyDate(Date modifyDate) {
-        this.modifyDate = TimeUtil.getCurrentDate();
-    }
-    */
-
-
-    /*
-    public Date getCreated() {
-        return createDate;
-    }
-
-    public void setCreated(Date created) {
-        this.createDate = created;
-    }
-    */
 
     public String convertDateToString(Date dtDate) {
 
@@ -241,5 +143,4 @@ public class ProductCommonData extends AbstractGsrsEntity {
 
         return dtDate;
     }
-
 }
