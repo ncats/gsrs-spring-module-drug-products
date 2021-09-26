@@ -6,20 +6,8 @@ import gov.hhs.gsrs.products.productall.repositories.*;
 import gsrs.controller.IdHelpers;
 import gsrs.events.AbstractEntityCreatedEvent;
 import gsrs.events.AbstractEntityUpdatedEvent;
-// import gsrs.module.substance.events.SubstanceCreatedEvent;
-// import gsrs.module.substance.events.SubstanceUpdatedEvent;
-// import gsrs.module.substance.repository.SubstanceRepository;
-import gsrs.module.substance.SubstanceEntityService;
 import gsrs.repository.GroupRepository;
 import gsrs.service.AbstractGsrsEntityService;
-import gsrs.validator.ValidatorConfig;
-import ix.core.validator.GinasProcessingMessage;
-import ix.core.validator.ValidationResponse;
-import ix.core.validator.ValidationResponseBuilder;
-import ix.core.validator.ValidatorCallback;
-// import ix.ginas.models.v1.Substance;
-// import ix.ginas.utils.GinasProcessingStrategy;
-// import ix.ginas.utils.JsonSubstanceFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -39,7 +27,7 @@ import java.util.Optional;
 
 @Service
 public class ProductAllEntityService extends AbstractGsrsEntityService<ProductMainAll, String> {
-    public static final String  CONTEXT = "productmainall";
+    public static final String  CONTEXT = "productsall";
 
     public ProductAllEntityService() {
         super(CONTEXT,  IdHelpers.STRING_NO_WHITESPACE, null, null, null);
@@ -132,13 +120,6 @@ public class ProductAllEntityService extends AbstractGsrsEntityService<ProductMa
     @Override
     protected List<ProductMainAll> fromUpdatedJsonList(JsonNode list) throws IOException {
         return null;
-        /*
-        List<Application> substances = new ArrayList<>(list.size());
-        for(JsonNode n : list){
-            substances.add(fromUpdatedJson(n));
-        }
-        return substances;
-         */
     }
 
     @Override
