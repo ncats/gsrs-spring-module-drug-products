@@ -6,29 +6,14 @@ import gov.hhs.gsrs.products.product.repositories.ProductRepository;
 import gsrs.controller.IdHelpers;
 import gsrs.events.AbstractEntityCreatedEvent;
 import gsrs.events.AbstractEntityUpdatedEvent;
-// import gsrs.module.substance.events.SubstanceCreatedEvent;
-// import gsrs.module.substance.events.SubstanceUpdatedEvent;
-// import gsrs.module.substance.repository.SubstanceRepository;
-import gsrs.module.substance.SubstanceEntityService;
 import gsrs.repository.GroupRepository;
 import gsrs.service.AbstractGsrsEntityService;
-import gsrs.validator.ValidatorConfig;
-import ix.core.validator.GinasProcessingMessage;
-import ix.core.validator.ValidationResponse;
-import ix.core.validator.ValidationResponseBuilder;
-import ix.core.validator.ValidatorCallback;
-// import ix.ginas.models.v1.Substance;
-// import ix.ginas.utils.GinasProcessingStrategy;
-// import ix.ginas.utils.JsonSubstanceFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,7 +24,7 @@ import java.util.Optional;
 
 @Service
 public class ProductEntityService extends AbstractGsrsEntityService<Product, Long> {
-    public static final String  CONTEXT = "product";
+    public static final String  CONTEXT = "products";
 
     public ProductEntityService() {
         super(CONTEXT,  IdHelpers.NUMBER, null, null, null);
@@ -132,13 +117,6 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
     @Override
     protected List<Product> fromUpdatedJsonList(JsonNode list) throws IOException {
         return null;
-        /*
-        List<Application> substances = new ArrayList<>(list.size());
-        for(JsonNode n : list){
-            substances.add(fromUpdatedJson(n));
-        }
-        return substances;
-         */
     }
 
     @Override

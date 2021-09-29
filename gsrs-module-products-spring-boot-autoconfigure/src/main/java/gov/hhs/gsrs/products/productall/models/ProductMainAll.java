@@ -111,17 +111,19 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="PROVENANCE")
     public String provenance;
 
+    @Indexable(facet=true, name="Record Created By")
     @Column(name = "CREATED_BY")
     private String createdBy;
 
+    @Indexable(facet=true, name="Record Last Edited By")
     @Column(name = "MODIFIED_BY")
     private String modifiedBy;
 
-    @Indexable( name = "Create Date", sortable=true)
+    @Indexable(facet=true, name ="Record Create Date", sortable=true)
     @Column(name = "CREATE_DATE")
     private Date creationDate;
 
-    @Indexable( name = "Last Modified Date", sortable=true)
+    @Indexable(facet=true, name ="Record Last Edited", sortable=true)
     @Column(name = "MODIFY_DATE")
     private Date lastModifiedDate;
 
