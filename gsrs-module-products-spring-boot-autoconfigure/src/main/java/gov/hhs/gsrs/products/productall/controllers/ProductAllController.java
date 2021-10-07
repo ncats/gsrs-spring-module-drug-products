@@ -97,7 +97,7 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
     }
 
     @PreAuthorize("isAuthenticated()")
-   // @GetGsrsRestApiMapping("/export/{etagId}/{format}")
+    @GetGsrsRestApiMapping("/export/{etagId}/{format}")
     public ResponseEntity<Object> createExport(@PathVariable("etagId") String etagId,
                                                @PathVariable("format") String format,
                                                @RequestParam(value = "publicOnly", required = false) Boolean publicOnlyObj,
@@ -112,7 +112,9 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
         if (!etagObj.isPresent()) {
             return new ResponseEntity("could not find etag with Id " + etagId, this.gsrsControllerConfiguration.getHttpStatusFor(HttpStatus.BAD_REQUEST, parameters));
         } else {
-            ExportMetaData emd = new ExportMetaData(etagId, ((ETag) etagObj.get()).uri, "admin", publicOnly, format);
+
+            ExportMetaData emd = new ExportMetaData(etagId, etagObj.get().uri, prof.getName(), publicOnly, format);
+
             Stream<ProductMainAll> mstream = (Stream)(new EtagExportGenerator(entityManager, transactionManager, HttpRequestHolder.fromRequest(request))).generateExportFrom(this.getEntityService().getContext(), (ETag)etagObj.get()).get();
             Stream<ProductMainAll> effectivelyFinalStream = this.filterStream(mstream, publicOnly, parameters);
 
