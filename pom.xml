@@ -9,6 +9,7 @@
     <modules>
         <module>gsrs-module-products-spring-boot-starter</module>
         <module>gsrs-module-products-spring-boot-autoconfigure</module>
+        <module>products-api</module>
     </modules>
 
     <parent>
