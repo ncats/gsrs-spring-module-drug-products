@@ -52,11 +52,11 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
     @Column(name="BOS_SUBSTANCE_KEY")
     public String basisOfStrengthSubstanceKey;
 
-    @Indexable(facet=true, name= "Ingredient Name", sortable = true)
+    @Indexable(suggest = true, facet=true, name= "Ingredient Name", sortable = true)
     @Column(name="SUBSTANCENAME")
     public String substanceName;
 
-    @Indexable(facet=true, name= "Ingredient Approval ID")
+    @Indexable(suggest = true, facet=true, name= "Ingredient Approval ID")
     @Column(name="SUBSTANCE_APPROVAL_ID")
     public String substanceApprovalId;
 
@@ -64,11 +64,11 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
     @Column(name="SUBSTANCE_UUID")
     public String substanceUuid;
 
-    @Indexable(facet=true, name= "Ingredient Type")
+    @Indexable(suggest = true, facet=true, name= "Ingredient Type")
     @Column(name="INGREDIENTTYPE")
     public String ingredientType;
 
-    @Indexable(facet=true, name= "Active Moiety")
+    @Indexable(suggest = true, facet=true, name= "Active Moiety")
     @Column(name="ACTIVEMOIETY_1_NAME")
     public String activeMoietyName;
 
@@ -81,7 +81,7 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
     @Column(name="STRENGTHNUMERATORUNIT")
     public String strengthNumeratorUnit;
 
-    @Indexable(facet=true, name= "Dosage Form Name", sortable = true)
+    @Indexable(suggest = true, facet=true, name= "Dosage Form Name", sortable = true)
     @Column(name="DOSAGEFORM")
     public String dosageFormName;
 

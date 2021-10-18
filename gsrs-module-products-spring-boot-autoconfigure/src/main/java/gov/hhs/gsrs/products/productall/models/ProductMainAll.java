@@ -41,15 +41,15 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="PRODUCTID")
     public String productId;
 
-    @Indexable(facet=true, name= "Product ID", sortable = true)
+    @Indexable(suggest = true, facet=true, name= "Product ID", sortable = true)
     @Column(name="PRODUCTNDC")
     public String productNDC;
 
-    @Indexable(facet=true, name= "Nonproprietary Name")
+    @Indexable(suggest = true, facet=true, name= "Nonproprietary Name")
     @Column(name="nonproprietaryname")
     public String nonProprietaryName;
 
-    @Indexable(facet=true, name="Product Type")
+    @Indexable(suggest = true, facet=true, name="Product Type")
     @Column(name="PRODUCTTYPE")
     public String productType;
 
@@ -57,7 +57,7 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="STATUS")
     public String status;
 
-    @Indexable(facet=true, name="Marketing Category Name")
+    @Indexable(suggest = true, facet=true, name="Marketing Category Name")
     @Column(name="MARKETINGCATEGORYNAME")
     public String marketingCategoryName;
 
@@ -65,11 +65,11 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="ISLISTED")
     public String isListed;
 
-    @Indexable(facet=true, name="Route of Admin")
+    @Indexable(suggest = true, facet=true, name="Route of Admin")
     @Column(name="ROUTENAME")
     public String routeName;
 
-    @Indexable(facet=true, name="Application Type Number")
+    @Indexable(suggest = true, facet=true, name="Application Type Number")
     @Column(name="APPLICATIONNUMBER")
     public String appTypeNumber;
 
@@ -84,7 +84,6 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="COUNTRY")
     public String country;
 
-   // @Indexable(facet=true, name="Country")
     @Column(name="COUNTRYWITHOUTCODE")
     public String countryWithoutCode;
 
@@ -107,7 +106,7 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="FROMTABLE")
     public String fromtable;
 
-    @Indexable(facet=true, name="Provenance")
+    @Indexable(suggest = true, facet=true, name="Provenance")
     @Column(name="PROVENANCE")
     public String provenance;
 

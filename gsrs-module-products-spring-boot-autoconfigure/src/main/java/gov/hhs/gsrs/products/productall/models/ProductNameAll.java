@@ -36,7 +36,7 @@ public class ProductNameAll extends AbstractGsrsEntity {
     @Column(name="PRODUCTID")
     public String productId;
 
-    @Indexable(facet=true, name= "Product Name")
+    @Indexable(suggest = true, facet=true, name= "Product Name")
     @Column(name="PRODUCTNAME")
     public String productName;
 

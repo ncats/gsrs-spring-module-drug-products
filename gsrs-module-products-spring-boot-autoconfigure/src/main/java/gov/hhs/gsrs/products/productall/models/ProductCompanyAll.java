@@ -36,7 +36,7 @@ public class ProductCompanyAll extends AbstractGsrsEntity {
     @Column(name="PRODUCTID")
     public String productId;
 
-    @Indexable(facet=true, name= "Labeler Name", sortable=true)
+    @Indexable(suggest = true, facet=true, name= "Labeler Name", sortable=true)
     @Column(name="LABELERNAME")
     public String labelerName;
 
@@ -68,7 +68,7 @@ public class ProductCompanyAll extends AbstractGsrsEntity {
     @Column(name="COUNTRY")
     public String country;
 
-    @Indexable(facet=true, name="Company Country", sortable = true)
+    @Indexable(suggest = true, facet=true, name="Company Country", sortable = true)
     @Column(name="COUNTRYWITHOUTCODE")
     public String countryWithoutCode;
 
