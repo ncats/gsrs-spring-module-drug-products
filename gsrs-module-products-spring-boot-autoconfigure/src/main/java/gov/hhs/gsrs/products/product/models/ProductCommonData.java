@@ -9,6 +9,7 @@ import gsrs.GsrsEntityProcessorListener;
 import gsrs.security.GsrsSecurityUtils;
 import gsrs.model.AbstractGsrsEntity;
 import gsrs.model.AbstractGsrsManualDirtyEntity;
+import ix.core.models.ForceUpdateDirtyMixin;
 import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
@@ -31,7 +32,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 @MappedSuperclass
-public class ProductCommonData extends AbstractGsrsEntity {
+public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdateDirtyMixin {
 
   //  @Id
   //  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appSeq")
