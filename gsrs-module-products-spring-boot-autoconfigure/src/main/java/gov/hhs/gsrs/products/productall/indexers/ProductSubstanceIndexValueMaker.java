@@ -23,7 +23,6 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<ProductM
     @Override
     public void createIndexableValues(ProductMainAll product, Consumer<IndexableValue> consumer) {
         try {
-            String result = "HAS_NO_INGREDIENT";
             for (ProductIngredientAll ing : product.productIngredientAllList) {
                 if (ing != null) {
                     if (ing.substanceKey != null) {
@@ -36,9 +35,15 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<ProductM
 
                         if (s != null) {
                             if (s.uuid != null) {
-                                result = s.uuid.toString();
-                                consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", result));
+                                consumer.accept(IndexableValue.simpleStringValue("entity_link_substances",  s.uuid.toString()));
                             }
+
+                            // All Ingredient Names
+                            s.names.forEach(nameObj -> {
+                                if (nameObj.name != null) {
+                                    consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name", nameObj.name).suggestable().setSortable());
+                                }
+                            });
                         }
                     }
                 }

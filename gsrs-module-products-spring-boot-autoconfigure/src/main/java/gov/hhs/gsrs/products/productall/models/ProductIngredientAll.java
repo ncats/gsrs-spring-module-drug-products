@@ -52,7 +52,7 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
     @Column(name="BOS_SUBSTANCE_KEY")
     public String basisOfStrengthSubstanceKey;
 
-    @Indexable(suggest = true, facet=true, name= "Ingredient Name", sortable = true)
+   // @Indexable(suggest = true, facet=true, name= "Ingredient Name", sortable = true)
     @Column(name="SUBSTANCENAME")
     public String substanceName;
 
