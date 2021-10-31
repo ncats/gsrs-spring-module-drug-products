@@ -1,15 +1,20 @@
 package gov.hhs.gsrs.products.productall.indexers;
 
-import gov.hhs.gsrs.products.productall.models.*;
+import java.util.function.Consumer;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
+import gov.hhs.gsrs.products.productall.models.ProductIngredientAll;
+import gov.hhs.gsrs.products.productall.models.ProductMainAll;
 import gsrs.DefaultDataSourceConfig;
 import ix.core.search.text.IndexValueMaker;
 import ix.core.search.text.IndexableValue;
 import ix.ginas.models.v1.Substance;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.*;
-import java.util.function.Consumer;
-
+@Slf4j
 public class ProductSubstanceIndexValueMaker implements IndexValueMaker<ProductMainAll> {
 
     @PersistenceContext(unitName = DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
@@ -50,7 +55,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<ProductM
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("Error indexing product:" + product.fetchKey(), e);
         }
     }
 }
