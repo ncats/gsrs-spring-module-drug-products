@@ -15,7 +15,9 @@ import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -38,11 +40,11 @@ public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdate
   //  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appSeq")
   //  public Long id;
 
-   // @CreatedBy
+  //  @CreatedBy
     @Column(name = "CREATED_BY")
     public String createdBy;
 
-    //@LastModifiedBy
+  //  @LastModifiedBy
     @Column(name = "MODIFIED_BY")
     public String modifiedBy;
 
@@ -62,7 +64,7 @@ public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdate
 
     @Version
     @Column(name = "INTERNAL_VERSION")
-    public Long internalVersion = 0L; // or 1L if you want to start at 1
+    public Long internalVersion; // or 1L if you want to start at 1
 
     public ProductCommonData() {
     }
