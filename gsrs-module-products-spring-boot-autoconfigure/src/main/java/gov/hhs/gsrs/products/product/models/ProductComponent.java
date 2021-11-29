@@ -1,12 +1,24 @@
 package gov.hhs.gsrs.products.product.models;
 
+import ix.core.models.Indexable;
+import ix.core.models.ParentReference;
+import ix.core.SingleParent;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
 import java.util.List;
 import java.util.ArrayList;
 
+@SingleParent
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_COMPONENT")
@@ -76,8 +88,35 @@ public class ProductComponent extends ProductCommonData {
     private Date lastModifiedDate;
     */
 
-    @JoinColumn(name = "PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_ID")
+    public Product owner;
+
+    public void setOwner(Product product) {
+        this.owner = product;
+    }
+
+   // @JoinColumn(name = "PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
+  //  @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+   // public List<ProductLot> productLotList = new ArrayList<ProductLot>();
+
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductLot> productLotList = new ArrayList<ProductLot>();
+
+    public void setProductLotList(List<ProductLot> productLotList) {
+        this.productLotList = productLotList;
+        if(productLotList !=null) {
+            for (ProductLot prod : productLotList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
 
 }

@@ -5,7 +5,12 @@ import gsrs.GsrsEntityProcessorListener;
 import gsrs.indexer.IndexerEntityListener;
 import ix.core.models.Backup;
 import ix.core.models.IndexableRoot;
+import ix.core.models.Indexable;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -111,23 +116,92 @@ public class Product extends ProductCommonData {
         return id;
     }
 
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+  //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductName> productNameList = new ArrayList<ProductName>();
 
+    public void setProductNameList(List<ProductName> productNameList) {
+        this.productNameList = productNameList;
+        if(productNameList !=null) {
+            for (ProductName prod : productNameList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+   // @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+  //  @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+   // public List<ProductName> productNameList = new ArrayList<ProductName>();
+
+  //  @LazyCollection(LazyCollectionOption.FALSE)
+  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+ //   @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+ //   public List<ProductCode> productCodeList = new ArrayList<ProductCode>();
+
+
+    @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCode> productCodeList = new ArrayList<ProductCode>();
 
+    public void setProductCodeList(List<ProductCode> productCodeList) {
+        this.productCodeList = productCodeList;
+        if(productCodeList !=null) {
+            for (ProductCode prod : productCodeList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+  //  @LazyCollection(LazyCollectionOption.FALSE)
+  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+  //  public List<ProductCompany> productCompanyList = new ArrayList<ProductCompany>();
+
+    @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCompany> productCompanyList = new ArrayList<ProductCompany>();
 
+    public void setProductCompanyList(List<ProductCompany> productCompanyList) {
+        this.productCompanyList = productCompanyList;
+        if(productCompanyList !=null) {
+            for (ProductCompany prod : productCompanyList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+   // @LazyCollection(LazyCollectionOption.FALSE)
+  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
+  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+  //  public List<ProductComponent> productComponentList = new ArrayList<ProductComponent>();
+
+    @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductComponent> productComponentList = new ArrayList<ProductComponent>();
+
+    public void setProductComponentList(List<ProductComponent> productComponentList) {
+        this.productComponentList = productComponentList;
+        if(productComponentList !=null) {
+            for (ProductComponent prod : productComponentList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
 
 }

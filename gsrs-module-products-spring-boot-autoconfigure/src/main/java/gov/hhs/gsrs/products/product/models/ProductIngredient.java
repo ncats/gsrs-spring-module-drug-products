@@ -1,11 +1,18 @@
 package gov.hhs.gsrs.products.product.models;
 
 import ix.core.models.Indexable;
+import ix.core.models.ParentReference;
+import ix.core.SingleParent;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+@SingleParent
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_INGREDIENT")
@@ -66,6 +73,18 @@ public class ProductIngredient extends ProductCommonData {
 
     @Column(name="INGREDIENT_LOCATION")
     public String ingredientLocation;
+
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_LOT_ID")
+    public ProductLot owner;
+
+    public void setOwner(ProductLot productLot) {
+        this.owner = productLot;
+    }
 
     /*
     @JsonSerialize(using = GsrsDateSerializer.class)
