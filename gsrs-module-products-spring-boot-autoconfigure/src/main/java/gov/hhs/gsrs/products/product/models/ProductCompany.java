@@ -1,9 +1,18 @@
 package gov.hhs.gsrs.products.product.models;
 
+import ix.core.models.Indexable;
+import ix.core.models.ParentReference;
+import ix.core.SingleParent;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+@SingleParent
 @Data
 @Entity
 @Table(name="SRSCID_PRODUCT_COMPANY")
@@ -41,6 +50,19 @@ public class ProductCompany extends ProductCommonData {
 
     @Column(name="COMPANY_CODE_TYPE")
     public String companyCodeType;
+
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_ID")
+    public Product owner;
+
+    public void setOwner(Product product) {
+        this.owner = product;
+    }
+
 
     /*
     @Version
