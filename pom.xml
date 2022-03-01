@@ -19,7 +19,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>gov.hhs.gsrs</groupId>
+    <groupId>gov.nih.ncats</groupId>
     <artifactId>gsrs-module-products</artifactId>
     <version>0.1.2-SNAPSHOT</version>
     <name>GSRS Product Module</name>
