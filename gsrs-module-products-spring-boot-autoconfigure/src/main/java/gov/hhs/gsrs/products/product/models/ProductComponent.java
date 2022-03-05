@@ -93,7 +93,7 @@ public class ProductComponent extends ProductCommonData {
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_ID", referencedColumnName = "PRODUCTID")
+    @JoinColumn(name="PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
     public Product owner;
 
     public void setOwner(Product product) {
