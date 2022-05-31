@@ -49,7 +49,7 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="nonproprietaryname")
     public String nonProprietaryName;
 
-    @Indexable(suggest = true, facet=true, name="Product Type")
+    @Indexable(suggest = true, facet=true, name="Product Type", sortable = true)
     @Column(name="PRODUCTTYPE")
     public String productType;
 
@@ -69,7 +69,7 @@ public class ProductMainAll extends AbstractGsrsEntity {
     @Column(name="ROUTENAME")
     public String routeName;
 
-    @Indexable(suggest = true, facet=true, name="Application Type Number")
+    @Indexable(suggest = true, facet=true, name="Application Type Number", sortable = true)
     @Column(name="APPLICATIONNUMBER")
     public String appTypeNumber;
 
