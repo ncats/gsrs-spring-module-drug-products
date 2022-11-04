@@ -112,6 +112,7 @@ public class Product extends ProductCommonData {
     private Date lastModifiedDate;
     */
 
+    // get Id
     public Long getId() {
         return id;
     }
