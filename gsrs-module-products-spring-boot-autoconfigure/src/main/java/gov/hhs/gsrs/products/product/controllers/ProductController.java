@@ -97,6 +97,7 @@ public class ProductController extends EtagLegacySearchEntityController<ProductC
         return stream;
     }
 
+    /*
     @PreAuthorize("isAuthenticated()")
    // @GetGsrsRestApiMapping("/export/{etagId}/{format}")
     public ResponseEntity<Object> createExport(@PathVariable("etagId") String etagId,
@@ -142,6 +143,7 @@ public class ProductController extends EtagLegacySearchEntityController<ProductC
             return factory.createNewExporter(pos, params);
         }
     }
+    */
 
     public Optional<Product> injectSubstanceDetails(Optional<Product> product) {
 
