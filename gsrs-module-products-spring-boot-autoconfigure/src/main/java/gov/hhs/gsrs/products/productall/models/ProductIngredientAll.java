@@ -64,7 +64,7 @@ public class ProductIngredientAll extends AbstractGsrsEntity {
     @Column(name="SUBSTANCE_UUID")
     public String substanceUuid;
 
-    @Indexable(suggest = true, facet=true, name= "Ingredient Type")
+    @Indexable(suggest = true, facet=true, name= "Ingredient Type", sortable = true)
     @Column(name="INGREDIENTTYPE")
     public String ingredientType;
 

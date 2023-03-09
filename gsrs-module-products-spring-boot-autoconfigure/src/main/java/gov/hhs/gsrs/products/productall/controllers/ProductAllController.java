@@ -97,6 +97,7 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
         return stream;
     }
 
+    /*
     @PreAuthorize("isAuthenticated()")
     @GetGsrsRestApiMapping("/export/{etagId}/{format}")
     public ResponseEntity<Object> createExport(@PathVariable("etagId") String etagId,
@@ -144,6 +145,7 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
             return factory.createNewExporter(pos, params);
         }
     }
+    */
 
     @GetGsrsRestApiMapping("/distprovenance/{substanceUuid}")
     public ResponseEntity<String> findProvenanceBySubstanceUuid(@PathVariable("substanceUuid") String substanceUuid) throws Exception {

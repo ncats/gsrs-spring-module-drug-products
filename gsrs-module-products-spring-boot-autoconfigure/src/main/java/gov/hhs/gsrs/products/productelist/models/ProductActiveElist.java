@@ -36,8 +36,20 @@ public class ProductActiveElist extends AbstractGsrsEntity {
     @Column(name="ACTIVEMOIETY_1_NAME")
     public String activeMoietyName;
 
+    @Column(name="BASISOFSTRENGTH")
+    public String basisOfStrength;
+
     @Column(name="STRENGTHNUMERATORUNIT")
     public String strengthNumeratorUnit;
+
+    @Column(name="ORIGINALNUMERATORUNIT")
+    public String originalNumeratorUnit;
+
+    @Column(name="ORIGINALDENOMINATORNUMBER")
+    public String originalDenominatorNumber;
+
+    @Column(name="ORIGINALDENOMINATORUNIT")
+    public String originalDenominatorUnit;
 
     public ProductActiveElist () {}
 }
