@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products.productall.controllers;
 
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import gov.hhs.gsrs.products.ProductDataSourceConfig;
 import gov.hhs.gsrs.products.productall.models.*;
 import gov.hhs.gsrs.products.productall.services.*;
@@ -135,7 +136,7 @@ public class ProductAllController extends EtagLegacySearchEntityController<Produ
     }
 
     private Exporter<ProductMainAll> getExporterFor(String extension, OutputStream pos, boolean publicOnly, Map<String, String> parameters) throws IOException {
-        ExporterFactory.Parameters params = this.createParamters(extension, publicOnly, parameters);
+        ExporterFactory.Parameters params = this.createParameters(extension, publicOnly, parameters, JsonNodeFactory.instance.objectNode());
         ExporterFactory<ProductMainAll> factory = this.gsrsExportConfiguration.getExporterFor(this.getEntityService().getContext(), params);
         if (factory == null) {
             throw new IllegalArgumentException("could not find suitable factory for " + params);
