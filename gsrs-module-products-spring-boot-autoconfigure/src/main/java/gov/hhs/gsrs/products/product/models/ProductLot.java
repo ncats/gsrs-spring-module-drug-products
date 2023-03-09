@@ -75,7 +75,9 @@ public class ProductLot extends ProductCommonData {
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_COMPONENT_ID")
+    @JoinColumn(name="PRODUCT_COMPONENT_ID",
+referencedColumnName="PRODUCT_COMPONENT_ID"
+)
     public ProductComponent owner;
 
     public void setOwner(ProductComponent productComponent) {

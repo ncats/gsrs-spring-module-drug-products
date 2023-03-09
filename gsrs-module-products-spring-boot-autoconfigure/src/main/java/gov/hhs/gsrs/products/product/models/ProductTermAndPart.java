@@ -35,7 +35,8 @@ public class ProductTermAndPart extends ProductCommonData {
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_NAME_ID")
+    @JoinColumn(name="PRODUCT_NAME_ID",
+referencedColumnName = "PRODUCT_NAME_ID")
     public ProductName owner;
 
     public void setOwner(ProductName productName) {
