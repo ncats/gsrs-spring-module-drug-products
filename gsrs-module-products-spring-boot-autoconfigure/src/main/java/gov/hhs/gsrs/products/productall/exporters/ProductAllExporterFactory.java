@@ -38,7 +38,7 @@ public class ProductAllExporterFactory implements ExporterFactory {
     public ProductAllExporter createNewExporter(OutputStream out, Parameters params) throws IOException {
 
         SpreadsheetFormat format = SpreadsheetFormat.XLSX;
-        Spreadsheet spreadsheet = format.createSpeadsheet(out);
+        Spreadsheet spreadsheet = format.createSpreadsheet(out);
 
         ProductAllExporter.Builder builder = new ProductAllExporter.Builder(spreadsheet);
 
