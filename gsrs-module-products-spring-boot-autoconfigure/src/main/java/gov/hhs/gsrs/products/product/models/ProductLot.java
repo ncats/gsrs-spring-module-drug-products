@@ -37,6 +37,9 @@ public class ProductLot extends ProductCommonData {
     @Column(name="LOT_SIZE")
     public String lotSize;
 
+    @Column(name="LOT_TYPE")
+    public String lotType;
+
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     @Column(name="EXPIRY_DATE")
     public Date expiryDate;

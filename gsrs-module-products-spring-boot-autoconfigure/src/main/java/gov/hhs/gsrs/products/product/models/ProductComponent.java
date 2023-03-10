@@ -63,30 +63,17 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="MANUFACTURE_CODE_TYPE")
     public String manufactureCodeType;
 
-    /*
-    @Version
-    public Long internalVersion;
+    @Column(name="DOSAGE_FORM_CODE")
+    public String dosageFormCode;
 
-    @Column(name = "CREATED_BY")
-    public String createdBy;
+    @Column(name="DOSAGE_FORM_CODE_TYPE")
+    public String dosageFormCodeType;
 
-    @Column(name = "MODIFIED_BY")
-    public String modifiedBy;
+    @Column(name="MANUFACTURE_ITEM_CODE")
+    public String manufactureItemCode;
 
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
+    @Column(name="MANUFACTURE_ITEM_CODE_TYPE")
+    public String manufactureItemCodeType;
 
     @Indexable(indexed=false)
     @ParentReference
@@ -99,10 +86,6 @@ public class ProductComponent extends ProductCommonData {
     public void setOwner(Product product) {
         this.owner = product;
     }
-
-   // @JoinColumn(name = "PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
-  //  @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-   // public List<ProductLot> productLotList = new ArrayList<ProductLot>();
 
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)

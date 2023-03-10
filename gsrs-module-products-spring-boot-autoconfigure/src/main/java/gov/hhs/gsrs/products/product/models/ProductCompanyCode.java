@@ -33,34 +33,31 @@ import java.util.ArrayList;
 @SingleParent
 @Data
 @Entity
-@Table(name = "SRSCID_PRODUCT_CODE")
-public class ProductCode extends ProductCommonData {
+@Table(name = "SRSCID_PRODUCT_COMPANY_CODE")
+public class ProductCompanyCode extends ProductCommonData {
 
     @Id
-    @SequenceGenerator(name = "prodCodeSeq", sequenceName = "SRSCID_SQ_PRODUCT_CODE_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodCodeSeq")
-    @Column(name = "PRODUCT_CODE_ID")
+    @SequenceGenerator(name = "prodCompCodeSeq", sequenceName = "SRSCID_SQ_PRODUCT_COMP_CODE_ID", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodCompCodeSeq")
+    @Column(name = "PRODUCT_COMPANY_CODE_ID")
     public Long id;
 
-    @Column(name = "PRODUCT_CODE")
-    public String productCode;
+    @Column(name = "COMPANY_CODE")
+    public String companyCode;
 
-    @Column(name = "PRODUCT_CODE_TYPE")
-    public String productCodeType;
-
-    @Column(name = "JURIDICTIONS")
-    public String juridictions;
+    @Column(name = "COMPANY_CODE_TYPE")
+    public String companyCodeType;
 
     @Indexable(indexed = false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    public Product owner;
+    @JoinColumn(name = "PRODUCT_COMPANY_ID", referencedColumnName = "PRODUCT_COMPANY_ID")
+    public ProductCompany owner;
 
-    public void setOwner(Product product) {
-        this.owner = product;
+    public void setOwner(ProductCompany productCompany) {
+        this.owner = productCompany;
     }
 
 }

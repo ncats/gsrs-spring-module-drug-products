@@ -9,8 +9,14 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 @SingleParent
 @Data
@@ -63,29 +69,19 @@ public class ProductCompany extends ProductCommonData {
         this.owner = product;
     }
 
+    // Set Children class
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductCompanyCode> productCompanyCodeList = new ArrayList<ProductCompanyCode>();
 
-    /*
-    @Version
-    public Long internalVersion;
-
-    @Column(name = "CREATED_BY")
-    public String createdBy;
-
-    @Column(name = "MODIFIED_BY")
-    public String modifiedBy;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
+    public void setProductComponentList(List<ProductCompanyCode> productCompanyCodeList) {
+        this.productCompanyCodeList = productCompanyCodeList;
+        if(productCompanyCodeList !=null) {
+            for (ProductCompanyCode prod : productCompanyCodeList)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
 }
