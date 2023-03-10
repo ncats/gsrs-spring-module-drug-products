@@ -74,60 +74,32 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="INGREDIENT_LOCATION")
     public String ingredientLocation;
 
+    @Column(name="CONFIDENTIALITY_CODE")
+    public String confidentialityCode;
+
+    @Column(name="ORIGINAL_NUMERATOR_NUMBER")
+    public String originalNumeratorNumber;
+
+    @Column(name="ORIGINAL_NUMERATOR_UNIT")
+    public String originalNumeratorUnit;
+
+    @Column(name="ORIGINAL_DENOMINATOR_NUMBER")
+    public String originalDenominatorNumber;
+
+    @Column(name="ORIGINAL_DENOMINATOR_UNIT")
+    public String originalDenominatorUnit;
+
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_LOT_ID",
-referencedColumnName="PRODUCT_LOT_ID"
-)
+    @JoinColumn(name="PRODUCT_LOT_ID", referencedColumnName="PRODUCT_LOT_ID")
     public ProductLot owner;
 
     public void setOwner(ProductLot productLot) {
         this.owner = productLot;
     }
 
-    /*
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Ingredient Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Ingredient Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
-
-    /*
-    @Transient
-    @JsonProperty("_substanceUuid")
-    public String _substanceUuid;
-
-    @Transient
-    @JsonProperty("_approvalID")
-    public String _approvalID;
-
-    @Transient
-    @JsonProperty("_name")
-    public String _name;
-
-    @Transient
-    @JsonProperty("_basisOfStrengthSubstanceUuid")
-    public String _basisOfStrengthSubstanceUuid;
-
-    @Transient
-    @JsonProperty("_basisOfStrengthApprovalID")
-    public String _basisOfStrengthApprovalID;
-
-    @Transient
-    @JsonProperty("_basisOfStrengthName")
-    public String _basisOfStrengthName;
-    */
 }
 

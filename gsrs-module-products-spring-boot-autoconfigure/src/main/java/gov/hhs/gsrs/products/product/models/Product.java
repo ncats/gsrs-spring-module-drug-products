@@ -87,30 +87,35 @@ public class Product extends ProductCommonData {
     @Column(name="PROVENANCE")
     public String provenance;
 
-    /*
-    @Version
-    public Long internalVersion;
+    @Column(name="PROVENANCE_PRODUCT_ID")
+    public String provenanceProductId;
 
-    @Column(name = "CREATED_BY")
-    public String createdBy;
+    @Column(name="PROVENANCE_DOCUMENT_ID")
+    public String provenanceDocumentId;
 
-    @Column(name = "MODIFIED_BY")
-    public String modifiedBy;
+    @Column(name="START_MARKETING_DATE")
+    public String startMarketingDate;
 
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
+    @Column(name="END_MARKETING_DATE")
+    public String endMarketingDate;
 
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
+    @Column(name="MARKETING_CATEGORY_CODE")
+    public String marketingCategoryCode;
+
+    @Column(name="MARKETING_CATEGORY_NAME")
+    public String marketingCategoryName;
+
+    @Column(name="DEASCHEDULE")
+    public String deaschedule;
+
+    @Column(name="SHELF_LIFE")
+    public String shelfLife;
+
+    @Column(name="STORAGE_CONDITIONS")
+    public String storageConditions;
+
+    @Column(name="PRODUCT_URL")
+    public String productUrl;
 
     // get Id
     public Long getId() {
@@ -119,8 +124,6 @@ public class Product extends ProductCommonData {
 
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-  //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductName> productNameList = new ArrayList<ProductName>();
 
@@ -134,20 +137,8 @@ public class Product extends ProductCommonData {
         }
     }
 
-   // @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-  //  @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-   // public List<ProductName> productNameList = new ArrayList<ProductName>();
-
-  //  @LazyCollection(LazyCollectionOption.FALSE)
-  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
- //   @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
- //   public List<ProductCode> productCodeList = new ArrayList<ProductCode>();
-
-
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCode> productCodeList = new ArrayList<ProductCode>();
 
@@ -161,15 +152,8 @@ public class Product extends ProductCommonData {
         }
     }
 
-  //  @LazyCollection(LazyCollectionOption.FALSE)
-  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-  //  public List<ProductCompany> productCompanyList = new ArrayList<ProductCompany>();
-
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCompany> productCompanyList = new ArrayList<ProductCompany>();
 
@@ -183,15 +167,8 @@ public class Product extends ProductCommonData {
         }
     }
 
-   // @LazyCollection(LazyCollectionOption.FALSE)
-  //  @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-  //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
-  //  public List<ProductComponent> productComponentList = new ArrayList<ProductComponent>();
-
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductComponent> productComponentList = new ArrayList<ProductComponent>();
 
