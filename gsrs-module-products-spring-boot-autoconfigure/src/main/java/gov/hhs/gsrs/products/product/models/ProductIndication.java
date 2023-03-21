@@ -33,23 +33,29 @@ import java.util.ArrayList;
 @SingleParent
 @Data
 @Entity
-@Table(name = "SRSCID_PRODUCT_CODE")
-public class ProductCode extends ProductCommonData {
+@Table(name = "SRSCID_PRODUCT_INDICATION")
+public class ProductIndication extends ProductCommonData {
 
     @Id
-    @SequenceGenerator(name = "prodCodeSeq", sequenceName = "SRSCID_SQ_PRODUCT_CODE_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodCodeSeq")
-    @Column(name = "PRODUCT_CODE_ID")
+    @SequenceGenerator(name = "prodIndSeq", sequenceName = "SRSCID_SQ_PRODUCT_INDICAT_ID", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodIndSeq")
+    @Column(name = "PRODUCT_INDICATION_ID")
     public Long id;
 
-    @Column(name = "PRODUCT_CODE")
-    public String productCode;
+    @Column(name = "INDICATION")
+    public String indication;
 
-    @Column(name = "PRODUCT_CODE_TYPE")
-    public String productCodeType;
+    @Column(name = "INDICATION_TEXT")
+    public String indicationText;
 
-    @Column(name = "JURISDICTIONS")
-    public String jurisdictions;
+    @Column(name = "INDICATION_CODE")
+    public String indicationCode;
+
+    @Column(name = "INDICATION_CODE_TYPE")
+    public String indicationCodeType;
+
+    @Column(name = "INDICATION_GROUP")
+    public String indicationGroup;
 
     // Set Parent Class
     @Indexable(indexed = false)

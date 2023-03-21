@@ -89,6 +89,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="ORIGINAL_DENOMINATOR_UNIT")
     public String originalDenominatorUnit;
 
+    // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude

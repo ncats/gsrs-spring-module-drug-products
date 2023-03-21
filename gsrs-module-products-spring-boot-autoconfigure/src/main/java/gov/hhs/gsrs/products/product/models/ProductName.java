@@ -36,31 +36,7 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_TYPE")
     public String productNameType;
 
-    /*
-    @Version
-    public Long internalVersion;
-
-    @Column(name = "CREATED_BY")
-    public String createdBy;
-
-    @Column(name = "MODIFIED_BY")
-    public String modifiedBy;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
-
+    // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
@@ -73,14 +49,9 @@ public class ProductName extends ProductCommonData {
         this.owner = product;
     }
 
-  //  @JoinColumn(name = "PRODUCT_NAME_ID", referencedColumnName = "PRODUCT_NAME_ID")
-  //  @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-  //  public List<ProductTermAndPart> productTermAndTermPartList = new ArrayList<ProductTermAndPart>();
-
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
-    //  @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    //  public List<ApplicationProduct> applicationProductList = new ArrayList<>();
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductTermAndPart> productTermAndTermPartList = new ArrayList<ProductTermAndPart>();
 

@@ -48,49 +48,20 @@ public class ProductLot extends ProductCommonData {
     @Column(name="MANUFACTURE_DATE")
     public Date manufactureDate;
 
-    /*
-    @Version
-    public Long internalVersion;
-
-    @Column(name = "CREATED_BY")
-    public String createdBy;
-
-    @Column(name = "MODIFIED_BY")
-    public String modifiedBy;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @CreatedDate
-    @Indexable( name = "Create Date", sortable=true)
-    @Column(name = "CREATE_DATE")
-    private Date creationDate;
-
-    @JsonSerialize(using = GsrsDateSerializer.class)
-    @JsonDeserialize(using = GsrsDateDeserializer.class)
-    @LastModifiedDate
-    @Indexable( name = "Last Modified Date", sortable=true)
-    @Column(name = "MODIFY_DATE")
-    private Date lastModifiedDate;
-    */
-
+    // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_COMPONENT_ID",
-referencedColumnName="PRODUCT_COMPONENT_ID"
-)
+    @JoinColumn(name="PRODUCT_COMPONENT_ID", referencedColumnName="PRODUCT_COMPONENT_ID")
     public ProductComponent owner;
 
     public void setOwner(ProductComponent productComponent) {
         this.owner = productComponent;
     }
 
-   // @JoinColumn(name = "PRODUCT_LOT_ID", referencedColumnName = "PRODUCT_LOT_ID")
-   // @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
-   // public List<ProductIngredient> productIngredientList = new ArrayList<ProductIngredient>();
-
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
