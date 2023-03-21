@@ -57,6 +57,22 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="COMPANY_CODE_TYPE")
     public String companyCodeType;
 
+    @Column(name="START_MARKETING_DATE")
+    public String startMarketingDate;
+
+    @Column(name="END_MARKETING_DATE")
+    public String endMarketingDate;
+
+    @Column(name="COMPANY_PRODUCT_ID")
+    public String companyProductId;
+
+    @Column(name="COMPANY_DOCUMENT_ID")
+    public String companyDocumentId;
+
+    @Column(name="PROVENANCE_DOCUMENT_ID")
+    public String provenanceDocumentId;
+
+    // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
@@ -69,7 +85,7 @@ public class ProductCompany extends ProductCommonData {
         this.owner = product;
     }
 
-    // Set Children class
+    // Set Child class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")

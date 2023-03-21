@@ -48,6 +48,7 @@ public class ProductCompanyCode extends ProductCommonData {
     @Column(name = "COMPANY_CODE_TYPE")
     public String companyCodeType;
 
+    // Set Parent Class
     @Indexable(indexed = false)
     @ParentReference
     @EqualsAndHashCode.Exclude

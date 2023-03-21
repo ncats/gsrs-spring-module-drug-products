@@ -21,7 +21,7 @@
 
     <groupId>gov.nih.ncats</groupId>
     <artifactId>gsrs-module-products</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
+    <version>3.1-SNAPSHOT</version>
     <name>GSRS Product Module</name>
     <description>GSRS Product Module for Spring Boot</description>
 
@@ -34,7 +34,7 @@
         <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
         <lucene.version>4.10.0</lucene.version>
         <gsrs.version>3.1-SNAPSHOT</gsrs.version>
-        <gsrs.product.version>3.0.3-SNAPSHOT</gsrs.product.version>
+        <gsrs.product.version>3.1-SNAPSHOT</gsrs.product.version>
         <log4j2.version>2.17.1</log4j2.version>
         <!-- TO BE REMOVE -->
         <gsrs.substance.version>3.1-SNAPSHOT</gsrs.substance.version>

@@ -36,15 +36,9 @@ import java.text.SimpleDateFormat;
 @MappedSuperclass
 public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdateDirtyMakerMixin {
 
-  //  @Id
-  //  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "appSeq")
-  //  public Long id;
-
-  //  @CreatedBy
     @Column(name = "CREATED_BY")
     public String createdBy;
 
-  //  @LastModifiedBy
     @Column(name = "MODIFIED_BY")
     public String modifiedBy;
 

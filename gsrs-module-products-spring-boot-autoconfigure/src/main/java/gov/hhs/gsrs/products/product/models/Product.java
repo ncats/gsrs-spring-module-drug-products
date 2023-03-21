@@ -93,12 +93,6 @@ public class Product extends ProductCommonData {
     @Column(name="PROVENANCE_DOCUMENT_ID")
     public String provenanceDocumentId;
 
-    @Column(name="START_MARKETING_DATE")
-    public String startMarketingDate;
-
-    @Column(name="END_MARKETING_DATE")
-    public String endMarketingDate;
-
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
 
@@ -122,6 +116,7 @@ public class Product extends ProductCommonData {
         return id;
     }
 
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
@@ -137,6 +132,7 @@ public class Product extends ProductCommonData {
         }
     }
 
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
@@ -152,6 +148,7 @@ public class Product extends ProductCommonData {
         }
     }
 
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
@@ -167,6 +164,23 @@ public class Product extends ProductCommonData {
         }
     }
 
+    // Set Child Class
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductIndication> productIndications = new ArrayList<ProductIndication>();
+
+    public void setProductIndications(List<ProductIndication> productIndications) {
+        this.productIndications = productIndications;
+        if (productIndications != null) {
+            for (ProductIndication prod : productIndications)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+    // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")

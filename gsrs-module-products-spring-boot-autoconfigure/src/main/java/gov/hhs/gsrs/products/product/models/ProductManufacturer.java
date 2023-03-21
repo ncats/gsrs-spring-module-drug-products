@@ -33,35 +33,44 @@ import java.util.ArrayList;
 @SingleParent
 @Data
 @Entity
-@Table(name = "SRSCID_PRODUCT_CODE")
-public class ProductCode extends ProductCommonData {
+@Table(name = "SRSCID_PRODUCT_MANUFACTURER")
+public class ProductManufacturer extends ProductCommonData {
 
     @Id
-    @SequenceGenerator(name = "prodCodeSeq", sequenceName = "SRSCID_SQ_PRODUCT_CODE_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodCodeSeq")
-    @Column(name = "PRODUCT_CODE_ID")
+    @SequenceGenerator(name = "prodManuSeq", sequenceName = "SRSCID_SQ_PRODUCT_MANUFACT_ID", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodManuSeq")
+    @Column(name = "PRODUCT_MANUFACTURER_ID")
     public Long id;
 
-    @Column(name = "PRODUCT_CODE")
-    public String productCode;
+    @Column(name = "MANUFACTURER_NAME")
+    public String manufacturerName;
 
-    @Column(name = "PRODUCT_CODE_TYPE")
-    public String productCodeType;
+    @Column(name = "MANUFACTURER_ROLE")
+    public String manufacturerRole;
 
-    @Column(name = "JURISDICTIONS")
-    public String jurisdictions;
+    @Column(name = "MANUFACTURER_CODE")
+    public String manufacturerCode;
+
+    @Column(name = "MANUFACTURER_CODE_TYPE")
+    public String manufacturerCodeType;
+
+    @Column(name = "MANUFACTURED_ITEM_CODE")
+    public String manufacturedItemCode;
+
+    @Column(name = "MANUFACTURED_ITEM_CODE_TYPE")
+    public String manufacturedItemCodeType;
 
     // Set Parent Class
-    @Indexable(indexed = false)
+    @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    public Product owner;
+    @JoinColumn(name="PRODUCT_COMPONENT_ID", referencedColumnName="PRODUCT_COMPONENT_ID")
+    public ProductComponent owner;
 
-    public void setOwner(Product product) {
-        this.owner = product;
+    public void setOwner(ProductComponent productComponent) {
+        this.owner = productComponent;
     }
 
 }

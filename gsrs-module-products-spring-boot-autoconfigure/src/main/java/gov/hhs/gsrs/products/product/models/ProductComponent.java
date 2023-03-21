@@ -51,30 +51,22 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="DOSAGE_FORM")
     public String dosageForm;
 
-    @Column(name="AMOUNT")
-    public Double amount;
-
-    @Column(name="UNIT")
-    public String unit;
-
-    @Column(name="MANUFACTURE_CODE")
-    public String manufactureCode;
-
-    @Column(name="MANUFACTURE_CODE_TYPE")
-    public String manufactureCodeType;
-
     @Column(name="DOSAGE_FORM_CODE")
     public String dosageFormCode;
 
     @Column(name="DOSAGE_FORM_CODE_TYPE")
     public String dosageFormCodeType;
 
-    @Column(name="MANUFACTURE_ITEM_CODE")
-    public String manufactureItemCode;
+    @Column(name="AMOUNT")
+    public Double amount;
 
-    @Column(name="MANUFACTURE_ITEM_CODE_TYPE")
-    public String manufactureItemCodeType;
+    @Column(name="UNIT")
+    public String unit;
 
+    @Column(name="PROVENANCE_MANUFACTURE_ITEM_ID")
+    public String provenanceManufactureItemId;
+
+    // Set Parent class
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
@@ -87,6 +79,23 @@ public class ProductComponent extends ProductCommonData {
         this.owner = product;
     }
 
+    // Set Child class
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductManufacturer> productManufacturers = new ArrayList<ProductManufacturer>();
+
+    public void setProductManufacturers(List<ProductManufacturer> productManufacturers) {
+        this.productManufacturers = productManufacturers;
+        if (productManufacturers != null) {
+            for (ProductManufacturer prod : productManufacturers)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+    // Set Child class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
