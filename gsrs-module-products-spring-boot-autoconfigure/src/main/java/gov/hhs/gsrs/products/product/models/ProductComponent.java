@@ -57,6 +57,12 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="DOSAGE_FORM_CODE_TYPE")
     public String dosageFormCodeType;
 
+    @Column(name="DOSAGE_FORM_NOTE")
+    public String dosageFormNote;
+
+    @Column(name="COMPOSITION_NOTE")
+    public String compositionNote;
+
     @Column(name="AMOUNT")
     public Double amount;
 

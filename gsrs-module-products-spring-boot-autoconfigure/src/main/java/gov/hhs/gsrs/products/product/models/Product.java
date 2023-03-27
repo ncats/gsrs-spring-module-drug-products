@@ -120,12 +120,12 @@ public class Product extends ProductCommonData {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductName> productNameList = new ArrayList<ProductName>();
+    public List<ProductName> productNames = new ArrayList<ProductName>();
 
-    public void setProductNameList(List<ProductName> productNameList) {
-        this.productNameList = productNameList;
-        if(productNameList !=null) {
-            for (ProductName prod : productNameList)
+    public void setProductNames(List<ProductName> productNames) {
+        this.productNames = productNames;
+        if(productNames !=null) {
+            for (ProductName prod : productNames)
             {
                 prod.setOwner(this);
             }
@@ -136,12 +136,12 @@ public class Product extends ProductCommonData {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductCode> productCodeList = new ArrayList<ProductCode>();
+    public List<ProductCode> productCodes = new ArrayList<ProductCode>();
 
-    public void setProductCodeList(List<ProductCode> productCodeList) {
-        this.productCodeList = productCodeList;
-        if(productCodeList !=null) {
-            for (ProductCode prod : productCodeList)
+    public void setProductCodes(List<ProductCode> productCodes) {
+        this.productCodes = productCodes;
+        if(productCodes != null) {
+            for (ProductCode prod : productCodes)
             {
                 prod.setOwner(this);
             }
