@@ -48,6 +48,15 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="COMPANY_COUNTRY")
     public String companyCountry;
 
+    @Column(name="GPS_LATITUDE")
+    public String companyGpsLatitude;
+
+    @Column(name="GPS_LONGITUDE")
+    public String companyGpsLongitude;
+
+    @Column(name="GPS_ELEVATION")
+    public String companyGpsElevation;
+
     @JoinColumn(name="COMPANY_ROLE")
     public String companyRole;
 
