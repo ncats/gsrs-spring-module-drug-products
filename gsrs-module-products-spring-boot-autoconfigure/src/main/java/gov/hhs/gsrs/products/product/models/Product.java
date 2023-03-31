@@ -184,12 +184,12 @@ public class Product extends ProductCommonData {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductComponent> productComponentList = new ArrayList<ProductComponent>();
+    public List<ProductComponent> productManufactureItems = new ArrayList<ProductComponent>();
 
-    public void setProductComponentList(List<ProductComponent> productComponentList) {
-        this.productComponentList = productComponentList;
-        if(productComponentList !=null) {
-            for (ProductComponent prod : productComponentList)
+    public void setProductManufactureItems(List<ProductComponent> productManufactureItems) {
+        this.productManufactureItems = productManufactureItems;
+        if (productManufactureItems != null) {
+            for (ProductComponent prod : productManufactureItems)
             {
                 prod.setOwner(this);
             }

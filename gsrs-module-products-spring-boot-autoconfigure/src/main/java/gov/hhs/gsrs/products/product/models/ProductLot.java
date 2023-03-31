@@ -65,12 +65,12 @@ public class ProductLot extends ProductCommonData {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductIngredient> productIngredientList = new ArrayList<ProductIngredient>();
+    public List<ProductIngredient> productIngredients = new ArrayList<ProductIngredient>();
 
-    public void setProductIngredientList(List<ProductIngredient> productIngredientList) {
-        this.productIngredientList = productIngredientList;
-        if(productIngredientList !=null) {
-            for (ProductIngredient prod : productIngredientList)
+    public void setProductIngredientList(List<ProductIngredient> productIngredients) {
+        this.productIngredients = productIngredients;
+        if (productIngredients != null) {
+            for (ProductIngredient prod : productIngredients)
             {
                 prod.setOwner(this);
             }

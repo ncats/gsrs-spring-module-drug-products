@@ -63,6 +63,9 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="COMPOSITION_NOTE")
     public String compositionNote;
 
+    @Column(name="ROUTE_OF_ADMINISTRATION")
+    public String routeOfAdministration;
+
     @Column(name="AMOUNT")
     public Double amount;
 
@@ -105,12 +108,12 @@ public class ProductComponent extends ProductCommonData {
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductLot> productLotList = new ArrayList<ProductLot>();
+    public List<ProductLot> productLots = new ArrayList<ProductLot>();
 
-    public void setProductLotList(List<ProductLot> productLotList) {
-        this.productLotList = productLotList;
-        if(productLotList !=null) {
-            for (ProductLot prod : productLotList)
+    public void setProductLots(List<ProductLot> productLots) {
+        this.productLots = productLots;
+        if (productLots != null) {
+            for (ProductLot prod : productLots)
             {
                 prod.setOwner(this);
             }
