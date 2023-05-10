@@ -57,16 +57,25 @@ public class ProductIndication extends ProductCommonData {
     @Column(name = "INDICATION_GROUP")
     public String indicationGroup;
 
+    @Column(name = "INDICATION_SOURCE")
+    public String indicationSource;
+
+    @Column(name = "INDICATION_SOURCE_TYPE")
+    public String indicationSourceType;
+
+    @Column(name = "INDICATION_SOURCE_URL")
+    public String indicationSourceUrl;
+
     // Set Parent Class
-    @Indexable(indexed = false)
+    @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    public Product owner;
+    @JoinColumn(name="PRODUCT_PROVENANCE_ID", referencedColumnName = "PRODUCT_PROVENANCE_ID")
+    public ProductProvenance owner;
 
-    public void setOwner(Product product) {
+    public void setOwner(ProductProvenance product) {
         this.owner = product;
     }
 

@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -60,17 +61,22 @@ public class ProductCompany extends ProductCommonData {
     @JoinColumn(name="COMPANY_ROLE")
     public String companyRole;
 
-    @Column(name="COMPANY_CODE")
-    public String companyCode;
+    @Column(name="PUBLIC_DOMAIN")
+    public String companyPublicDomain;
 
-    @Column(name="COMPANY_CODE_TYPE")
-    public String companyCodeType;
+    //  @Column(name="COMPANY_CODE")
+  //  public String companyCode;
 
+   // @Column(name="COMPANY_CODE_TYPE")
+   // public String companyCodeType;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     @Column(name="START_MARKETING_DATE")
-    public String startMarketingDate;
+    public Date startMarketingDate;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     @Column(name="END_MARKETING_DATE")
-    public String endMarketingDate;
+    public Date endMarketingDate;
 
     @Column(name="COMPANY_PRODUCT_ID")
     public String companyProductId;
@@ -81,6 +87,7 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="PROVENANCE_DOCUMENT_ID")
     public String provenanceDocumentId;
 
+    /*
     // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
@@ -91,6 +98,20 @@ public class ProductCompany extends ProductCommonData {
     public Product owner;
 
     public void setOwner(Product product) {
+        this.owner = product;
+    }
+    */
+
+    // Set Parent Class
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_PROVENANCE_ID", referencedColumnName="PRODUCT_PROVENANCE_ID")
+    public ProductProvenance owner;
+
+    public void setOwner(ProductProvenance product) {
         this.owner = product;
     }
 

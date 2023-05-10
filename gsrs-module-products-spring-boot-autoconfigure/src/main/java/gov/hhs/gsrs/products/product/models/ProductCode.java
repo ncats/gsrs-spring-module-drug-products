@@ -52,6 +52,7 @@ public class ProductCode extends ProductCommonData {
     public String jurisdictions;
 
     // Set Parent Class
+    /*
     @Indexable(indexed = false)
     @ParentReference
     @EqualsAndHashCode.Exclude
@@ -61,6 +62,20 @@ public class ProductCode extends ProductCommonData {
     public Product owner;
 
     public void setOwner(Product product) {
+        this.owner = product;
+    }
+     */
+
+    // Set Parent Class
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_PROVENANCE_ID", referencedColumnName = "PRODUCT_PROVENANCE_ID")
+    public ProductProvenance owner;
+
+    public void setOwner(ProductProvenance product) {
         this.owner = product;
     }
 
