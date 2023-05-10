@@ -15,8 +15,11 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -33,9 +36,40 @@ public class Product extends ProductCommonData {
     @Column(name="PRODUCT_ID")
     public Long id;
 
-    @Column(name="SOURCE")
-    public String source;
+    @Column(name="PHARMACEDICAL_DOSAGE_FORM")
+    public String pharmacedicalDosageForm;
 
+    @Column(name="ROUTE_OF_ADMINISTRATION")
+    public String routeAdmin;
+
+    @Column(name="UNIT_PRESENTATION")
+    public String unitPresentation;
+
+    @Column(name="COUNTRY_CODE")
+    public String countryCode;
+
+    @Column(name="LANGUAGE")
+    public String language;
+
+    @Column(name="SHELF_LIFE")
+    public String shelfLife;
+
+    @Column(name="STORAGE_CONDITIONS")
+    public String storageConditions;
+
+    @Column(name="NUMBER_OF_MANU_ITEM")
+    public String numberOfManufactureItem;
+
+    @Column(name="MANUFACTURER_NAME")
+    public String manufacturerName;
+
+    @Column(name="MANUFACTURER_CODE")
+    public String manufacturerCode;
+
+    @Column(name="MANUFACTURER_CODE_TYPE")
+    public String manufacturerCodeType;
+
+    /*
     @Column(name="PUBLIC_DOMAIN")
     public String publicDomain;
 
@@ -48,15 +82,6 @@ public class Product extends ProductCommonData {
     @Column(name="PRODUCT_TYPE")
     public String productType;
 
-    @Column(name="SOURCE_TYPE")
-    public String sourceType;
-
-    @Column(name="UNIT_PRESENTATION")
-    public String unitPresentation;
-
-    @Column(name="ROUTE_OF_ADMINISTRATION")
-    public String routeAdmin;
-
     @Column(name="STATUS")
     public String status;
 
@@ -66,11 +91,14 @@ public class Product extends ProductCommonData {
     @Column(name="PROPRIETARY_NAME")
     public String proprietaryName;
 
-    @Column(name="PHARMACEDICAL_DOSAGE_FORM")
-    public String pharmacedicalDosageForm;
-
     @Column(name="COMPOSE_PRODUCT_NAME")
     public String composeProductName;
+
+    @Column(name="SOURCE")
+    public String source;
+
+    @Column(name="SOURCE_TYPE")
+    public String sourceType;
 
     @Column(name="RELEASE_CHARACTERISTIC")
     public String releaseCharacteristic;
@@ -78,20 +106,8 @@ public class Product extends ProductCommonData {
     @Column(name="STRENGTH_CHARACTERISTIC")
     public String strengthCharacteristic;
 
-    @Column(name="COUNTRY_CODE")
-    public String countryCode;
-
-    @Column(name="LANGUAGE")
-    public String language;
-
     @Column(name="PROVENANCE")
     public String provenance;
-
-    @Column(name="PROVENANCE_PRODUCT_ID")
-    public String provenanceProductId;
-
-    @Column(name="PROVENANCE_DOCUMENT_ID")
-    public String provenanceDocumentId;
 
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
@@ -101,21 +117,46 @@ public class Product extends ProductCommonData {
 
     @Column(name="DEASCHEDULE")
     public String deaschedule;
-
-    @Column(name="SHELF_LIFE")
-    public String shelfLife;
-
-    @Column(name="STORAGE_CONDITIONS")
-    public String storageConditions;
-
-    @Column(name="PRODUCT_URL")
-    public String productUrl;
+    */
 
     // get Id
     public Long getId() {
         return id;
     }
 
+    // Set Child Class
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductProvenance> productProvenances = new ArrayList<ProductProvenance>();
+
+    public void setProductProvenances(List<ProductProvenance> productProvenances) {
+        this.productProvenances = productProvenances;
+        if(productProvenances != null) {
+            for (ProductProvenance prod : productProvenances)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+    // Set Child Class
+    @ToString.Exclude
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductComponent> productManufactureItems = new ArrayList<ProductComponent>();
+
+    public void setProductManufactureItems(List<ProductComponent> productManufactureItems) {
+        this.productManufactureItems = productManufactureItems;
+        if (productManufactureItems != null) {
+            for (ProductComponent prod : productManufactureItems)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+    /*
     // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -147,7 +188,10 @@ public class Product extends ProductCommonData {
             }
         }
     }
+    */
 
+
+    /*
     // Set Child Class
     @ToString.Exclude
     @LazyCollection(LazyCollectionOption.FALSE)
@@ -179,21 +223,5 @@ public class Product extends ProductCommonData {
             }
         }
     }
-
-    // Set Child Class
-    @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
-    public List<ProductComponent> productManufactureItems = new ArrayList<ProductComponent>();
-
-    public void setProductManufactureItems(List<ProductComponent> productManufactureItems) {
-        this.productManufactureItems = productManufactureItems;
-        if (productManufactureItems != null) {
-            for (ProductComponent prod : productManufactureItems)
-            {
-                prod.setOwner(this);
-            }
-        }
-    }
-
+    */
 }

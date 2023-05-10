@@ -36,7 +36,17 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_TYPE")
     public String productNameType;
 
+    @Column(name="JURISDICTIONS")
+    public String jurisdictions;
+
+    @Column(name="LANGUAGE")
+    public String language;
+
+    @Column(name="DISPLAY_NAME")
+    public Boolean displayName;
+
     // Set Parent Class
+    /*
     @Indexable(indexed=false)
     @ParentReference
     @EqualsAndHashCode.Exclude
@@ -46,6 +56,20 @@ public class ProductName extends ProductCommonData {
     public Product owner;
 
     public void setOwner(Product product) {
+        this.owner = product;
+    }
+    */
+
+    // Set Parent Class
+    @Indexable(indexed=false)
+    @ParentReference
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PRODUCT_PROVENANCE_ID", referencedColumnName = "PRODUCT_PROVENANCE_ID")
+    public ProductProvenance owner;
+
+    public void setOwner(ProductProvenance product) {
         this.owner = product;
     }
 

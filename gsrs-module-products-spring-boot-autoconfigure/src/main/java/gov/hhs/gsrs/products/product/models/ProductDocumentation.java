@@ -20,9 +20,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -33,43 +34,41 @@ import java.util.ArrayList;
 @SingleParent
 @Data
 @Entity
-@Table(name = "SRSCID_PRODUCT_MANUFACTURER")
-public class ProductManufacturer extends ProductCommonData {
+@Table(name = "SRSCID_PRODUCT_DOCUMENTATION")
+public class ProductDocumentation extends ProductCommonData {
 
     @Id
-    @SequenceGenerator(name = "prodManuSeq", sequenceName = "SRSCID_SQ_PRODUCT_MANUFACT_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodManuSeq")
-    @Column(name = "PRODUCT_MANUFACTURER_ID")
+    @SequenceGenerator(name = "prodDocSeq", sequenceName = "SRSCID_SQ_PRODUCT_DOCUMENT_ID", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodDocSeq")
+    @Column(name = "PRODUCT_DOCUMENTATION_ID")
     public Long id;
 
-    @Column(name = "MANUFACTURER_NAME")
-    public String manufacturerName;
+    @Column(name = "DOCUMENT_ID")
+    public String documentId;
 
-    @Column(name = "MANUFACTURER_ROLE")
-    public String manufacturerRole;
+    @Column(name = "DOCUMENT_TYPE")
+    public String documentType;
 
-    @Column(name = "MANUFACTURER_CODE")
-    public String manufacturerCode;
+    @Column(name = "SET_ID_VERSION")
+    public String setIdVersion;
 
-    @Column(name = "MANUFACTURER_CODE_TYPE")
-    public String manufacturerCodeType;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
+    @Column(name="EFFECTIVE_TIME")
+    public Date effectiveTime;
 
-    @Column(name = "MANUFACTURED_ITEM_CODE")
-    public String manufacturedItemCode;
-
-    @Column(name = "MANUFACTURED_ITEM_CODE_TYPE")
-    public String manufacturedItemCodeType;
+    @Column(name = "JURISDICTIONS")
+    public String jurisdictions;
 
     // Set Parent Class
-    @Indexable(indexed=false)
+    @Indexable(indexed = false)
     @ParentReference
     @EqualsAndHashCode.Exclude
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_COMPONENT_ID", referencedColumnName = "PRODUCT_COMPONENT_ID")
-    public ProductComponent owner;
+    @JoinColumn(name = "PRODUCT_PROVENANCE_ID", referencedColumnName = "PRODUCT_PROVENANCE_ID")
+    public ProductProvenance owner;
 
-    public void setOwner(ProductComponent product) {
+    public void setOwner(ProductProvenance product) {
         this.owner = product;
     }
 

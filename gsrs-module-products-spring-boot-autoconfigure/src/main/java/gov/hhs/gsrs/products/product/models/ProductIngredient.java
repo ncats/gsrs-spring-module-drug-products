@@ -89,6 +89,12 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="ORIGINAL_DENOMINATOR_UNIT")
     public String originalDenominatorUnit;
 
+    @Column(name="MANU_INGRED_CATALOG_NUM")
+    public String manufactureIngredientCatalogId;
+
+    @Column(name="MANU_INGREDIENT_URL")
+    public String manufactureIngredientUrl;
+
     // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
