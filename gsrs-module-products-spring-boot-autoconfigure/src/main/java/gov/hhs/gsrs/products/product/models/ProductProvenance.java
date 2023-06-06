@@ -68,6 +68,9 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name = "IS_LISTED")
     public String isListed;
 
+    @Column(name="JURISDICTIONS")
+    public String jurisdictions;
+
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
 
