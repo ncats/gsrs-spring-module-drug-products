@@ -36,9 +36,6 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_TYPE")
     public String productNameType;
 
-    @Column(name="JURISDICTIONS")
-    public String jurisdictions;
-
     @Column(name="LANGUAGE")
     public String language;
 

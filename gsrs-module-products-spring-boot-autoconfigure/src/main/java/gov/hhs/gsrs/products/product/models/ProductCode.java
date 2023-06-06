@@ -48,9 +48,6 @@ public class ProductCode extends ProductCommonData {
     @Column(name = "PRODUCT_CODE_TYPE")
     public String productCodeType;
 
-    @Column(name = "JURISDICTIONS")
-    public String jurisdictions;
-
     // Set Parent Class
     /*
     @Indexable(indexed = false)
