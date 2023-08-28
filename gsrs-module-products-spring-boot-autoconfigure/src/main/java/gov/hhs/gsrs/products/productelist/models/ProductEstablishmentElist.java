@@ -48,7 +48,7 @@ public class ProductEstablishmentElist extends AbstractGsrsEntity {
     @Column(name="FIRM_NAME")
     public String firmName;
 
-    @Column(name="ADDRESS")
+    @Column(name="ADDRESS", length=500)
     public String address;
 
     @Column(name="CITY")
@@ -60,7 +60,7 @@ public class ProductEstablishmentElist extends AbstractGsrsEntity {
     @Column(name="ZIP")
     public String zip;
 
-    @Column(name="COUNTRY")
+    @Column(name="COUNTRY", length=500)
     public String country;
 
     @Column(name="COUNTRY_CODE")

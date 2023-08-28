@@ -51,7 +51,7 @@ public class ProductCompanyAll extends AbstractGsrsEntity {
     @Column(name="NDC_LABELER_CODE")
     public String ndcLabelerCode;
 
-    @Column(name="ADDRESS")
+    @Column(name="ADDRESS", length=500)
     public String address;
 
     @Indexable(facet=true, name= "City")
@@ -65,22 +65,12 @@ public class ProductCompanyAll extends AbstractGsrsEntity {
     @Column(name="ZIP")
     public String zip;
 
-    @Column(name="COUNTRY")
+    @Column(name="COUNTRY", length=500)
     public String country;
 
     @Indexable(suggest = true, facet=true, name="Company Country", sortable = true)
     @Column(name="COUNTRYWITHOUTCODE")
     public String countryWithoutCode;
-
-    /*
-    @Indexable(facet=true, name= "Registrant Name")
-    @Column(name="REGISTRANTNAME")
-    public String registrantName;
-
-    @Indexable(facet=true, name= "Registrant DUNS")
-    @Column(name="REGISTRANTDUNS")
-    public String registrantDuns;
-    */
 
     public ProductCompanyAll () {}
 }

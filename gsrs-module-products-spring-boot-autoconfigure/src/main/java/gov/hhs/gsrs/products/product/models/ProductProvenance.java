@@ -53,7 +53,7 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name = "PRODUCT_STATUS")
     public String productStatus;
 
-    @Column(name = "PRODUCT_TYPE")
+    @Column(name = "PRODUCT_TYPE", length=500)
     public String productType;
 
     @Column(name = "APPLICATION_TYPE")
@@ -68,13 +68,13 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name = "IS_LISTED")
     public String isListed;
 
-    @Column(name="JURISDICTIONS")
+    @Column(name="JURISDICTIONS", length=500)
     public String jurisdictions;
 
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
 
-    @Column(name="MARKETING_CATEGORY_NAME")
+    @Column(name="MARKETING_CATEGORY_NAME", length=500)
     public String marketingCategoryName;
 
     @Column(name="CONTROL_SUBSTANCE_CODE")
@@ -83,10 +83,10 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name="CONTROL_SUBSTANCE_CLASS")
     public String controlSubstanceClass;
 
-    @Column(name="CONTROL_SUBSTANCE_SOURCE")
+    @Column(name="CONTROL_SUBSTANCE_SOURCE", length=500)
     public String controlSubstanceSource;
 
-    @Column(name = "PRODUCT_URL")
+    @Column(name = "PRODUCT_URL", length=500)
     public String productUrl;
 
     // Set Parent Class

@@ -5,20 +5,14 @@ import java.io.Serializable;
 
 public class ProductInactiveCompositePrimaryKeyId implements Serializable {
 
-    @Column(name="PRODUCTID")
+    @Column(name="PRODUCTID", length = 100)
     private String productId;
 
-    @Column(name="DOCUMENTID")
+    @Column(name="DOCUMENTID", length = 100)
     private String documentId;
 
-    @Column(name="SUBSTANCENAME")
+    @Column(name="SUBSTANCENAME", length=400)
     private String name;
-
-   // @Column(name="STRENGTHNUMBER")
-   // private String strengthNumber;
-
-    //@Column(name="ORIGINALNUMERATORNUMBER")
-    //private String originalNumeratorNumber;
 
     public ProductInactiveCompositePrimaryKeyId() {};
 
@@ -27,8 +21,6 @@ public class ProductInactiveCompositePrimaryKeyId implements Serializable {
         this.productId = productId;
         this.documentId = documentId;
         this.name = name;
-     //   this.strengthNumber = strengthNumber;
-      //  this.originalNumeratorNumber = originalNumeratorNumber;
     }
 
     // equals() and hashCode()
@@ -41,9 +33,6 @@ public class ProductInactiveCompositePrimaryKeyId implements Serializable {
 
         if (!productId.equals(that.productId)) return false;
         if (!documentId.equals(that.documentId)) return false;
-    //    if (!name.equals(that.name)) return false;
-
-       // if (!strengthNumber.equals(that.strengthNumber)) return false;
         return (name.equals(that.name));
     }
 
@@ -52,8 +41,6 @@ public class ProductInactiveCompositePrimaryKeyId implements Serializable {
         int result =  productId.hashCode();
         result = 31 * result + (documentId != null ? documentId.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-      //  result = 31 * result + (strengthNumber != null ? strengthNumber.hashCode() : 0);
-      //  result = 31 * result + (originalNumeratorNumber != null ? originalNumeratorNumber.hashCode() : 0);
         return (int) result;
     }
 
