@@ -72,15 +72,5 @@ public class ProductCompanyAll extends AbstractGsrsEntity {
     @Column(name="COUNTRYWITHOUTCODE")
     public String countryWithoutCode;
 
-    /*
-    @Indexable(facet=true, name= "Registrant Name")
-    @Column(name="REGISTRANTNAME")
-    public String registrantName;
-
-    @Indexable(facet=true, name= "Registrant DUNS")
-    @Column(name="REGISTRANTDUNS")
-    public String registrantDuns;
-    */
-
     public ProductCompanyAll () {}
 }

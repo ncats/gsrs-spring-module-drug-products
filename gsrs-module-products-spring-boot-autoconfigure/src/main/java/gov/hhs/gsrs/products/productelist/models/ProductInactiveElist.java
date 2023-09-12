@@ -42,8 +42,6 @@ public class ProductInactiveElist extends AbstractGsrsEntity {
     @Column(name="STRENGTHNUMBER")
     public String strengthNumber;
 
-    //public String originalNumeratorNumber;
-
     @Column(name="STRENGTHDENOMINATORUNIT")
     public String strengthDenominatorUnit;
 
