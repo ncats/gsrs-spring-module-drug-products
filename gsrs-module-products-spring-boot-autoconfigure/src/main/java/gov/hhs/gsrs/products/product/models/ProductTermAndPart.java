@@ -24,10 +24,10 @@ public class ProductTermAndPart extends ProductCommonData {
     @Column(name="PRODUCT_TERM_ID")
     public Long id;
 
-    @Column(name="PRODUCT_TERM", length=500)
+    @Column(name="PRODUCT_TERM")
     public String productTerm;
 
-    @Column(name="PRODUCT_TERM_PART", length=500)
+    @Column(name="PRODUCT_TERM_PART")
     public String productTermPart;
 
     // Set Parent Class

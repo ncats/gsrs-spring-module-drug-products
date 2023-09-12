@@ -36,7 +36,7 @@ public class Product extends ProductCommonData {
     @Column(name="PRODUCT_ID")
     public Long id;
 
-    @Column(name="PHARMACEDICAL_DOSAGE_FORM", length=500)
+    @Column(name="PHARMACEDICAL_DOSAGE_FORM")
     public String pharmacedicalDosageForm;
 
     @Column(name="ROUTE_OF_ADMINISTRATION")
@@ -45,7 +45,7 @@ public class Product extends ProductCommonData {
     @Column(name="UNIT_PRESENTATION")
     public String unitPresentation;
 
-    @Column(name="COUNTRY_CODE", length=500)
+    @Column(name="COUNTRY_CODE")
     public String countryCode;
 
     @Column(name="LANGUAGE")
@@ -60,7 +60,7 @@ public class Product extends ProductCommonData {
     @Column(name="NUMBER_OF_MANU_ITEM")
     public String numberOfManufactureItem;
 
-    @Column(name="MANUFACTURER_NAME", length=500)
+    @Column(name="MANUFACTURER_NAME")
     public String manufacturerName;
 
     @Column(name="MANUFACTURER_CODE")

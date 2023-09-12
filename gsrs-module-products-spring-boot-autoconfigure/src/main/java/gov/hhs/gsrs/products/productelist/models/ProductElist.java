@@ -54,13 +54,13 @@ public class ProductElist implements Serializable {
     @Column(name="PRODUCTNDC")
     public String productNDC;
 
-    @Column(name="PROPRIETARYNAME", length=1000)
+    @Column(name="PROPRIETARYNAME")
     public String productName;
 
-    @Column(name="NONPROPRIETARYNAME", length=1000)
+    @Column(name="NONPROPRIETARYNAME")
     public String nonProprietaryName;
 
-    @Column(name="LABELERNAME", length=500)
+    @Column(name="LABELERNAME")
     public String labelerName;
 
     @Column(name="LABELERDUNS")
@@ -75,10 +75,10 @@ public class ProductElist implements Serializable {
     @Column(name="MARKETINGCATEGORYCODE")
     public String marketingCategoryCode;
 
-    @Column(name="MARKETINGCATEGORYNAME", length=500)
+    @Column(name="MARKETINGCATEGORYNAME")
     public String marketingCategoryName;
 
-    @Column(name="DOSAGEFORMNAME", length=1000)
+    @Column(name="DOSAGEFORMNAME")
     public String dosageFormName;
 
     @Column(name="PRODUCTTYPENAME")

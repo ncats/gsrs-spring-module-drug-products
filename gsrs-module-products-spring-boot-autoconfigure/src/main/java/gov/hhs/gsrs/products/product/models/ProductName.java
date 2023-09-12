@@ -30,7 +30,7 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_ID")
     public Long id;
 
-    @Column(name="PRODUCT_NAME", length=1000)
+    @Column(name="PRODUCT_NAME")
     public String productName;
 
     @Column(name="PRODUCT_NAME_TYPE")

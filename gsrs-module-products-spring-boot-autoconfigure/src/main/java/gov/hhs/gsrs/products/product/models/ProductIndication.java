@@ -42,10 +42,10 @@ public class ProductIndication extends ProductCommonData {
     @Column(name = "PRODUCT_INDICATION_ID")
     public Long id;
 
-    @Column(name = "INDICATION", length=4000)
+    @Column(name = "INDICATION")
     public String indication;
 
-    @Column(name = "INDICATION_TEXT", length=4000)
+    @Column(name = "INDICATION_TEXT")
     public String indicationText;
 
     @Column(name = "INDICATION_CODE")
@@ -57,13 +57,13 @@ public class ProductIndication extends ProductCommonData {
     @Column(name = "INDICATION_GROUP")
     public String indicationGroup;
 
-    @Column(name = "INDICATION_SOURCE", length=500)
+    @Column(name = "INDICATION_SOURCE")
     public String indicationSource;
 
     @Column(name = "INDICATION_SOURCE_TYPE")
     public String indicationSourceType;
 
-    @Column(name = "INDICATION_SOURCE_URL", length=500)
+    @Column(name = "INDICATION_SOURCE_URL")
     public String indicationSourceUrl;
 
     // Set Parent Class

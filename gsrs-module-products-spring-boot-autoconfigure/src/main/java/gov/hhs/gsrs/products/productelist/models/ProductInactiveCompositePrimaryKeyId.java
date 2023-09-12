@@ -5,13 +5,13 @@ import java.io.Serializable;
 
 public class ProductInactiveCompositePrimaryKeyId implements Serializable {
 
-    @Column(name="PRODUCTID", length = 100)
+    @Column(name="PRODUCTID")
     private String productId;
 
-    @Column(name="DOCUMENTID", length = 100)
+    @Column(name="DOCUMENTID")
     private String documentId;
 
-    @Column(name="SUBSTANCENAME", length=400)
+    @Column(name="SUBSTANCENAME")
     private String name;
 
     public ProductInactiveCompositePrimaryKeyId() {};

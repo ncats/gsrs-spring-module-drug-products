@@ -42,22 +42,22 @@ public class ProductManufacturer extends ProductCommonData {
     @Column(name = "PRODUCT_MANUFACTURER_ID")
     public Long id;
 
-    @Column(name = "MANUFACTURER_NAME", length=500)
+    @Column(name = "MANUFACTURER_NAME")
     public String manufacturerName;
 
-    @Column(name = "MANUFACTURER_ROLE", length=500)
+    @Column(name = "MANUFACTURER_ROLE")
     public String manufacturerRole;
 
-    @Column(name = "MANUFACTURER_CODE", length=500)
+    @Column(name = "MANUFACTURER_CODE")
     public String manufacturerCode;
 
-    @Column(name = "MANUFACTURER_CODE_TYPE", length=500)
+    @Column(name = "MANUFACTURER_CODE_TYPE")
     public String manufacturerCodeType;
 
-    @Column(name = "MANUFACTURED_ITEM_CODE", length=500)
+    @Column(name = "MANUFACTURED_ITEM_CODE")
     public String manufacturedItemCode;
 
-    @Column(name = "MANUFACTURED_ITEM_CODE_TYPE", length=500)
+    @Column(name = "MANUFACTURED_ITEM_CODE_TYPE")
     public String manufacturedItemCodeType;
 
     // Set Parent Class

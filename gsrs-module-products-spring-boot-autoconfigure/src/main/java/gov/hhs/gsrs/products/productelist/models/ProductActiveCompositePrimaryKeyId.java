@@ -5,22 +5,22 @@ import java.io.Serializable;
 
 public class ProductActiveCompositePrimaryKeyId implements Serializable {
 
-    @Column(name="PRODUCTID", length = 100)
+    @Column(name="PRODUCTID")
     private String productId;
 
-    @Column(name="DOCUMENTID", length = 100)
+    @Column(name="DOCUMENTID")
     private String documentId;
 
-    @Column(name="SUBSTANCENAME", length=400)
+    @Column(name="SUBSTANCENAME")
     private String name;
 
-    @Column(name="STRENGTHNUMBER", length = 50)
+    @Column(name="STRENGTHNUMBER")
     private String strengthNumber;
 
-    @Column(name="ORIGINALNUMERATORNUMBER", length = 50)
+    @Column(name="ORIGINALNUMERATORNUMBER")
     private String originalNumeratorNumber;
 
-    @Column(name="STRENGTHDENOMINATORUNIT", length = 50)
+    @Column(name="STRENGTHDENOMINATORUNIT")
     private String strengthDenominatorUnit;
 
     public ProductActiveCompositePrimaryKeyId() {};

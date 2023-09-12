@@ -48,19 +48,19 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="CHAR_NUM_FRAGMENTS")
     public String charNumFragments;
 
-    @Column(name="DOSAGE_FORM", length=500)
+    @Column(name="DOSAGE_FORM")
     public String dosageForm;
 
-    @Column(name="DOSAGE_FORM_CODE", length=500)
+    @Column(name="DOSAGE_FORM_CODE")
     public String dosageFormCode;
 
     @Column(name="DOSAGE_FORM_CODE_TYPE")
     public String dosageFormCodeType;
 
-    @Column(name="DOSAGE_FORM_NOTE", length=4000)
+    @Column(name="DOSAGE_FORM_NOTE")
     public String dosageFormNote;
 
-    @Column(name="COMPOSITION_NOTE", length=4000)
+    @Column(name="COMPOSITION_NOTE")
     public String compositionNote;
 
     @Column(name="ROUTE_OF_ADMINISTRATION")

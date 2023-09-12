@@ -31,10 +31,10 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="PRODUCT_COMPANY_ID")
     public Long id;
 
-    @Column(name="COMPANY_NAME", length=500)
+    @Column(name="COMPANY_NAME")
     public String companyName;
 
-    @Column(name="COMPANY_ADDRESS", length=1000)
+    @Column(name="COMPANY_ADDRESS")
     public String companyAddress;
 
     @Column(name="COMPANY_CITY")
@@ -78,13 +78,13 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="END_MARKETING_DATE")
     public Date endMarketingDate;
 
-    @Column(name="COMPANY_PRODUCT_ID", length=500)
+    @Column(name="COMPANY_PRODUCT_ID")
     public String companyProductId;
 
-    @Column(name="COMPANY_DOCUMENT_ID", length=500)
+    @Column(name="COMPANY_DOCUMENT_ID")
     public String companyDocumentId;
 
-    @Column(name="PROVENANCE_DOCUMENT_ID", length=500)
+    @Column(name="PROVENANCE_DOCUMENT_ID")
     public String provenanceDocumentId;
 
     /*

@@ -39,16 +39,16 @@ public class ProductInactiveElist extends AbstractGsrsEntity {
     @Id
     public String name;
 
-    @Column(name="STRENGTHNUMBER", length = 50)
+    @Column(name="STRENGTHNUMBER")
     public String strengthNumber;
 
-    @Column(name="STRENGTHDENOMINATORUNIT", length = 50)
+    @Column(name="STRENGTHDENOMINATORUNIT")
     public String strengthDenominatorUnit;
 
-    @Column(name="STRENGTHNUMERATORUNIT", length = 50)
+    @Column(name="STRENGTHNUMERATORUNIT")
     public String strengthNumeratorUnit;
 
-    @Column(name="SUBSTANCEUNII", length = 100)
+    @Column(name="SUBSTANCEUNII")
     public String unii;
 
     public ProductInactiveElist() {}
