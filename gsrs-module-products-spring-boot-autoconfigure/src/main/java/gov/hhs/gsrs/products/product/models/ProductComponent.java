@@ -72,7 +72,7 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="UNIT")
     public String unit;
 
-    @Column(name="PROVENANCE_MANUFACTURE_ITEM_ID", length=500)
+    @Column(name="PROVENANCE_MANUFACTURE_ITEM_ID")
     public String provenanceManufactureItemId;
 
     // Set Parent class
