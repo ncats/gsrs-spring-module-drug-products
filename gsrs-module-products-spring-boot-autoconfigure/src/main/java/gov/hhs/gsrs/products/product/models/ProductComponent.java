@@ -48,19 +48,19 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="CHAR_NUM_FRAGMENTS")
     public String charNumFragments;
 
-    @Column(name="DOSAGE_FORM")
+    @Column(name="DOSAGE_FORM", length=500)
     public String dosageForm;
 
-    @Column(name="DOSAGE_FORM_CODE")
+    @Column(name="DOSAGE_FORM_CODE", length=500)
     public String dosageFormCode;
 
     @Column(name="DOSAGE_FORM_CODE_TYPE")
     public String dosageFormCodeType;
 
-    @Column(name="DOSAGE_FORM_NOTE")
+    @Column(name="DOSAGE_FORM_NOTE", length=4000)
     public String dosageFormNote;
 
-    @Column(name="COMPOSITION_NOTE")
+    @Column(name="COMPOSITION_NOTE", length=4000)
     public String compositionNote;
 
     @Column(name="ROUTE_OF_ADMINISTRATION")
@@ -72,7 +72,7 @@ public class ProductComponent extends ProductCommonData {
     @Column(name="UNIT")
     public String unit;
 
-    @Column(name="PROVENANCE_MANUFACTURE_ITEM_ID")
+    @Column(name="PROVENANCE_MANUFACTURE_ITEM_ID", length=500)
     public String provenanceManufactureItemId;
 
     // Set Parent class
