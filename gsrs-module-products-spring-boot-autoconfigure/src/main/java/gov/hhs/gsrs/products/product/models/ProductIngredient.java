@@ -24,7 +24,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="PRODUCT_INGRED_ID")
     public Long id;
 
-    @Column(name="APPLICANT_INGRED_NAME")
+    @Column(name="APPLICANT_INGRED_NAME", length=1000)
     public String applicantIngredName;
 
     @Indexable(facet = true, name = "Substance Key")
@@ -50,7 +50,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="HIGH")
     public Double high;
 
-    @Column(name="MANUFACTURER")
+    @Column(name="MANUFACTURER", length=500)
     public String manufacturer;
 
     @Column(name="LOT_NO")
@@ -65,7 +65,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="RELEASE_CHARACTERISTIC")
     public String releaseCharacteristic;
 
-    @Column(name="NOTES")
+    @Column(name="NOTES", length=4000)
     public String notes;
 
     @Column(name="GRADE")
@@ -92,7 +92,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="MANU_INGRED_CATALOG_NUM")
     public String manufactureIngredientCatalogId;
 
-    @Column(name="MANU_INGREDIENT_URL")
+    @Column(name="MANU_INGREDIENT_URL", length=500)
     public String manufactureIngredientUrl;
 
     // Set Parent Class

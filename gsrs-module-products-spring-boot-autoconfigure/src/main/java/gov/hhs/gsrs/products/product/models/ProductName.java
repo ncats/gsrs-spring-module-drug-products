@@ -30,7 +30,7 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_ID")
     public Long id;
 
-    @Column(name="PRODUCT_NAME")
+    @Column(name="PRODUCT_NAME", length=1000)
     public String productName;
 
     @Column(name="PRODUCT_NAME_TYPE")
@@ -41,7 +41,6 @@ public class ProductName extends ProductCommonData {
 
     @Column(name="DISPLAY_NAME")
     public Boolean displayName;
-
     // Set Parent Class
     /*
     @Indexable(indexed=false)

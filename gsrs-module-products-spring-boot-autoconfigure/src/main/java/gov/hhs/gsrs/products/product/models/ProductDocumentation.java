@@ -43,10 +43,10 @@ public class ProductDocumentation extends ProductCommonData {
     @Column(name = "PRODUCT_DOCUMENTATION_ID")
     public Long id;
 
-    @Column(name = "DOCUMENT_ID")
+    @Column(name = "DOCUMENT_ID", length=500)
     public String documentId;
 
-    @Column(name = "DOCUMENT_TYPE")
+    @Column(name = "DOCUMENT_TYPE", length=500)
     public String documentType;
 
     @Column(name = "SET_ID_VERSION")
@@ -56,7 +56,7 @@ public class ProductDocumentation extends ProductCommonData {
     @Column(name="EFFECTIVE_TIME")
     public Date effectiveTime;
 
-    @Column(name = "JURISDICTIONS")
+    @Column(name = "JURISDICTIONS", length=500)
     public String jurisdictions;
 
     // Set Parent Class
