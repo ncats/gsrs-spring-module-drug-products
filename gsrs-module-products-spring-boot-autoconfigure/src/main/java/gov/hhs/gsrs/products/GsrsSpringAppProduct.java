@@ -1,8 +1,6 @@
 package gov.hhs.gsrs.products;
 
 import gov.hhs.gsrs.products.product.EnableProduct;
-import gov.hhs.gsrs.products.productall.EnableProductAll;
-import gov.hhs.gsrs.products.productelist.EnableProductElist;
 
 import gsrs.*;
 
@@ -21,8 +19,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @EnableProduct
-@EnableProductAll
-@EnableProductElist
 
 @SpringBootApplication
 @EnableGsrsApi(indexValueMakerDetector = EnableGsrsApi.IndexValueMakerDetector.CONF)

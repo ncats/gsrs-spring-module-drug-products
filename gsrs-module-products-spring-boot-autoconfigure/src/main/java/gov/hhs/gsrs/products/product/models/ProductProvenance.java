@@ -12,10 +12,6 @@ import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -28,6 +24,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -47,24 +47,31 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name = "PRODUCT_PROVENANCE_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name="Provenance")
     @Column(name = "PROVENANCE")
     public String provenance;
 
+    @Indexable(facet=true, name="Product Status", sortable = true)
     @Column(name = "PRODUCT_STATUS")
     public String productStatus;
 
+    @Indexable(suggest = true, facet=true, name="Product Type", sortable = true)
     @Column(name = "PRODUCT_TYPE", length=500)
     public String productType;
 
+    @Indexable(suggest = true, facet=true, name="Application Type")
     @Column(name = "APPLICATION_TYPE")
     public String applicationType;
 
+    @Indexable(suggest = true, facet=true, name="Application Number")
     @Column(name = "APPLICATION_NUMBER")
     public String applicationNumber;
 
+    @Indexable(suggest = true, facet=true, name= "Public Domain", sortable=true)
     @Column(name = "PUBLIC_DOMAIN")
     public String publicDomain;
 
+    @Indexable(facet=true, name="Is Listed")
     @Column(name = "IS_LISTED")
     public String isListed;
 
@@ -74,6 +81,7 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
 
+    @Indexable(suggest = true, facet=true, name="Marketing Category Name")
     @Column(name="MARKETING_CATEGORY_NAME", length=500)
     public String marketingCategoryName;
 

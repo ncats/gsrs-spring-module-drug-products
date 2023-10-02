@@ -1,6 +1,6 @@
 package gov.hhs.gsrs.products.autoconfigure;
 
-import gov.hhs.gsrs.products.productall.services.SubstanceModuleService;
+import gov.hhs.gsrs.products.product.services.SubstanceModuleService;
 
 import gsrs.EnableGsrsApi;
 import gsrs.EnableGsrsJpaEntities;

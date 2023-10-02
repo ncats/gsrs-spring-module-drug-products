@@ -100,14 +100,6 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
         return null;
     }
 
-    /*
-    @Override
-    protected Application fixUpdatedIfNeeded(Application oldEntity, Application updatedEntity) {
-        //force the "owner" on all the updated fields to point to the old version so the uuids are correct
-        return updatedEntity;
-    }
-    */
-
     @Override
     protected Product fromUpdatedJson(JsonNode json) throws IOException {
         //TODO should we make any edits to remove fields?
@@ -152,4 +144,8 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
         return Optional.empty();
     }
 
+    public List<String> findProvenanceBySubstance(String substanceId) {
+        List<String> provenanceList = repository.findProvenanceBySubstance(substanceId);
+        return provenanceList;
+    }
 }

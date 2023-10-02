@@ -4,11 +4,11 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
@@ -31,6 +31,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="SUBSTANCE_KEY")
     public String substanceKey;
 
+    @Indexable(facet = true, name = "Substance Key")
     @Column(name="SUBSTANCE_KEY_TYPE")
     public String substanceKeyType;
 
@@ -56,6 +57,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="LOT_NO")
     public String ingredLotNo;
 
+    @Indexable(suggest = true, facet=true, name= "Ingredient Type", sortable = true)
     @Column(name="INGREDIENT_TYPE")
     public String ingredientType;
 
