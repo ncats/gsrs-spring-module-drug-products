@@ -18,8 +18,11 @@ import java.util.*;
 
 public class ProductExporterFactory implements ExporterFactory {
 
-    @PersistenceContext(unitName =  DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
-    public EntityManager entityManager;
+  @PersistenceContext(unitName =  DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
+  public EntityManager entityManager;
+
+  //  @Autowire
+  //  public EntityManagerSubstanceKeyResolver substanceKeyResolver;
 
     private static final Set<OutputFormat> FORMATS;
 

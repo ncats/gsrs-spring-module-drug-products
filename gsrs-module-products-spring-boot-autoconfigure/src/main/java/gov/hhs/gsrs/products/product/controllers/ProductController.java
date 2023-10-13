@@ -1,10 +1,10 @@
 package gov.hhs.gsrs.products.product.controllers;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import gov.hhs.gsrs.products.ProductDataSourceConfig;
 import gov.hhs.gsrs.products.product.models.*;
 import gov.hhs.gsrs.products.product.services.*;
 import gov.hhs.gsrs.products.product.searcher.LegacyProductSearcher;
+import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 
 import gov.nih.ncats.common.util.Unchecked;
 import gsrs.autoconfigure.GsrsExportConfiguration;
@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,6 +52,9 @@ import javax.persistence.EntityManager;
 @ExposesResourceFor(Product.class)
 @GsrsRestApiController(context = ProductEntityService.CONTEXT, idHelper = IdHelpers.NUMBER)
 public class ProductController extends EtagLegacySearchEntityController<ProductController, Product, Long> {
+
+    //@Autowired
+    //private SubstanceApiService substanceApiService;
 
     @Autowired
     private ETagRepository eTagRepository;

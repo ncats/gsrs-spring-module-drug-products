@@ -25,5 +25,5 @@ public class ProductLotDTO {
     private Date expiryDate;
     private Date manufactureDate;
 
-    private List<ProductIngredientDTO> productIngredients = new ArrayList();
+    private final List<ProductIngredientDTO> productIngredients = new ArrayList();
 }

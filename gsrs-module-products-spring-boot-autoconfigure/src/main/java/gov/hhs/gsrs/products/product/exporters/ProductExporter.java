@@ -418,6 +418,8 @@ public class ProductExporter implements Exporter<Product> {
 
                             //TODO: replace with SubstanceKeyResolver for this later
                             //Get Substance Object by Substance Key
+                          //  Substance s = substanceKeyResolver.substanceEMResolver(substanckey, substanceKeyType);
+                            //or else null
                             Query query = entityManager.createQuery("SELECT s FROM Substance s JOIN s.codes c WHERE c.type = 'PRIMARY' and c.code=:subKey");
                             query.setParameter("subKey", ingred.substanceKey);
                             Substance sub = (Substance) query.getSingleResult();

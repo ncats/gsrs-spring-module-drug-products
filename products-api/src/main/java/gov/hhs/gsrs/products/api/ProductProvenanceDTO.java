@@ -34,9 +34,9 @@ public class ProductProvenanceDTO {
     private String controlSubstanceSource;
     private String productUrl;
 
-    private List<ProductNameDTO> productNames = new ArrayList();
-    private List<ProductCodeDTO> productCodes = new ArrayList();
-    private List<ProductCompanyDTO> productCompanies = new ArrayList();
-    private List<ProductDocumentationDTO> productDocumentations = new ArrayList();
-    private List<ProductIndicationDTO> productIndications = new ArrayList();
+    private final List<ProductNameDTO> productNames = new ArrayList();
+    private final List<ProductCodeDTO> productCodes = new ArrayList();
+    private final List<ProductCompanyDTO> productCompanies = new ArrayList();
+    private final List<ProductDocumentationDTO> productDocumentations = new ArrayList();
+    private final List<ProductIndicationDTO> productIndications = new ArrayList();
 }

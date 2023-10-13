@@ -24,5 +24,5 @@ public class ProductNameDTO {
     private String language;
     private Boolean displayName;
 
-    private List<ProductTermAndPartDTO> productTermAndParts = new ArrayList();
+    private final List<ProductTermAndPartDTO> productTermAndParts = new ArrayList();
 }

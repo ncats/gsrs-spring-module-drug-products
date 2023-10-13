@@ -7,7 +7,7 @@ import ix.core.validator.GinasProcessingMessage;
 import ix.core.validator.ValidatorCallback;
 import ix.ginas.utils.validation.ValidatorPlugin;
 
-public class RequiredFieldNonNullValidator implements ValidatorPlugin<Product> {
+public class ProductValidator implements ValidatorPlugin<Product> {
 
     @Override
     public boolean supports(Product newValue, Product oldValue, ValidatorConfig.METHOD_TYPE methodType) {

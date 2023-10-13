@@ -4,6 +4,8 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -18,6 +20,9 @@ import javax.persistence.*;
 @Table(name="SRSCID_PRODUCT_INGREDIENT")
 public class ProductIngredient extends ProductCommonData {
 
+    @Value("${substance.linking.substanceKeyType}")
+    static String substanceKeyTypeConfig;
+
     @Id
     @SequenceGenerator(name="prodIngredSeq", sequenceName="SRSCID_SQ_PRODUCT_INGRED_ID",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodIngredSeq")
@@ -27,13 +32,18 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="APPLICANT_INGRED_NAME", length=1000)
     public String applicantIngredName;
 
-    @Indexable(facet = true, name = "Substance Key")
+    /*@Indexable(facet = true, name = "Substance Key")
     @Column(name="SUBSTANCE_KEY")
-    public String substanceKey;
+    public String substanceKey;*/
 
     @Indexable(facet = true, name = "Substance Key")
     @Column(name="SUBSTANCE_KEY_TYPE")
-    public String substanceKeyType;
+
+    public String substanceKeyType = substanceKeyTypeConfig;
+
+    public void setSubstanceKeyType(String substanceKeyType) {
+        this.substanceKeyType = substanceKeyType;
+    }
 
     @Indexable
     @Column(name="BOS_SUBSTANCE_KEY")
@@ -97,6 +107,12 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name="MANU_INGREDIENT_URL", length=500)
     public String manufactureIngredientUrl;
 
+    @Column(name="substance_key")
+    public String substanceKey;
+    public void setSubstanceKey(String substanceKey) {
+        this.substanceKey = substanceKey;
+    }
+
     // Set Parent Class
     @Indexable(indexed=false)
     @ParentReference
@@ -109,6 +125,7 @@ public class ProductIngredient extends ProductCommonData {
     public void setOwner(ProductLot productLot) {
         this.owner = productLot;
     }
+
 
 }
 

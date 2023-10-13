@@ -31,7 +31,7 @@ public class ProductDTO {
     private String manufacturerCode;
     private String manufacturerCodeType;
 
-    private List<ProductProvenanceDTO> productProvenances = new ArrayList();
-    private List<ProductManufactureItemDTO> productManufactureItems = new ArrayList();
+    private final List<ProductProvenanceDTO> productProvenances = new ArrayList();
+    private final List<ProductManufactureItemDTO> productManufactureItems = new ArrayList();
 }
 

@@ -36,6 +36,6 @@ public class ProductCompanyDTO {
     private String companyDocumentId;
     private String provenanceDocumentId;
 
-    private List<ProductCompanyCodeDTO> productCompanyCodes = new ArrayList();
+    private final List<ProductCompanyCodeDTO> productCompanyCodes = new ArrayList();
 
 }

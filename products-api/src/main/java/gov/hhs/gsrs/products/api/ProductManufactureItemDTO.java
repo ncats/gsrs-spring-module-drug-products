@@ -35,6 +35,6 @@ public class ProductManufactureItemDTO {
     private String unit;
     private String provenanceManufactureItemId;
 
-    private List<ProductLotDTO> productLots = new ArrayList();
-    private List<ProductManufacturerDTO> productManufacturers = new ArrayList();
+    private final List<ProductLotDTO> productLots = new ArrayList();
+    private final List<ProductManufacturerDTO> productManufacturers = new ArrayList();
 }

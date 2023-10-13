@@ -11,16 +11,6 @@
 
     <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
 
-    <!--
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <java.version>1.8</java.version>
-        <gsrs.version>0.7.5-SNAPSHOT</gsrs.version>
-        <gsrs.substance.version>0.6.8-SNAPSHOT</gsrs.substance.version>
-    </properties>
-    -->
-
     <repositories>
         <repository>
             <id>oss.sonatype.org-snapshot</id>
@@ -35,33 +25,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>gov.nih.ncats</groupId>
-            <artifactId>ncats-common</artifactId>
-            <version>0.3.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <!-- SPRING BOOT Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -194,7 +157,36 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- NCATS Dependencies -->
+
+        <dependency>
+            <groupId>gov.nih.ncats</groupId>
+            <artifactId>ncats-common</artifactId>
+            <version>0.3.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>gsrs-spring-boot-starter</artifactId>
@@ -330,6 +322,67 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- TO BE REMOVED -->
+        <!-- SUBSTANCE MODDULE Dependencies -->
+        <dependency>
+            <groupId>gov.nih.ncats</groupId>
+            <artifactId>gsrs-module-substances-spring-boot-starter</artifactId>
+            <version>${gsrs.substance.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- SUBSTANCE MODULE API and DTO Dependencies -->
+        <dependency>
+            <groupId>gov.nih.ncats</groupId>
+            <artifactId>gsrs-module-substances-api</artifactId>
+            <version>${gsrs.substance.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.nih.ncats</groupId>
+            <artifactId>gsrs-module-substances-dto</artifactId>
+            <version>${gsrs.substance.version}</version>
+        </dependency>
+
+        <!-- DATABASE Dependencies  TO BE MOVED TO GSRS-CI? -->
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.6.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- LOMBOK Dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -357,6 +410,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <!-- JAVAX Dependencies -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -385,63 +439,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- TO BE REMOVED -->
-        <dependency>
-            <groupId>gov.nih.ncats</groupId>
-            <artifactId>gsrs-module-substances-spring-boot-starter</artifactId>
-            <version>${gsrs.substance.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- DATABASE DEPENDENCIES  TO BE MOVED TO GSRS-CI? -->
-        <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc8</artifactId>
-            <version>19.6.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-devtools</artifactId>
-        <scope>runtime</scope>
-        <optional>true</optional>
-       </dependency>
 
-        -->
     </dependencies>
 
 </project>
