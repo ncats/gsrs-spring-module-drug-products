@@ -1,17 +1,19 @@
 package gov.hhs.gsrs.products.product.exporters;
 
 import gov.hhs.gsrs.products.product.models.*;
+import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 
 import ix.core.EntityFetcher;
 import ix.ginas.exporters.*;
 import ix.ginas.models.v1.Substance;
+import ix.ginas.models.v1.Relationship;
+import ix.ginas.models.v1.SubstanceReference;
 
 import java.io.IOException;
 import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 enum ProdDefaultColumns implements Column {
@@ -19,6 +21,7 @@ enum ProdDefaultColumns implements Column {
     SUBSTANCE_NAME,
     APPROVAL_ID,
     SUBSTANCE_KEY,
+    SUBSTANCE_KEY_TYPE,
     INGREDIENT_TYPE,
     ACTIVE_MOIETY_NAME,
     ACTIVE_MOIETY_UNII,
@@ -46,19 +49,19 @@ enum ProdDefaultColumns implements Column {
 @Slf4j
 public class ProductExporter implements Exporter<Product> {
 
-    static final String CONST_ACTIVE_MOIETY = "ACTIVE MOIETY";
+    private static SubstanceApiService substanceApiService;
 
     private final Spreadsheet spreadsheet;
-    private static EntityManager entityManager;
 
     private int row = 1;
     private static int ingredientNumber = 0;
 
     private final List<ColumnValueRecipe<Product>> recipeMap;
 
-    private ProductExporter(Builder builder, EntityManager entityManager) {
+    private ProductExporter(Builder builder, SubstanceApiService substanceApiService) {
 
-        this.entityManager = entityManager;
+        // Substance API Service
+        this.substanceApiService = substanceApiService;
 
         this.spreadsheet = builder.spreadsheet;
         this.recipeMap = builder.columns;
@@ -83,9 +86,7 @@ public class ProductExporter implements Exporter<Product> {
             if (p.productManufactureItems.size() > 0) {
                 for (ProductManufactureItem prodManuItem : p.productManufactureItems) {
                     for (ProductLot prodLot : prodManuItem.productLots) {
-                        //     for (productIngredient prodIngred : prodLot.productIngredients) {
 
-                        //        if (s.productIngredientAllList.size() > 0) {
                         for (int i = 0; i < prodLot.productIngredients.size(); i++) {
 
                             Spreadsheet.SpreadsheetRow row = spreadsheet.getRow(this.row++);
@@ -122,7 +123,7 @@ public class ProductExporter implements Exporter<Product> {
             cell.writeInteger((ingredNum));
         }));
 
-        // Get Substance Name, Approval ID (UNII), Active Moiety, Substance Key, Ingredient Type
+        // Get Substance Name, Approval ID (UNII), Active Moiety, Substance Key, Substance Key Type, Ingredient Type
         getSubstanceKeyDetails();
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PROVENANCE, SingleColumnValueRecipe.create(ProdDefaultColumns.PROVENANCE, (s, cell) -> {
@@ -245,7 +246,7 @@ public class ProductExporter implements Exporter<Product> {
                         sb.append((prodProv.isListed != null) ? prodProv.isListed : "");
                         break;
                     case APPLICATION_TYPE_NUMBER:
-                        sb.append((prodProv.applicationType != null) ? prodProv.applicationType + " ": "");
+                        sb.append((prodProv.applicationType != null) ? prodProv.applicationType + " " : "");
                         sb.append((prodProv.applicationNumber != null) ? prodProv.applicationNumber : "");
                         break;
                     default:
@@ -382,9 +383,8 @@ public class ProductExporter implements Exporter<Product> {
 
     private static void getSubstanceKeyDetails() {
 
-        StringBuilder nameSb = new StringBuilder();
-        StringBuilder approvalIdSb = new StringBuilder();
         StringBuilder substanceKeySb = new StringBuilder();
+        StringBuilder substanceKeyTypeSb = new StringBuilder();
         StringBuilder ingredientTypeSb = new StringBuilder();
         StringBuilder substanceNameSb = new StringBuilder();
         StringBuilder substanceApprovalIdSb = new StringBuilder();
@@ -393,74 +393,84 @@ public class ProductExporter implements Exporter<Product> {
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.SUBSTANCE_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.SUBSTANCE_NAME, (p, cell) -> {
 
-            nameSb.setLength(0);
-            approvalIdSb.setLength(0);
             substanceKeySb.setLength(0);
+            substanceKeyTypeSb.setLength(0);
             ingredientTypeSb.setLength(0);
             substanceNameSb.setLength(0);
             substanceApprovalIdSb.setLength(0);
             substanceActiveMoietySb.setLength(0);
+            substanceActiveMoietyApprovalIdSb.setLength(0);
 
-        try {
-            if (p.productManufactureItems.size() > 0) {
-                for (int i = 0; i < p.productManufactureItems.size(); i++) {
-                    ProductManufactureItem prodManuItem = p.productManufactureItems.get(i);
-                    for (int j = 0; j < prodManuItem.productLots.size(); j++) {
-                        ProductLot prodLot = prodManuItem.productLots.get(j);
+            try {
+                if (p.productManufactureItems.size() > 0) {
+                    for (int i = 0; i < p.productManufactureItems.size(); i++) {
+                        ProductManufactureItem prodManuItem = p.productManufactureItems.get(i);
+                        for (int j = 0; j < prodManuItem.productLots.size(); j++) {
+                            ProductLot prodLot = prodManuItem.productLots.get(j);
 
-                        ProductIngredient ingred = prodLot.productIngredients.get(ingredientNumber);
+                            ProductIngredient ingred = prodLot.productIngredients.get(ingredientNumber);
 
-                        // Get Substance Details
-                        if (ingred.substanceKey != null) {
-
+                            // Get Substance Key, Substance Key Type, Ingredient Type
                             substanceKeySb.append((ingred.substanceKey != null) ? ingred.substanceKey : "");
+                            substanceKeyTypeSb.append((ingred.substanceKeyType != null) ? ingred.substanceKeyType : "");
                             ingredientTypeSb.append((ingred.ingredientType != null) ? ingred.ingredientType : "");
 
-                            //TODO: replace with SubstanceKeyResolver for this later
-                            //Get Substance Object by Substance Key
-                          //  Substance s = substanceKeyResolver.substanceEMResolver(substanckey, substanceKeyType);
-                            //or else null
-                            Query query = entityManager.createQuery("SELECT s FROM Substance s JOIN s.codes c WHERE c.type = 'PRIMARY' and c.code=:subKey");
-                            query.setParameter("subKey", ingred.substanceKey);
-                            Substance sub = (Substance) query.getSingleResult();
+                            // Get Substance Details - Substance Name, Approval ID, Active Moiety, and Active Moiety Approval ID
+                            if ((ingred.substanceKey != null) && (ingred.substanceKeyType != null)) {
 
-                            if (sub != null) {
+                                String subName = "";
+                                String approvalId = "";
+                                String activeMoiety = "";
+                                String activeMoietyApprovalId = "";
 
-                                nameSb.append(((Substance) EntityFetcher.of(sub.fetchKey()).call()).getName());
-                                approvalIdSb.append(sub.approvalID);
+                                // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+                                Optional<Substance> sub = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(ingred.substanceKey, ingred.substanceKeyType);
 
-                                // Get Substance Name
-                                substanceNameSb.append((nameSb.toString() != null) ? nameSb.toString() : "");
+                                if (sub.get() != null) {
 
-                                // Storing in static variable so do not have to call the same Substance API twice just to get
-                                // approval Id.
-                                substanceApprovalIdSb.append((approvalIdSb.toString() != null) ? approvalIdSb.toString() : "");
+                                    // Get Substance Name from Substance
+                                    subName = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getName();
 
-                                if (sub.getActiveMoieties().size() > 0) {
-                                    sub.getActiveMoieties().forEach(relationship -> {
-                                        if ((relationship.type != null) && (relationship.type.equalsIgnoreCase(CONST_ACTIVE_MOIETY))) {
-                                            if (relationship.relatedSubstance != null) {
-                                                substanceActiveMoietySb.append(relationship.relatedSubstance.refPname != null ? relationship.relatedSubstance.refPname : "");
-                                                substanceActiveMoietyApprovalIdSb.append(relationship.relatedSubstance.approvalID != null ? relationship.relatedSubstance.approvalID : "");
+                                    // SUBSTANCE NAME: Add Substance/Ingredient Name in the String Builder
+                                    substanceNameSb.append((subName != null) ? subName : "");
+
+                                    // APPROVAL ID: Storing in static variable so do not have to call the same Substance API twice just to get
+                                    // approval Id.
+                                    substanceApprovalIdSb.append((sub.get().approvalID != null) ? sub.get().approvalID : "");
+
+                                    // Get Active Moiety and Active Moiety Approval ID from Substance
+                                    List<Relationship> relationship = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getActiveMoieties();
+
+                                    for (int z = 0; z < relationship.size(); z++) {
+                                        Relationship rel = relationship.get(z);
+                                        if (rel != null) {
+                                            if (rel.relatedSubstance != null) {
+                                                activeMoiety = rel.relatedSubstance.refPname;
+                                                activeMoietyApprovalId = rel.relatedSubstance.approvalID;
                                             }
                                         }
-                                    });
-                                }
-                            }
+                                    }
 
-                        } else {   // No Substance Key
-                            substanceKeySb.append("");
-                            substanceNameSb.append("");
-                            substanceApprovalIdSb.append("");
-                        }
+                                    substanceActiveMoietySb.append((activeMoiety != null) ? activeMoiety : "");
+                                    substanceActiveMoietyApprovalIdSb.append((activeMoietyApprovalId != null) ? activeMoietyApprovalId : "");
+
+                                } // if Substance is not null
+
+                            } else {   // else No Substance Key and Substance Key Type exist
+                                substanceNameSb.append("");
+                                substanceApprovalIdSb.append("");
+                                substanceActiveMoietySb.append("");
+                                substanceActiveMoietyApprovalIdSb.append("");
+                            }
+                        } // for loop Product Lot
                     }
                 }
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
+            // Store Substance Name in Excel
             cell.writeString(substanceNameSb.toString());
+
         }));
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.APPROVAL_ID, SingleColumnValueRecipe.create(ProdDefaultColumns.APPROVAL_ID, (p, cell) -> {
@@ -469,6 +479,10 @@ public class ProductExporter implements Exporter<Product> {
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.SUBSTANCE_KEY, SingleColumnValueRecipe.create(ProdDefaultColumns.SUBSTANCE_KEY, (p, cell) -> {
             cell.writeString(substanceKeySb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.SUBSTANCE_KEY_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.SUBSTANCE_KEY_TYPE, (p, cell) -> {
+            cell.writeString(substanceKeyTypeSb.toString());
         }));
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.INGREDIENT_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.INGREDIENT_TYPE, (p, cell) -> {
@@ -539,8 +553,8 @@ public class ProductExporter implements Exporter<Product> {
             return this;
         }
 
-        public ProductExporter build(EntityManager entityManager) {
-            return new ProductExporter(this, entityManager);
+        public ProductExporter build(SubstanceApiService substanceApiService) {
+            return new ProductExporter(this, substanceApiService);
         }
 
         public Builder includePublicDataOnly(boolean publicOnly) {

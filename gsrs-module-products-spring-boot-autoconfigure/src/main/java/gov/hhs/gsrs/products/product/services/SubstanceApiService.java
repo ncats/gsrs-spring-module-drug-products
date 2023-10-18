@@ -5,6 +5,7 @@ import gsrs.api.substances.SubstanceRestApi;
 import gsrs.module.substance.services.EntityManagerSubstanceKeyResolver;
 import gsrs.substances.dto.SubstanceDTO;
 import gsrs.substances.dto.NameDTO;
+import gsrs.substances.dto.CodeDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,10 @@ import java.util.List;
 @Slf4j
 public class SubstanceApiService {
 
+    public static final String SUBSTANCE_KEY_TYPE_UUID = "UUID";
+    public static final String SUBSTANCE_KEY_TYPE_APPROVAL_ID = "APPROVAL_ID";
+    public static final String SUBSTANCE_KEY_TYPE_BDNUM = "BDNUM";
+
     @Autowired
     private SubstanceRestApi substanceRestApi;
 
@@ -52,8 +57,31 @@ public class SubstanceApiService {
     @Value("${substanceAPI.BaseUrl}")
     private String baseUrl;
 
-    @Value("${substance.linking.keyType.productKeyType}")
-    private String substanceKeyTypeConfig;
+    @Value("${substance.linking.keyType.productKeyType:UUID}")
+    private String substanceKeyTypeFromConfig;
+
+
+    public String getSubstanceKeyTypeFromConfig() {
+        return this.substanceKeyTypeFromConfig;
+    }
+
+    private String substanceKey;
+
+    public String getSubstanceKey() {
+        return this.substanceKey;
+    }
+
+    private String substanceKeyType;
+
+    public String getSubstanceKeyType() {
+        return this.substanceKeyType;
+    }
+
+    // Class to store the Substance Key and Substance Key Type
+    public class SubstanceKeyPair {
+        public String substanceKey;
+        public String substanceKeyType;
+    }
 
     // Entity Manager, Substance Key Resolver
     public Optional<Substance> getEntityManagerSubstanceBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
@@ -68,10 +96,6 @@ public class SubstanceApiService {
         try {
             // Get ENTITY MANAGER Substance Key resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)
             substance = entityManagerSubstanceKeyResolver.resolveEMSubstance(substanceKey, substanceKeyType);
-
-           // JsonNode root = null;
-           // root = objectMapper.readTree(substance);
-          //  System.out.println("AAAAAAAAAAAAAAAAAAAAAA " + root.toPrettyString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,13 +140,14 @@ public class SubstanceApiService {
         return null;
     }
 
+    // Substance API, get the Names for the Substance
     public Optional<List<NameDTO>> getNamesOfSubstance(String anyKindOfSubstanceId) {
         if (anyKindOfSubstanceId == null) {
             return null;
         }
 
         ResponseEntity<String> response = null;
-        Optional<List<NameDTO>> nameDTO = null;
+        Optional<List<NameDTO>> names = null;
 
         try {
             return substanceRestApi.getNamesOfSubstance(anyKindOfSubstanceId);
@@ -130,74 +155,97 @@ public class SubstanceApiService {
             e.printStackTrace();
         }
 
-        if (nameDTO == null || !nameDTO.isPresent()) {
+        if (names == null || !names.isPresent()) {
             return null;
         }
 
-        if (nameDTO.get().size() > 0) {
-            return nameDTO;
+        if (names.get().size() > 0) {
+            return names;
         } else {
-            log.debug("The nameDTO is not null, but could not retrieve data from getNamesOfSubstance(anyKindOfSubstanceId)");
+            log.debug("The names is not null, but could not retrieve data from names");
         }
 
         return null;
     }
 
-    public ResponseEntity<String> getSubstanceDetailsFromUUID(String uuid) {
-        String urlTemplate1 = baseUrl + "api/v1/substances(%s)";
-        Boolean exists;
-
-        if (uuid == null) {
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{'errors': 'Substance UUID is required.'}");
-        }
-
-        ResponseEntity<String> response = null;
-
-        try {
-            response = restTemplate.getForEntity(String.format(urlTemplate1, uuid), String.class);
-            return response;
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{'errors': 'There were errors.'}");
-    }
-
-    public ResponseEntity<String> getSubstanceDetailsFromSubstanceKey(String substanceKey) {
-        String urlTemplate1 = baseUrl + "api/v1/substances(%s)";
-
-        if (substanceKey == null) {
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body("{'errors': 'Substance Code is required.'}");
-        }
-
-        ResponseEntity<String> response = null;
-
-        try {
-            response = restTemplate.getForEntity(String.format(urlTemplate1, substanceKey), String.class);
-            return response;
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-        }
-
-        if (response == null) return null;
-
-        HttpStatus statusCode = response.getStatusCode();
-        if (statusCode.equals(HttpStatus.valueOf(404))) {
+    // Substance API, get the Names for the Substance
+    public Optional<List<CodeDTO>> getCodesOfSubstance(String anyKindOfSubstanceId) {
+        if (anyKindOfSubstanceId == null) {
             return null;
         }
 
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("{'errors': 'There were errors.'}");
+        ResponseEntity<String> response = null;
+        Optional<List<CodeDTO>> codes = null;
+
+        try {
+            return substanceRestApi.getCodesOfSubstance(anyKindOfSubstanceId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (codes == null || !codes.isPresent()) {
+            return null;
+        }
+
+        if (codes.get().size() > 0) {
+            return codes;
+        } else {
+            log.debug("The codes is not null, but could not retrieve data from codes");
+        }
+
+        return null;
+    }
+
+    // Convert Substance Key and Substance Key Type by Substance Key Resolver
+    public SubstanceKeyPair convertSubstanceKeyBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
+
+        if ((substanceKey == null) && (substanceKeyType == null)) {
+            return null;
+        }
+
+        SubstanceKeyPair subKey = new SubstanceKeyPair();
+
+        subKey.substanceKeyType = substanceKeyTypeFromConfig;
+
+        // UUID or APPROVAL_ID
+        if ((substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) ||
+        (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID))) {
+
+            // Get Substance by Substance Key Resolver
+            Optional<SubstanceDTO> substance = getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
+
+            if (substance.isPresent()) {
+                if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) {
+                    if (substance.get().getUuid() != null) {
+                        subKey.substanceKey = substance.get().getUuid().toString();
+                    } else {
+                        log.debug("The Substance is not null, but could not retrieve uuid from Substance");
+                    }
+                } else if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID)) {
+                    if (substance.get().getApprovalID() != null) {
+                        subKey.substanceKey = substance.get().getApprovalID();
+                    } else {
+                        log.debug("The Substance is not null, but could not retrieve Approval ID from Substance");
+                    }
+                }
+            }
+
+        } else if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_BDNUM)) {
+            Optional<List<CodeDTO>> codes = getCodesOfSubstance(substanceKey);
+            if (codes.isPresent()) {
+                codes.get().forEach(codeObj -> {
+                    if ((codeObj.getCodeSystem() != null) && (codeObj.getCodeSystem().equalsIgnoreCase(SUBSTANCE_KEY_TYPE_BDNUM))) {
+                        if (codeObj.getCode() != null) {
+                            subKey.substanceKey = codeObj.getCode();
+                        }
+                    }
+                });
+            }
+
+        } else {
+            log.debug("Could not retrieve Substance since no valid Substance Key Type found");
+        }
+
+        return subKey;
     }
 }

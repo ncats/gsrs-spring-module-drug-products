@@ -1,9 +1,10 @@
 package gov.hhs.gsrs.products.product.exporters;
 
 import gov.hhs.gsrs.products.product.controllers.ProductController;
+import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 
-import gsrs.DefaultDataSourceConfig;
 import ix.ginas.exporters.*;
+import gsrs.springUtils.AutowireHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,8 +18,9 @@ import java.io.OutputStreamWriter;
 import java.util.*;
 
 public class ProductTextExporterFactory implements ExporterFactory {
-    @PersistenceContext(unitName =  DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
-    public EntityManager entityManager;
+
+    @Autowired
+    private SubstanceApiService substanceApiService;
 
     OutputFormat format = new OutputFormat("txt", "Tab-delimited (.txt)");
 
@@ -34,7 +36,11 @@ public class ProductTextExporterFactory implements ExporterFactory {
 
     @Override
     public ProductTextExporter createNewExporter(OutputStream out, Parameters params) throws IOException {
-        return new ProductTextExporter(out, params, entityManager);
+
+        if (substanceApiService == null) {
+            AutowireHelper.getInstance().autowire(this);
+        }
+        return new ProductTextExporter(out, params, substanceApiService);
     }
 
 }

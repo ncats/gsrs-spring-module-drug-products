@@ -12,6 +12,7 @@ import gsrs.DefaultDataSourceConfig;
 import gsrs.springUtils.AutowireHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +32,12 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
     @Autowired
     private SubstanceApiService substanceApiService;
 
-    //@Autowire
-    //  public EntityManagerSubstanceKeyResolver substanceKeyResolver;
-
     @PersistenceContext(unitName = DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
     public EntityManager entityManager;
+
+    @Value("${substance.product.ivm.substancekey.resolver.touse}")
+    private String substanceKeyResolverToUseFromConfig;
+
 
     @Override
     public Class<Product> getIndexedEntityClass() {
@@ -57,79 +59,20 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                                 String substanceKey = prodIng.substanceKey;
                                 String substanceKeyType = prodIng.substanceKeyType;
 
-                                // Facet: "entity_link_substance" gets any Substance Key (UUID, APPROVAL_ID, BDNUM)
-                               // consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", subKey);
-
-                                // Optional.ofNullable(sub);
-                                // if subKeyType == UUID or bdnum
-                                // Substance API, calls Substance Key and Substance Key Type Resolver
-                                //Optional<SubstanceDTO> s = substanceApiService.getSubstanceBySubstanceKeyResolver(subKey, subKeyType);
-
-                                // Call the key resolver function, if Substance Key Type is not UUID
-                                if (substanceKeyType.equalsIgnoreCase("APPROVAL_ID")) {
-                                    consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substanceKey));
-                                } else {
-                                    // ENTITY MANAGER Substance Key Resolver
-                                    Optional<Substance> substance = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
-                                    if (substance.get() != null) {
-                                        if (substance.get().uuid != null) {
-                                            consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substance.get().uuid.toString()));
-                                        }
+                                // Get from Config which Substance Key Resolver to use. Substance API or Entity Mananger
+                                if (substanceKeyResolverToUseFromConfig != null) {
+                                    if (substanceKeyResolverToUseFromConfig.equalsIgnoreCase("api")) {
+                                        // Call SUBSTANCE API Substance Resolver
+                                        createIndexableValuesBySubstanceApiResolver(consumer, substanceKey, substanceKeyType);
+                                    } else {
+                                        // Call ENTITY MANAGER Substance Resolver
+                                        createIndexableValuesByEntityManagerResolver(consumer, substanceKey, substanceKeyType);
                                     }
                                 }
 
-                                /*
-                                if (s.get() != null) {
-                                    if (s.get().getUuid() != null) {
-                                        consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", s.get().getUuid().toString()));
-                                    }
-                                } */
-
-                                // Call Substance API to get Substance Names by any Substance Key
-                                Optional<List<NameDTO>> names = substanceApiService.getNamesOfSubstance(substanceKey);
-
-                                // get Names by Any Substance Key (UUID, APPROVAL_ID, BDNUM)
-                                if (names.isPresent()) {
-                                    names.get().forEach(nameObj -> {
-                                        if (nameObj.getName() != null) {
-                                            // Facet: "Ingredient Name" gets all Ingredient Names
-                                            consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name", nameObj.getName()).suggestable().setSortable());
-
-
-                                            if (nameObj.isDisplayName() == true) {
-                                                // Facet: "Ingredient Name (Preferred)" gets Preferred Name
-                                                consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name (Preferred)", nameObj.getName()).suggestable().setSortable());
-                                            }
-                                        }
-                                    });
-                                }
-
-                                /*  OLD CODE
-                                //Get Substance Object by Substance Key
-                                Query query = entityManager.createQuery("SELECT s FROM Substance s JOIN s.codes c WHERE c.type = 'PRIMARY' and c.code=:subKey");
-                                query.setParameter("subKey", subKey);
-                                Substance s = (Substance) query.getSingleResult();
-
-                                if (s != null) {
-                                    if (s.uuid != null) {
-                                        consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", s.uuid.toString()));
-                                    }
-
-                                    // All Ingredient Names
-                                    s.names.forEach(nameObj -> {
-                                        if (nameObj.name != null) {
-                                            consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name", nameObj.name).suggestable().setSortable());
-                                        }
-                                    });
-
-                                    // Facet: "Ingredient Name (Preferred)"
-                                    if (s.getName() != null) {
-                                        consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name (Preferred)", s.getName()).suggestable().setSortable());
-                                    }
-                                } */
-                            }
-                        }
-                    }  // productIngredients
+                            }  // product substance key not null
+                        } // product Ingredient is not null
+                    }  // for productIngredients
                 } // for productLots
             } // for productManufactureItems
 
@@ -138,12 +81,68 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
         }
     }
 
-    /*
-    public void createIndexableValuesByEntityManagerResolver(consumer, String substanceKey, String substanceKeyType) {
+    public void createIndexableValuesBySubstanceApiResolver(Consumer<IndexableValue> consumer, String substanceKey, String substanceKeyType) {
 
+        // If Substance Key Type is APPROVAL_ID, BDNUM, or other key type, get the Substance record by Resolver
+        if ((substanceKeyType != null) && (!substanceKeyType.equalsIgnoreCase("UUID"))) {
+            // SUBSTANCE API Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+            Optional<SubstanceDTO> substance = substanceApiService.getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
+
+            if (substance.get() != null) {
+                if (substance.get().getUuid() != null) {
+                    consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substance.get().getUuid().toString()));
+                }
+            }
+        } else {
+            // If Substance Key Type is UUID, use that substanceKey
+            consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substanceKey));
+        }
+
+        // Call Substance API to get Substance Names by any Substance Key
+        Optional<List<NameDTO>> names = substanceApiService.getNamesOfSubstance(substanceKey);
+
+        // get Names by Any Substance Key (UUID, APPROVAL_ID, BDNUM)
+        if (names.isPresent()) {
+            names.get().forEach(nameObj -> {
+                if (nameObj.getName() != null) {
+                    // Facet: "Ingredient Name" gets all Ingredient Names
+                    consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name", nameObj.getName()).suggestable().setSortable());
+
+                    if (nameObj.isDisplayName() == true) {
+                        // Facet: "Ingredient Name (Preferred)" gets Preferred Name
+                        consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name (Preferred)", nameObj.getName()).suggestable().setSortable());
+                    }
+                }
+            });
+        }
     }
 
-    public void createIndexableValuesBySubstanceApiResolver(Product product, Consumer<IndexableValue> consumer) {
+    public void createIndexableValuesByEntityManagerResolver(Consumer<IndexableValue> consumer, String substanceKey, String substanceKeyType) {
 
-    }*/
+        // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+        Optional<Substance> substance = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
+
+        if (substance.get() != null) {
+            if (substance.get().uuid != null) {
+                consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substance.get().uuid.toString()));
+
+                // Get ALL Substance Names
+                if (substance.get().names.size() > 0) {
+                    substance.get().names.forEach(nameObj -> {
+
+                        if (nameObj.name != null) {
+                            // Facet: "Ingredient Name" gets all Ingredient Names
+                            consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name", nameObj.name).suggestable().setSortable());
+                        }
+
+                        if (nameObj.isDisplayName() == true) {
+                            // Facet: "Ingredient Name (Preferred)" gets Preferred Name
+                            consumer.accept(IndexableValue.simpleFacetStringValue("Ingredient Name (Preferred)", nameObj.name).suggestable().setSortable());
+                        }
+                    });
+                }
+            }
+        }
+    }
+
 }

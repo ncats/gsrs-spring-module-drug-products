@@ -1,9 +1,10 @@
 package gov.hhs.gsrs.products.product.exporters;
 
 import gov.hhs.gsrs.products.product.controllers.ProductController;
+import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 
-import gsrs.DefaultDataSourceConfig;
 import ix.ginas.exporters.*;
+import gsrs.springUtils.AutowireHelper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,15 +19,12 @@ import java.util.*;
 
 public class ProductExporterFactory implements ExporterFactory {
 
-  @PersistenceContext(unitName =  DefaultDataSourceConfig.NAME_ENTITY_MANAGER)
-  public EntityManager entityManager;
-
-  //  @Autowire
-  //  public EntityManagerSubstanceKeyResolver substanceKeyResolver;
+    @Autowired
+    private SubstanceApiService substanceApiService;
 
     private static final Set<OutputFormat> FORMATS;
 
-    static{
+    static {
         Set<OutputFormat> set = new LinkedHashSet<>();
         set.add(SpreadsheetFormat.XLSX);
 
@@ -46,6 +44,10 @@ public class ProductExporterFactory implements ExporterFactory {
     @Override
     public ProductExporter createNewExporter(OutputStream out, Parameters params) throws IOException {
 
+        if (substanceApiService == null) {
+            AutowireHelper.getInstance().autowire(this);
+        }
+
         SpreadsheetFormat format = SpreadsheetFormat.XLSX;
         Spreadsheet spreadsheet = format.createSpreadsheet(out);
 
@@ -53,10 +55,10 @@ public class ProductExporterFactory implements ExporterFactory {
 
         configure(builder, params);
 
-        return builder.build(entityManager);
+        return builder.build(substanceApiService);
     }
-    
-    protected void configure(ProductExporter.Builder builder, Parameters params){
+
+    protected void configure(ProductExporter.Builder builder, Parameters params) {
         builder.includePublicDataOnly(params.publicOnly());
     }
 
