@@ -209,7 +209,7 @@ public class SubstanceApiService {
 
         // UUID or APPROVAL_ID
         if ((substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) ||
-        (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID))) {
+                (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID))) {
 
             // Get Substance by Substance Key Resolver
             Optional<SubstanceDTO> substance = getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);

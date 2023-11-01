@@ -53,9 +53,6 @@ import javax.persistence.EntityManager;
 @GsrsRestApiController(context = ProductEntityService.CONTEXT, idHelper = IdHelpers.NUMBER)
 public class ProductController extends EtagLegacySearchEntityController<ProductController, Product, Long> {
 
-    //@Autowired
-    //private SubstanceApiService substanceApiService;
-
     @Autowired
     private ETagRepository eTagRepository;
 
