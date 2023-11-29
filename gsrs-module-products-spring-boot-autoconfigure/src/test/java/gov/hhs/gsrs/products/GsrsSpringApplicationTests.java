@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products;
 
+import gsrs.startertests.GsrsEntityTestConfiguration;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 
 import org.junit.jupiter.api.Test;
