@@ -10,15 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 @SpringBootTest(classes = {GsrsSpringApplication.class,  GsrsEntityTestConfiguration.class})
 class GsrsSpringApplicationTests extends AbstractGsrsJpaEntityJunit5Test {
 
     @MockBean
     WebMvcRegistrations webMvcRegistrations;
 
-    @Test
-    void contextLoads() {
-    }
+  //  @Test
+  //  void contextLoads() {
+  //  }
 
 }

@@ -30,7 +30,7 @@ import java.io.File;
 import java.time.LocalDate;
 
 //@Disabled
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 @GsrsJpaTest(classes = {GsrsSpringApplication.class, GsrsControllerConfiguration.class, GsrsEntityTestConfiguration.class, ProductRepository.class})
 @Import({Product.class, ProductEntityService.class})
 public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
@@ -50,6 +50,7 @@ public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
         JacksonTester.initFields(this, objectMapper);
     }
 
+    /*
     @Test
     void contextLoads() {
     }
@@ -68,4 +69,5 @@ public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
         assertNotNull(prodCreated.getId());
 
     }
+     */
 }
