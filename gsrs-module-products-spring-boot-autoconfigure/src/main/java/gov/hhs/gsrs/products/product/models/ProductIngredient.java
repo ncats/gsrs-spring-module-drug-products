@@ -158,6 +158,15 @@ public class ProductIngredient extends ProductCommonData {
                         SubstanceKeyPair subKeyPair = substanceApiService.convertSubstanceKeyBySubstanceKeyResolver(this.substanceKey, this.substanceKeyType);
 
                         if (subKeyPair != null) {
+                            // Basis of Strength is same as Subtance Key and Substance Key Type
+                            if ((this.basisOfStrengthSubstanceKey != null) && this.basisOfStrengthSubstanceKey.equalsIgnoreCase(this.substanceKey)) {
+                                if ((this.basisOfStrengthSubstanceKeyType != null) && this.basisOfStrengthSubstanceKeyType.equalsIgnoreCase(this.substanceKeyType)) {
+                                    this.basisOfStrengthSubstanceKey = subKeyPair.substanceKey;
+                                    this.basisOfStrengthSubstanceKeyType = subKeyPair.substanceKeyType;
+                                }
+                            }
+
+                            // Substance Key and Substance Key Type
                             this.substanceKey = subKeyPair.substanceKey;
                             this.substanceKeyType = subKeyPair.substanceKeyType;
                         }
