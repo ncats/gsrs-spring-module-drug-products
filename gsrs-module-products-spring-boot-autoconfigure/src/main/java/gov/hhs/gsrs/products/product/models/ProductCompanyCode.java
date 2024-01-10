@@ -12,10 +12,6 @@ import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,6 +19,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -42,9 +42,11 @@ public class ProductCompanyCode extends ProductCommonData {
     @Column(name = "PRODUCT_COMPANY_CODE_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name="Labeler Code")
     @Column(name = "COMPANY_CODE")
     public String companyCode;
 
+    @Indexable(facet=true, name="Labeler Code Type")
     @Column(name = "COMPANY_CODE_TYPE")
     public String companyCodeType;
 

@@ -4,14 +4,14 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -30,6 +30,7 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name= "Product Name", sortable = true)
     @Column(name="PRODUCT_NAME", length=1000)
     public String productName;
 
@@ -41,20 +42,6 @@ public class ProductName extends ProductCommonData {
 
     @Column(name="DISPLAY_NAME")
     public Boolean displayName;
-    // Set Parent Class
-    /*
-    @Indexable(indexed=false)
-    @ParentReference
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    public Product owner;
-
-    public void setOwner(Product product) {
-        this.owner = product;
-    }
-    */
 
     // Set Parent Class
     @Indexable(indexed=false)

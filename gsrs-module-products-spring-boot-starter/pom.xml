@@ -6,18 +6,12 @@
     <parent>
         <artifactId>gsrs-module-products</artifactId>
         <groupId>gov.nih.ncats</groupId>
-        <version>3.1-SNAPSHOT</version>
+        <version>3.1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gsrs-module-products-spring-boot-starter</artifactId>
 
-    <!--
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-    -->
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

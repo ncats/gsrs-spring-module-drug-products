@@ -4,14 +4,15 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 
@@ -31,6 +32,7 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="PRODUCT_COMPANY_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name= "Labeler Name", sortable=true)
     @Column(name="COMPANY_NAME", length=500)
     public String companyName;
 
@@ -40,12 +42,14 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="COMPANY_CITY")
     public String companyCity;
 
+    @Indexable(suggest = true, facet=true, name= "Labeler State", sortable=true)
     @Column(name="COMPANY_STATE")
     public String companyState;
 
     @Column(name="COMPANY_ZIP")
     public String companyZip;
 
+    @Indexable(suggest = true, facet=true, name="Company Country", sortable = true)
     @Column(name="COMPANY_COUNTRY")
     public String companyCountry;
 
@@ -58,17 +62,13 @@ public class ProductCompany extends ProductCommonData {
     @Column(name="GPS_ELEVATION")
     public String companyGpsElevation;
 
+    @Indexable(suggest = true, facet=true, name="Company Role", sortable = true)
     @JoinColumn(name="COMPANY_ROLE")
     public String companyRole;
 
+    @Indexable(suggest = true, facet=true, name= "Labeler Public Domain", sortable=true)
     @Column(name="PUBLIC_DOMAIN")
     public String companyPublicDomain;
-
-    //  @Column(name="COMPANY_CODE")
-  //  public String companyCode;
-
-   // @Column(name="COMPANY_CODE_TYPE")
-   // public String companyCodeType;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     @Column(name="START_MARKETING_DATE")
@@ -86,21 +86,6 @@ public class ProductCompany extends ProductCommonData {
 
     @Column(name="PROVENANCE_DOCUMENT_ID", length=500)
     public String provenanceDocumentId;
-
-    /*
-    // Set Parent Class
-    @Indexable(indexed=false)
-    @ParentReference
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name="PRODUCT_ID", referencedColumnName="PRODUCT_ID")
-    public Product owner;
-
-    public void setOwner(Product product) {
-        this.owner = product;
-    }
-    */
 
     // Set Parent Class
     @Indexable(indexed=false)

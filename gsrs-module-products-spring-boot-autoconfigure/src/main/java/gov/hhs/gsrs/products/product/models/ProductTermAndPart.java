@@ -4,11 +4,11 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 

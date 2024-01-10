@@ -4,14 +4,14 @@ import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
 import ix.core.SingleParent;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -55,9 +55,9 @@ public class ProductLot extends ProductCommonData {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="PRODUCT_COMPONENT_ID", referencedColumnName="PRODUCT_COMPONENT_ID")
-    public ProductComponent owner;
+    public ProductManufactureItem owner;
 
-    public void setOwner(ProductComponent productComponent) {
+    public void setOwner(ProductManufactureItem productComponent) {
         this.owner = productComponent;
     }
 

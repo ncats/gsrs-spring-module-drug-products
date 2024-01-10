@@ -12,10 +12,6 @@ import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -23,6 +19,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -42,26 +42,13 @@ public class ProductCode extends ProductCommonData {
     @Column(name = "PRODUCT_CODE_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name= "Product ID", sortable = true)
     @Column(name = "PRODUCT_CODE")
     public String productCode;
 
+    @Indexable(suggest = true, facet=true, name= "Product Code Type", sortable = true)
     @Column(name = "PRODUCT_CODE_TYPE")
     public String productCodeType;
-
-    // Set Parent Class
-    /*
-    @Indexable(indexed = false)
-    @ParentReference
-    @EqualsAndHashCode.Exclude
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "PRODUCT_ID", referencedColumnName = "PRODUCT_ID")
-    public Product owner;
-
-    public void setOwner(Product product) {
-        this.owner = product;
-    }
-     */
 
     // Set Parent Class
     @Indexable(indexed=false)

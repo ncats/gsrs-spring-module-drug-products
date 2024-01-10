@@ -14,8 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
 
 import ix.utils.Util;
 import java.io.IOException;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class ProductEntityService extends AbstractGsrsEntityService<Product, Long> {
     public static final String  CONTEXT = "products";
 
@@ -100,14 +104,6 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
         return null;
     }
 
-    /*
-    @Override
-    protected Application fixUpdatedIfNeeded(Application oldEntity, Application updatedEntity) {
-        //force the "owner" on all the updated fields to point to the old version so the uuids are correct
-        return updatedEntity;
-    }
-    */
-
     @Override
     protected Product fromUpdatedJson(JsonNode json) throws IOException {
         //TODO should we make any edits to remove fields?
@@ -152,4 +148,8 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
         return Optional.empty();
     }
 
+    public List<String> findProvenanceBySubstance(String substanceId) {
+        List<String> provenanceList = repository.findProvenanceBySubstance(substanceId);
+        return provenanceList;
+    }
 }
