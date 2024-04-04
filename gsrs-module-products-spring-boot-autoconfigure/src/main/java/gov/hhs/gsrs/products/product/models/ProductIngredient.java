@@ -135,23 +135,17 @@ public class ProductIngredient extends ProductCommonData {
         try {
 
             if (substanceApiService == null) {
-                log.info("***** in resolveSubstance(): substanceApiService == null");
                 AutowireHelper.getInstance().autowire(this);
             }
 
             // Get SubstanceKeyType from backend config
-            log.info("***** in resolveSubstance(): before getting config);
             String substanceKeyTypeFromConfig = substanceApiService.getSubstanceKeyTypeFromConfig();
-            log.info("***** in resolveSubstance(): SUBSTANCE KEY FROM CONFIG: " + substanceKeyTypeFromConfig);
             if (substanceKeyTypeFromConfig != null) {
                 // if JSON Substance Key Type is not null
-                log.info("***** in resolveSubstance(): SUBSTANCE KEY FROM CONFIG NOT NULL: " + substanceKeyTypeFromConfig);
                 if (this.substanceKeyType != null) {
 
-                    log.info("***** in resolveSubstance(): SUBSTANCE KEY NOT NULL: " + this.substanceKeyType);
                     // Substance Key Type in (backend config) and in (JSON) are NOT same
                     if (!substanceKeyTypeFromConfig.equalsIgnoreCase(this.substanceKeyType)) {
-                        log.info("***** in resolveSubstance(): SUBSTANCE KEY CONF AND SUB KEY NOT EQUAL: " + substanceKeyTypeFromConfig + "  + this.substanceKeyType);
                         /* IMPORTANT NOTE:
                         ONLY save the substance key and subtsance key Type into the database,
                         which is in the BACKEND CONFIG.
