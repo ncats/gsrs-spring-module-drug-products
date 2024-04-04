@@ -112,7 +112,6 @@ public class SubstanceApiService {
 
     // Substance API, Substance Key Resolver
     public Optional<SubstanceDTO> getSubstanceBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
-        log.info("**** INSIDE getSubstanceBySubstanceKeyResolver()");
         if ((substanceKey == null) && (substanceKeyType == null)) {
             return null;
         }
@@ -121,21 +120,17 @@ public class SubstanceApiService {
         Optional<SubstanceDTO> substanceDTO = null;
 
         try {
-            log.info("**** INSIDE getSubstanceBySubstanceKeyResolver():  before calling Sub API resolveSubstance");
             // Substance API resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)
             substanceDTO = substanceRestApi.resolveSubstance(substanceKey, substanceKeyType);
-            log.info("**** INSIDE getSubstanceBySubstanceKeyResolver():  After calling Sub API resolveSubstance");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         if (substanceDTO == null || !substanceDTO.isPresent()) {
-            log.info("**** INSIDE getSubstanceBySubstanceKeyResolver(): NOT Found substance");
             return null;
         }
 
         if (substanceDTO.get().getUuid() != null) {
-            log.info("**** INSIDE getSubstanceBySubstanceKeyResolver(): Found substance");
             return substanceDTO;
         } else {
             log.debug("The SubstanceDTO is not null, but could not retrieve substance uuid");
@@ -203,7 +198,6 @@ public class SubstanceApiService {
     // Convert Substance Key and Substance Key Type by Substance Key Resolver
     public SubstanceKeyPair convertSubstanceKeyBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
 
-        log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver()");
         if ((substanceKey == null) && (substanceKeyType == null)) {
             return null;
         }
@@ -216,16 +210,12 @@ public class SubstanceApiService {
         if ((substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) ||
                 (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID))) {
 
-            log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver(): INSIDE key matching with constant");
             // Get Substance by Substance Key Resolver
             Optional<SubstanceDTO> substance = getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
-            log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver(): after calling getSubstanceBySubstanceKeyResolver");
 
             if (substance.isPresent()) {
-                log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver(): substance is present");
 
                 if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) {
-                    log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver(): substance UUID");
                     if (substance.get().getUuid() != null) {
                         subKey.substanceKey = substance.get().getUuid().toString();
                     } else {
@@ -241,7 +231,6 @@ public class SubstanceApiService {
             }
 
         } else if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_BDNUM)) {
-            log.info("****  IN convertSubstanceKeyBySubstanceKeyResolver(): substance BDNUM");
             Optional<List<CodeDTO>> codes = getCodesOfSubstance(substanceKey);
             if (codes.isPresent()) {
                 codes.get().forEach(codeObj -> {
