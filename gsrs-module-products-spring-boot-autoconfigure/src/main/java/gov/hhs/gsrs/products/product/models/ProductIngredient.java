@@ -78,6 +78,10 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name = "INGREDIENT_TYPE")
     public String ingredientType;
 
+    @Indexable(suggest = true, facet = true, name = "Ingredient Function", sortable = true)
+    @Column(name = "INGREDIENT_FUNCTION")
+    public String ingredientFunction;
+
     @Column(name = "UNIT")
     public String unit;
 
