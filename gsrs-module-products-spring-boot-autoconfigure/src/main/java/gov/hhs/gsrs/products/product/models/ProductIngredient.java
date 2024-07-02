@@ -97,6 +97,9 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name = "INGREDIENT_LOCATION")
     public String ingredientLocation;
 
+    @Column(name = "INGRED_LOCATION_TEXT")
+    public String ingredientLocationText;
+
     @Column(name = "CONFIDENTIALITY_CODE")
     public String confidentialityCode;
 

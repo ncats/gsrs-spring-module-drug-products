@@ -73,6 +73,14 @@ public class Product extends ProductCommonData {
     @Column(name="MANUFACTURER_CODE_TYPE")
     public String manufacturerCodeType;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
+    @Column(name="EFFECTIVE_DATE")
+    public Date effectiveDate;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
+    @Column(name="END_DATE")
+    public Date endDate;
+
     @JsonIgnore
     @Indexable(facet=true, name="Deprecated")
     public String getDeprecated(){

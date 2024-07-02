@@ -94,11 +94,16 @@ public class SubstanceApiService {
         Optional<Substance> substance = null;
 
         try {
+            // CALL to Substance Module, EntityManagerSubstanceKeyResolver
             // Get ENTITY MANAGER Substance Key resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)
             substance = entityManagerSubstanceKeyResolver.resolveEMSubstance(substanceKey, substanceKeyType);
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        if (substance == null || !substance.isPresent()) {
+            return null;
         }
 
         if (substance.get().uuid != null) {
@@ -122,6 +127,7 @@ public class SubstanceApiService {
         try {
             // Substance API resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)
             substanceDTO = substanceRestApi.resolveSubstance(substanceKey, substanceKeyType);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,7 +173,7 @@ public class SubstanceApiService {
         return null;
     }
 
-    // Substance API, get the Names for the Substance
+    // Substance API, get the Codes for the Substance
     public Optional<List<CodeDTO>> getCodesOfSubstance(String anyKindOfSubstanceId) {
         if (anyKindOfSubstanceId == null) {
             return null;

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -75,6 +77,32 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                     }  // for productIngredients
                 } // for productLots
             } // for productManufactureItems
+
+
+            // Facet: Application Type Number - Create a facet by combining Application Type and Application Number
+            for (ProductProvenance prodProv : product.productProvenances) {
+                if (prodProv != null) {
+                    if ((prodProv.applicationType != null) && (prodProv.applicationNumber != null)) {
+                        consumer.accept(IndexableValue.simpleFacetStringValue("Application Type Number", prodProv.applicationType + " " + prodProv.applicationNumber).suggestable().setSortable());
+                    }
+                }
+
+                // The Product Code is stored as String in the database, and need this IVM so can
+                // sort by numeric values on the frontend.
+                for (ProductCode prodCode : prodProv.productCodes) {
+                    if (prodCode != null) {
+                        if (prodCode.productCode != null) {
+                            // Remove hypen - from Product Code. Change 13334-155 to 13334155
+                            String codeRemovedHypen = prodCode.productCode.replaceAll("-", "");
+                            // Check if code has numeric values or not. If has number values, create IVM
+                            if (StringUtils.isNumeric(codeRemovedHypen) == true) {
+                                Long codeLong = Long.parseLong(codeRemovedHypen);
+                                consumer.accept(IndexableValue.simpleLongValue("Product Code", codeLong).suggestable().setSortable());
+                            }
+                        }
+                    }
+                }
+            } // for ProductProvenance
 
         } catch (Exception e) {
             log.warn("Error indexing ProductSubstanceIndexValueMaker:" + product.fetchKey(), e);
