@@ -38,8 +38,8 @@ public class Product extends ProductCommonData {
     @Column(name="PRODUCT_ID")
     public Long id;
 
-    @Column(name="PHARMACEDICAL_DOSAGE_FORM", length=500)
-    public String pharmacedicalDosageForm;
+    @Column(name="PHARMACEUTICAL_DOSAGE_FORM", length=500)
+    public String pharmaceuticalDosageForm;
 
     @Indexable(suggest = true, facet=true, name="Route of Administration")
     @Column(name="ROUTE_OF_ADMINISTRATION")
