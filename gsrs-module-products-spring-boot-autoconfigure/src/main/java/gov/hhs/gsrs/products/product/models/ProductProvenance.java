@@ -78,6 +78,7 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name="JURISDICTIONS", length=500)
     public String jurisdictions;
 
+    @Indexable(suggest = true, facet=true, name="Marketing Category Code")
     @Column(name="MARKETING_CATEGORY_CODE")
     public String marketingCategoryCode;
 
@@ -94,7 +95,7 @@ public class ProductProvenance extends ProductCommonData {
     @Column(name="CONTROL_SUBSTANCE_SOURCE", length=500)
     public String controlSubstanceSource;
 
-    @Column(name = "PRODUCT_URL", length=500)
+    @Column(name="PRODUCT_URL", length=500)
     public String productUrl;
 
     // Set Parent Class

@@ -38,11 +38,9 @@ public class Product extends ProductCommonData {
     @Column(name="PRODUCT_ID")
     public Long id;
 
+    @Indexable(suggest = true, facet=true, name="Product Container")
     @Column(name="PRODUCT_CONTAINER", length=500)
     public String productContainer;
-
-    @Column(name="PHARMACEDICAL_DOSAGE_FORM", length=500)
-    public String pharmacedicalDosageForm;
 
     @Indexable(suggest = true, facet=true, name="Route of Administration")
     @Column(name="ROUTE_OF_ADMINISTRATION")
@@ -55,6 +53,7 @@ public class Product extends ProductCommonData {
     @Column(name="COUNTRY_CODE", length=500)
     public String countryCode;
 
+    @Indexable(facet=true, name="Language")
     @Column(name="LANGUAGE")
     public String language;
 
