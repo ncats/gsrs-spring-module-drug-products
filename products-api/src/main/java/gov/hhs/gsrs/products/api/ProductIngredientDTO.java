@@ -33,7 +33,9 @@ public class ProductIngredientDTO {
     private String releaseCharacteristic;
     private String notes;
     private String grade;
+    private String ingredientFunction;
     private String ingredientLocation;
+    private String ingredientLocationText;
     private String confidentialityCode;
     private String originalNumeratorNumber;
     private String originalNumeratorUnit;

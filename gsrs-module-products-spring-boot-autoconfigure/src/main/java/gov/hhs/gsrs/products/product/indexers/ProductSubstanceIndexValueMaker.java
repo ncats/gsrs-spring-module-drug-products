@@ -63,6 +63,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
                                 // Get from Config which Substance Key Resolver to use. Substance API or Entity Mananger
                                 if (substanceKeyResolverToUseFromConfig != null) {
+
                                     if (substanceKeyResolverToUseFromConfig.equalsIgnoreCase("api")) {
                                         // Call SUBSTANCE API Substance Resolver
                                         createIndexableValuesBySubstanceApiResolver(consumer, substanceKey, substanceKeyType);
@@ -75,6 +76,16 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                             }  // product substance key not null
                         } // product Ingredient is not null
                     }  // for productIngredients
+
+                    // Number of Ingredients in the Product
+                    if (prodLot.productIngredients != null) {
+                        String ingredientSize = "0";
+                        if (prodLot.productIngredients.size() > 0) {
+                            ingredientSize = Integer.toString(prodLot.productIngredients.size());
+                        }
+                        consumer.accept(IndexableValue.simpleFacetStringValue("Number of Ingredients", ingredientSize));
+                    }
+
                 } // for productLots
             } // for productManufactureItems
 

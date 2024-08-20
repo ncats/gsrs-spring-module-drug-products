@@ -19,7 +19,7 @@ import java.util.List;
 public class ProductDTO {
 
     private Long id;
-    private String pharmacedicalDosageForm;
+    private String productContainer;
     private String routeAdmin;
     private String unitPresentation;
     private String countryCode;
@@ -30,6 +30,8 @@ public class ProductDTO {
     private String manufacturerName;
     private String manufacturerCode;
     private String manufacturerCodeType;
+    private Date effectiveDate;
+    private Date endDate;
 
     private final List<ProductProvenanceDTO> productProvenances = new ArrayList();
     private final List<ProductManufactureItemDTO> productManufactureItems = new ArrayList();
