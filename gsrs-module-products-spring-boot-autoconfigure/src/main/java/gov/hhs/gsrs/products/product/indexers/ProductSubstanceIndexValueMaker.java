@@ -49,7 +49,10 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
     @Override
     public void createIndexableValues(Product product, Consumer<IndexableValue> consumer) {
         try {
+            int numberOfIngredents = 0;
+
             for (ProductManufactureItem prodManuItems : product.productManufactureItems) {
+
                 for (ProductLot prodLot : prodManuItems.productLots) {
                     for (ProductIngredient prodIng : prodLot.productIngredients) {
 
@@ -79,16 +82,19 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
                     // Number of Ingredients in the Product
                     if (prodLot.productIngredients != null) {
-                        String ingredientSize = "0";
                         if (prodLot.productIngredients.size() > 0) {
-                            ingredientSize = Integer.toString(prodLot.productIngredients.size());
+                            // Count total number of Ingredients in a product. Since there can be multiple Manufacture Items,
+                            // need to count all the ingredients under each Manufacuture Item record.
+                            numberOfIngredents = numberOfIngredents  + prodLot.productIngredients.size();
                         }
-                        consumer.accept(IndexableValue.simpleFacetStringValue("Number of Ingredients", ingredientSize));
                     }
 
                 } // for productLots
             } // for productManufactureItems
 
+            // Create facet "Number of Ingredients" that counts total number of Ingredients in a Product.
+            String numberOfIngredientsStr = numberOfIngredents > 0 ? Integer.toString(numberOfIngredents) : "0";
+            consumer.accept(IndexableValue.simpleFacetStringValue("Number of Ingredients", numberOfIngredientsStr));
 
             // Facet: Application Type Number - Create a facet by combining Application Type and Application Number
             for (ProductProvenance prodProv : product.productProvenances) {

@@ -63,6 +63,9 @@ public class ProductFieldNameDecorator implements FieldNameDecorator {
         m.put("root_productProvenances_productIndications_indication", "Indication");
 
         m.put("root_productManufactureItems_dosageForm", "Dosage Form Name");
+        m.put("root_productManufactureItems_dosageFormCode", "Dosage Form Code");
+        m.put("root_productManufactureItems_dosageFormCodeType", "Dosage Form Code Type");
+        m.put("root_productManufactureItems_routeOfAdministration", "Manufacture Item Route of Administration");
         m.put("root_productManufactureItems_charColor", "Manufacture Item Color");
         m.put("root_productManufactureItems_charShape", "Manufacture Item Shape");
         m.put("root_productManufactureItems_unit", "Manufacture Item Unit");
@@ -74,15 +77,21 @@ public class ProductFieldNameDecorator implements FieldNameDecorator {
         m.put("root_productManufactureItems_productManufacturers_manufacturedItemCode", "Manufactured Item Code");
         m.put("root_productManufactureItems_productManufacturers_manufacturedItemCodeType", "Manufactured Item Code Type");
 
-        m.put("root_productManufactureItems_productLots_productIngredients_applicantIngredName", "Manufacturer Role");
+        m.put("root_productManufactureItems_productLots_productIngredients_applicantIngredName", "Applicant Ingredient Name");
         m.put("root_productManufactureItems_productLots_productIngredients_substanceKey", "Substance Key");
         m.put("root_productManufactureItems_productLots_productIngredients_substanceKeyType", "Substance Key Type");
         m.put("root_productManufactureItems_productLots_productIngredients_ingredientType", "Ingredient Type");
         m.put("root_productManufactureItems_productLots_productIngredients_ingredientFunction", "Ingredient Function");
         m.put("root_productManufactureItems_productLots_productIngredients_ingredientLocation", "Ingredient Location");
+        m.put("root_productManufactureItems_productLots_productIngredients_grade", "Ingredient Grade");
+        m.put("root_productManufactureItems_productLots_productIngredients_average", "Ingredient Average");
         m.put("root_productManufactureItems_productLots_productIngredients_unit", "Ingredient Average Unit");
-        m.put("root_productManufactureItems_productLots_productIngredients_originalNumeratorUnit", "Original Numerator Unit");
-        m.put("root_productManufactureItems_productLots_productIngredients_originalDenominatorUnit", "Original Denominator Unit");
+        m.put("root_productManufactureItems_productLots_productIngredients_originalNumeratorNumber", "Ingredient Original Numerator Number");
+        m.put("root_productManufactureItems_productLots_productIngredients_originalNumeratorUnit", "Ingredient Original Numerator Unit");
+        m.put("root_productManufactureItems_productLots_productIngredients_originalDenominatorNumber", "Ingredient Original Denominator Number");
+        m.put("root_productManufactureItems_productLots_productIngredients_originalDenominatorUnit", "Ingredient Original Denominator Unit");
+        m.put("root_productManufactureItems_productLots_productIngredients_notes", "Ingredient Notes");
+        m.put("root_productManufactureItems_productLots_productIngredients_manufacturer", "Ingredient Manufacturer");
 
         displayNames = m;
     }
