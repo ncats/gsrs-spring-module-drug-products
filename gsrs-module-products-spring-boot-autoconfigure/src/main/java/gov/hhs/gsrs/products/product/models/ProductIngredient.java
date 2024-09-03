@@ -52,7 +52,7 @@ public class ProductIngredient extends ProductCommonData {
     @Column(name = "SUBSTANCE_KEY_TYPE")
     public String substanceKeyType;
 
-    @Indexable
+    @Indexable(facet = true, name = "Basis of Strength Substance Key")
     @Column(name = "BOS_SUBSTANCE_KEY")
     public String basisOfStrengthSubstanceKey;
 

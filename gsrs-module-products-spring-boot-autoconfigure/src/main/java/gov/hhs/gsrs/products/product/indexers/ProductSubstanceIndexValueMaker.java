@@ -49,7 +49,10 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
     @Override
     public void createIndexableValues(Product product, Consumer<IndexableValue> consumer) {
         try {
+            int numberOfIngredents = 0;
+
             for (ProductManufactureItem prodManuItems : product.productManufactureItems) {
+
                 for (ProductLot prodLot : prodManuItems.productLots) {
                     for (ProductIngredient prodIng : prodLot.productIngredients) {
 
@@ -63,6 +66,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
                                 // Get from Config which Substance Key Resolver to use. Substance API or Entity Mananger
                                 if (substanceKeyResolverToUseFromConfig != null) {
+
                                     if (substanceKeyResolverToUseFromConfig.equalsIgnoreCase("api")) {
                                         // Call SUBSTANCE API Substance Resolver
                                         createIndexableValuesBySubstanceApiResolver(consumer, substanceKey, substanceKeyType);
@@ -75,9 +79,22 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                             }  // product substance key not null
                         } // product Ingredient is not null
                     }  // for productIngredients
+
+                    // Number of Ingredients in the Product
+                    if (prodLot.productIngredients != null) {
+                        if (prodLot.productIngredients.size() > 0) {
+                            // Count total number of Ingredients in a product. Since there can be multiple Manufacture Items,
+                            // need to count all the ingredients under each Manufacuture Item record.
+                            numberOfIngredents = numberOfIngredents  + prodLot.productIngredients.size();
+                        }
+                    }
+
                 } // for productLots
             } // for productManufactureItems
 
+            // Create facet "Number of Ingredients" that counts total number of Ingredients in a Product.
+            String numberOfIngredientsStr = numberOfIngredents > 0 ? Integer.toString(numberOfIngredents) : "0";
+            consumer.accept(IndexableValue.simpleFacetStringValue("Number of Ingredients", numberOfIngredientsStr));
 
             // Facet: Application Type Number - Create a facet by combining Application Type and Application Number
             for (ProductProvenance prodProv : product.productProvenances) {

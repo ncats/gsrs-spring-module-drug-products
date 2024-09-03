@@ -34,6 +34,7 @@ public class ProductName extends ProductCommonData {
     @Column(name="PRODUCT_NAME", length=1000)
     public String productName;
 
+    @Indexable(suggest = true, facet=true, name= "Product Name Type", sortable = true)
     @Column(name="PRODUCT_NAME_TYPE")
     public String productNameType;
 

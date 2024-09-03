@@ -16,10 +16,13 @@ import gsrs.repository.EditRepository;
 import gsrs.service.EtagExportGenerator;
 import gsrs.service.ExportService;
 import gsrs.service.GsrsEntityService;
+import gsrs.GsrsFactoryConfiguration;
 import gsrs.controller.hateoas.HttpRequestHolder;
 import ix.core.models.Principal;
 import ix.core.models.ETag;
+import ix.core.search.text.TextIndexer;
 import ix.core.search.SearchResult;
+import ix.core.search.SearchOptions;
 import ix.ginas.exporters.ExportMetaData;
 import ix.ginas.exporters.ExportProcess;
 import ix.ginas.exporters.Exporter;
@@ -83,6 +86,9 @@ public class ProductController extends EtagLegacySearchEntityController<ProductC
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private GsrsFactoryConfiguration gsrsFactoryConfiguration;
+
 
     @Override
     public GsrsEntityService<Product, Long> getEntityService() {
@@ -97,6 +103,29 @@ public class ProductController extends EtagLegacySearchEntityController<ProductC
     @Override
     protected Stream<Product> filterStream(Stream<Product> stream, boolean publicOnly, Map<String, String> parameters) {
         return stream;
+    }
+
+    @Override
+    public SearchOptions instrumentSearchOptions(SearchOptions so) {
+
+        so= super.instrumentSearchOptions(so);
+        so.addDateRangeFacet("root_lastModifiedDate");
+        so.addDateRangeFacet("root_creationDate");
+
+        if (gsrsFactoryConfiguration != null) {
+            Optional<Map<String, Object>> conf = gsrsFactoryConfiguration
+                    .getSearchSettingsFor(ProductEntityService.CONTEXT);
+
+            String restrict = conf
+                    .map(cc -> cc.get("restrictDefaultToIdentifiers"))
+                    .filter(bb -> bb != null).map(bb -> bb.toString())
+                    .orElse(null);
+            if (restrict != null && "true".equalsIgnoreCase(restrict)) {
+                so.setDefaultField(TextIndexer.FULL_IDENTIFIER_FIELD);
+            }
+        }
+
+        return so;
     }
 
     @GetGsrsRestApiMapping("/distinctprovenance/{substanceId}")
