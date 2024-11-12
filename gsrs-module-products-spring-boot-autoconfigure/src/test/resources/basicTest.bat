@@ -1,0 +1,1 @@
+echo input: %1  > %2

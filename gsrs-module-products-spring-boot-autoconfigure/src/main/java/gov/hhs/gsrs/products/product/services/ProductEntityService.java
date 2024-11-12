@@ -132,10 +132,17 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
 
     @Override
     public Optional<Product> flexLookup(String someKindOfId) {
-        if (someKindOfId == null){
+        log.trace("in flex lookup, someKindOfId: {}", someKindOfId);
+        if (someKindOfId == null || someKindOfId.isEmpty()) {
             return Optional.empty();
         }
-        return repository.findById(Long.parseLong(someKindOfId));
+        try {
+            return repository.findById(Long.parseLong(someKindOfId));
+        }
+        catch (NumberFormatException e) {
+            log.warn("Error making number out of input");
+        }
+        return Optional.empty();
     }
 
     @Override
