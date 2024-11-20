@@ -1,8 +1,13 @@
 package gov.hhs.gsrs.products.product.tasks;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.hhs.gsrs.products.product.models.Product;
+import gov.hhs.gsrs.products.product.services.ProductEntityService;
 import gov.hhs.gsrs.products.product.utils.ShellCommandRunner;
 import gsrs.scheduledTasks.ScheduledTaskInitializer;
 import gsrs.scheduledTasks.SchedulerPlugin;
+import gsrs.springUtils.AutowireHelper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +38,11 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
     private String firstScriptPath;
 
+    private String processedFilePath;
+
+    //@Autowired
+    //private ProductEntityService productEntityService;
+
     @Override
     public void run(SchedulerPlugin.JobStats stats, SchedulerPlugin.TaskListener l) {
       log.info("Starting in DataDirMonitorTask. dirs: {}", dataFileDirectories);
@@ -54,20 +64,13 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
             log.info("files in dir {}", dir);
             File directory = new File(dir);
             //make sure there's a place to put processed files
-            String processedFilePath = directory.getAbsolutePath() + File.separator + PROCESSED_FILES_DIR;
+            this.processedFilePath = directory.getAbsolutePath() + File.separator + PROCESSED_FILES_DIR;
             log.trace("looking for {}", processedFilePath);
             File processedFile = new File(processedFilePath);
             if(!processedFile.exists()) {
                 processedFile.mkdirs();
                 log.trace("created {}", processedFilePath);
             }
-            StringBuilder results = new StringBuilder();
-            try {
-                processOneDirectory(dir, results::append);
-            } catch (IOException | InterruptedException e) {
-                log.error("Error during file processing: {}", e.getMessage(), e);
-            }
-            log.info("results: {}", results);
 
             for( String fileName : directory.list()) {
                 String fullFilePath = directory.getAbsolutePath() + File.separator + fileName;
@@ -77,6 +80,14 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                     log.info("omitting dir {}", fullFilePath);
                     continue;
                 }
+                StringBuilder results = new StringBuilder();
+                try {
+                    processOneFile(fullFilePath, results::append);
+                } catch (IOException | InterruptedException e) {
+                    log.error("Error during file processing: {}", e.getMessage(), e);
+                }
+                log.info("results: {}", results);
+
                 String currentDirectoryPath = System.getProperty("user.dir");
                 String destinationPath = processedFilePath + File.separator + fileName;
                 //Files.move(fullFile.toPath(), new File(destinationPath).toPath());
@@ -85,7 +96,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         });
     }
 
-    private void processOneDirectory(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
+    private void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
         log.info("processOneFile fileName: {}", fileName);
         String logFilePath = File.createTempFile("project_data_processing", ".log").getAbsolutePath();
         StringBuilder commandBuilder = new StringBuilder();
@@ -104,12 +115,10 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         File jsonFile = File.createTempFile(fileName,".json");
         String jsonFilePath = jsonFile.getAbsolutePath();
 
-        commandBuilder.append("start_processing(\"");
+        commandBuilder.append("process_one_file(\"");
         commandBuilder.append(fileName.replace("\\", "\\\\"));
         commandBuilder.append("\", \"");
         commandBuilder.append(logFilePath.replace("\\", "\\\\"));
-        //commandBuilder.append("\" \"");
-        //commandBuilder.append(dictionaryCsvSourceFilePath);
         commandBuilder.append("\", \"");
         commandBuilder.append(jsonFilePath.replace("\\", "\\\\"));
         commandBuilder.append("\", \"");
@@ -128,10 +137,28 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 .command(pythonExecutablePath, activatorScriptName)
                 .build()
                 .run()
+                .onExit(r->this.completeProcessing(fileName))
                 .onInput(consumer::accept);
         log.info("file written? {}", jsonFile.exists());
     }
 
+    public void completeProcessing(String fileName){
+        log.info("completeProcessing file: {}", fileName);
+        try {
+            Product newProduct= getProductFromFile(fileName);
+            ProductEntityService productEntityService = new ProductEntityService();
+            AutowireHelper.getInstance().autowire(productEntityService);
+            productEntityService.create(newProduct);
+            log.info("Product created: {}", newProduct);
+            String destinationPath = processedFilePath + File.separator + fileName;
+            File fullFile = new File(fileName);
+            //Files.move(fullFile.toPath(), new File(destinationPath).toPath());
+            log.info("skipping moving of file to {}", destinationPath);
+
+        } catch (Exception e) {
+            log.error("error deserializing product", e);
+        }
+    }
     public static String getFileName(String path) {
         if(path == null || path.isEmpty()) {
             return null;
@@ -142,5 +169,11 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
             return fullFileName.replaceAll(".py", "");
         }
         return path;
+    }
+
+    public static Product getProductFromFile(String filePath) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(new File(filePath), Product.class);
     }
 }

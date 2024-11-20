@@ -318,12 +318,11 @@ def save_data_as_zip(data_list, output_zip):
     #print(f"[INFO] Created zip file: {output_zip}")
 
 # save data as plain text JSON
-def save_data_as_json(data_list, json_file):
+def save_data_as_json(data, json_file):
     with open(json_file, 'w') as f:
-        for index, data in enumerate(data_list):
-            if data:
-                json.dump(data, f)
-                
+        if data:
+            json.dump(data, f)
+
 # Function to load data from a zip file containing JSON files
 def load_data_from_zip(zip_file_path):
     data_list = []
@@ -345,4 +344,10 @@ def start_processing(folder_path_in, log_file_path_in, output_json_in, api_base_
     #data_dictionary = csv_to_transformed_dict(csv_file_path_in, key_column, value_column)
     parsed_data = process_xml_files(folder_path_in, log_file_path_in, api_base_url_in)
     save_data_as_json(parsed_data, output_json_in)
-    
+
+def process_one_file(file_path_in, log_file_path_in, output_json_in, api_base_url_in):
+    date_time = datetime.now().strftime("%I:%M%p on %B %d, %Y")
+    log_to_file(log_file_path_in, "process_one_file at " + date_time)
+    log_to_file(log_file_path_in, "file_path_in: " + file_path_in)
+    parsed_record=parse_xml_file(file_path_in, log_file_path_in, api_base_url_in)
+    save_data_as_json(parsed_record, output_json_in)

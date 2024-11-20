@@ -1,9 +1,13 @@
 package gov.hhs.gsrs.products;
 
+import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.tasks.DataDirMonitorTask;
-import gov.nih.ncats.common.stream.StreamUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+
+import java.io.File;
+import java.io.IOException;
 
 public class DataDirMonitorTaskTests {
 
@@ -24,5 +28,14 @@ public class DataDirMonitorTaskTests {
             if(c == '\\') totalBackSlash++;
         }
         Assertions.assertEquals(6, totalBackSlash);
+    }
+
+    @Test
+    void getProductFromFileTest() throws IOException {
+        String fileName = "json/product.2.json";
+        File dataFile = new ClassPathResource(fileName).getFile();
+        Product product = DataDirMonitorTask.getProductFromFile(dataFile.getAbsolutePath());
+        String expectedManufacturer = "Smith";
+        Assertions.assertEquals(product.manufacturerName, expectedManufacturer);
     }
 }

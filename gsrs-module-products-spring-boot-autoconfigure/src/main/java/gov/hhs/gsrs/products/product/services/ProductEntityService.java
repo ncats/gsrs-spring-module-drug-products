@@ -64,7 +64,7 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
     }
 
     @Override
-    protected Product create(Product application) {
+    public Product create(Product application) {
         try {
             return repository.saveAndFlush(application);
         }catch(Throwable t){

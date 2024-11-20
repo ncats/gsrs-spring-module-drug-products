@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -88,6 +89,7 @@ public class ShellCommandRunner {
 
         Consumer<String> onIn=null;
         Consumer<String> onErr=(l)-> log.error(l);
+        Consumer<String> onExit=(l)-> log.trace("completed");
 
         private Monitor(Process process){
             this.p=process;
@@ -98,6 +100,7 @@ public class ShellCommandRunner {
                     new StreamGobbler(process.getErrorStream(), l->_onErr(l));
             Executors.newSingleThreadExecutor().submit(streamGobblerErr);
             pw = new PrintWriter(this.p.getOutputStream());
+            CompletableFuture<Process> future = process.onExit();
         }
 
         private void _onInput(String line){
@@ -109,6 +112,10 @@ public class ShellCommandRunner {
             if(onErr!=null){
                 onErr.accept(line);
             }
+        }
+
+        private void _onExit(String result){
+            onExit.accept(result);
         }
 
         public OutputStream getOut(){
@@ -132,6 +139,11 @@ public class ShellCommandRunner {
 
         public Monitor onError(Consumer<String> one){
             this.onErr=one;
+            return this;
+        }
+
+        public Monitor onExit(Consumer<String> one){
+            this.onExit=one;
             return this;
         }
 
