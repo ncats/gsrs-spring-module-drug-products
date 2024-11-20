@@ -1,13 +1,14 @@
 package gov.hhs.gsrs.products.product.tasks;
 
 import gov.hhs.gsrs.products.product.utils.ShellCommandRunner;
-import gov.hhs.gsrs.products.product.utils.ShellCommandRunner.Monitor;
 import gsrs.scheduledTasks.ScheduledTaskInitializer;
 import gsrs.scheduledTasks.SchedulerPlugin;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
+@EqualsAndHashCode(callSuper = true)
 @Slf4j
 @Data
 public class DataDirMonitorTask extends ScheduledTaskInitializer {
@@ -23,9 +25,13 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
     private String PROCESSED_FILES_DIR = "processed";
 
-    private String BASE_COMMAND = "D:\\app\\python\\python.exe";
+    private String pythonExecutablePath;
 
-    private String SCRIPT_NAME = "D:\\temp\\script1.py";
+    private String dictionaryCsvSourceFilePath;
+
+    private String substanceApiBaseUrl;
+
+    private String firstScriptPath;
 
     @Override
     public void run(SchedulerPlugin.JobStats stats, SchedulerPlugin.TaskListener l) {
@@ -65,7 +71,8 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 }
                 StringBuilder results = new StringBuilder();
                 try {
-                    processOneFile("d:\\temp", fullFilePath, results::append);
+                    String currentDirectoryPath = System.getProperty("user.dir");
+                    processOneFile(fullFilePath, results::append);
                     log.info("results: {}", results);
                     String destinationPath = processedFilePath + File.separator + fileName;
                     Files.move(fullFile.toPath(), new File(destinationPath).toPath());
@@ -77,13 +84,62 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         });
     }
 
-    private void processOneFile(String activeDir, String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
-        log.info("processOneFile");
-        Monitor monitor=(new ShellCommandRunner.Builder())
-                .activeDir(activeDir)
-                .command(BASE_COMMAND, SCRIPT_NAME, fileName)
+    private void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
+        log.info("processOneFile fileName: {}", fileName);
+        String logFilePath = File.createTempFile("project_data_processing", ".log").getAbsolutePath();
+        StringBuilder commandBuilder = new StringBuilder();
+        File scriptFile = new File(firstScriptPath);
+        String scriptFileName = getFileName(firstScriptPath);
+        String activatorScriptName = "central_script.py";
+
+        String temporaryDirectory = Files.createTempDirectory("python_processing").toAbsolutePath().toString();
+        log.info("temporaryDirectory: {}", temporaryDirectory);
+        File temporaryScriptFile =new File(temporaryDirectory + File.separator + scriptFileName);
+        Files.copy(scriptFile.toPath(), temporaryScriptFile.toPath());
+        File activatorScriptFile = new File(temporaryDirectory + File.separator + activatorScriptName);
+        FileWriter writer = new FileWriter(activatorScriptFile);
+        writer.write("from " + scriptFileName + " import *\n");
+
+        File jsonFile = File.createTempFile(fileName,".json");
+        String jsonFilePath = jsonFile.getAbsolutePath();
+
+        commandBuilder.append("start_processing(\"");
+        commandBuilder.append(fileName.replace("\\", "\\\\"));
+        commandBuilder.append("\", \"");
+        commandBuilder.append(logFilePath.replace("\\", "\\\\"));
+        //commandBuilder.append("\" \"");
+        //commandBuilder.append(dictionaryCsvSourceFilePath);
+        commandBuilder.append("\", \"");
+        commandBuilder.append(jsonFilePath.replace("\\", "\\\\"));
+        commandBuilder.append("\", \"");
+        commandBuilder.append(substanceApiBaseUrl);
+        commandBuilder.append("\")");
+
+        log.info("write processing script to {}", activatorScriptFile.getAbsolutePath());
+
+        String commandInPython = commandBuilder.toString();
+        log.info("commandInPython: {}", commandInPython);
+        writer.write(commandInPython);
+        writer.close();
+
+        (new ShellCommandRunner.Builder())
+                .activeDir(temporaryDirectory)
+                .command(pythonExecutablePath, activatorScriptName)
                 .build()
                 .run()
-                .onInput(l->consumer.accept(l));
+                .onInput(consumer::accept);
+        log.info("file written? {}", jsonFile.exists());
+    }
+
+    public static String getFileName(String path) {
+        if(path == null || path.isEmpty()) {
+            return null;
+        }
+        int pos = path.lastIndexOf(File.separator);
+        if( pos > 0 ){
+            String fullFileName= path.substring(pos+1);
+            return fullFileName.replaceAll(".py", "");
+        }
+        return path;
     }
 }
