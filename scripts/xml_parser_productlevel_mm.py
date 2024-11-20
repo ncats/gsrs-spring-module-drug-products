@@ -1,10 +1,11 @@
-import os
+import sys, os
 import json
 import csv
 import xml.etree.ElementTree as ET
 from datetime import datetime
 import zipfile
 import requests
+from datetime import date
 
 # HL7
 HL7 = {'hl7': 'urn:hl7-org:v3'}
@@ -125,8 +126,12 @@ def parse_xml_file(file_path, log_file_path, api_base_url):
   
                         quantity = ingredient.find('.//hl7:quantity',HL7)
                         active_moiety = ingredient.find('.//hl7:activeMoiety', HL7)
-                        
-                        basis_of_strength_unii = ingredient_substance.find('.//hl7:code',HL7).get('code')
+
+                        basis_of_strength =ingredient_substance.find('.//hl7:code',HL7)
+                        if basis_of_strength is not None:
+                            basis_of_strength_unii = ingredient_substance.find('.//hl7:code',HL7).get('code')
+                        else:
+                            basis_of_strength_unii = None
                         #print(basis_of_strength_unii)
                         if ingredientTypeXML == 'ACTIM':
                             basis_of_strength_unii = active_moiety.find('.//hl7:code',HL7).get('code')
@@ -159,8 +164,9 @@ def parse_xml_file(file_path, log_file_path, api_base_url):
                                     'originalDenominatorUnit': (quantity.find('.//hl7:denominator',HL7).get('unit')).upper() if quantity is not None else ''                
                                     }                               
                             XML_values['Ingredients'].append(Substance)
-                        except:
-                            log_message=f"[ERROR]IgredientIssue: {file_path}. Error: {e}"
+                        except Exception as e:
+                            exc_type, exc_obj, exc_tb = sys.exc_info()
+                            log_message=f"[ERROR]IgredientIssue: {file_path}. Error: {e} line {exc_tb.tb_lineno}"
                             log_to_file(log_file_path, log_message)
                             pass
                     #GSRSProduct={}
@@ -281,8 +287,9 @@ def parse_xml_file(file_path, log_file_path, api_base_url):
         log_message=f"[SUCCESS] parse XML file: {file_path}"
         log_to_file(log_file_path, log_message)                
     except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
         print('key', file_path)
-        log_message=f"[ERROR] Failed to parse XML file: {file_path}. Error: {e}"
+        log_message=f"[ERROR] Failed to parse XML file: {file_path}. Error: {e} line {exc_tb.tb_lineno}"
         log_to_file(log_file_path, log_message)
         GSRSProduct = {}    
         #print(error,f"[ERROR] Failed to parse XML file: {file_path}. Error: {e}")
@@ -296,6 +303,7 @@ def process_xml_files(folder_path, log_file_path, api_base_url):
     parsed_data = []
     for filename in xml_files:
         file_path = os.path.join(folder_path, filename)
+        log_to_file(log_file_path, "going to process file " + file_path)
         parsed_data.append(parse_xml_file(file_path, log_file_path, api_base_url))
     return parsed_data
 
@@ -329,7 +337,7 @@ def load_data_from_zip(zip_file_path):
     return data_list
 
 def start_processing(folder_path_in, log_file_path_in, output_json_in, api_base_url_in):
-    date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    date_time = datetime.now().strftime("%I:%M%p on %B %d, %Y")
     log_to_file(log_file_path_in, "start_processing at " + date_time)
     log_to_file(log_file_path_in, "folder_path_in: " + folder_path_in)
     key_column = 'UNII'

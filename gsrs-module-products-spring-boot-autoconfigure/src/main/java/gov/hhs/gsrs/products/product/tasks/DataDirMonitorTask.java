@@ -61,6 +61,14 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 processedFile.mkdirs();
                 log.trace("created {}", processedFilePath);
             }
+            StringBuilder results = new StringBuilder();
+            try {
+                processOneDirectory(dir, results::append);
+            } catch (IOException | InterruptedException e) {
+                log.error("Error during file processing: {}", e.getMessage(), e);
+            }
+            log.info("results: {}", results);
+
             for( String fileName : directory.list()) {
                 String fullFilePath = directory.getAbsolutePath() + File.separator + fileName;
                 log.info("full file path: {}", fullFilePath);
@@ -69,22 +77,15 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                     log.info("omitting dir {}", fullFilePath);
                     continue;
                 }
-                StringBuilder results = new StringBuilder();
-                try {
-                    String currentDirectoryPath = System.getProperty("user.dir");
-                    processOneFile(fullFilePath, results::append);
-                    log.info("results: {}", results);
-                    String destinationPath = processedFilePath + File.separator + fileName;
-                    Files.move(fullFile.toPath(), new File(destinationPath).toPath());
-                    log.info("moved file to {}", destinationPath);
-                } catch (IOException | InterruptedException e) {
-                    log.error("Error during file processing: {}", e.getMessage(), e);
-                }
+                String currentDirectoryPath = System.getProperty("user.dir");
+                String destinationPath = processedFilePath + File.separator + fileName;
+                //Files.move(fullFile.toPath(), new File(destinationPath).toPath());
+                log.info("skipped move of file to {}", destinationPath);
             }
         });
     }
 
-    private void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
+    private void processOneDirectory(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
         log.info("processOneFile fileName: {}", fileName);
         String logFilePath = File.createTempFile("project_data_processing", ".log").getAbsolutePath();
         StringBuilder commandBuilder = new StringBuilder();
@@ -94,7 +95,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
         String temporaryDirectory = Files.createTempDirectory("python_processing").toAbsolutePath().toString();
         log.info("temporaryDirectory: {}", temporaryDirectory);
-        File temporaryScriptFile =new File(temporaryDirectory + File.separator + scriptFileName);
+        File temporaryScriptFile =new File(temporaryDirectory + File.separator + scriptFileName + ".py");
         Files.copy(scriptFile.toPath(), temporaryScriptFile.toPath());
         File activatorScriptFile = new File(temporaryDirectory + File.separator + activatorScriptName);
         FileWriter writer = new FileWriter(activatorScriptFile);
