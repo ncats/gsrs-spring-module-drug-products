@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -131,34 +132,36 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         log.info("commandInPython: {}", commandInPython);
         writer.write(commandInPython);
         writer.close();
-
+        List<String> fileNames = Arrays.asList(jsonFilePath, fileName);
         (new ShellCommandRunner.Builder())
                 .activeDir(temporaryDirectory)
                 .command(pythonExecutablePath, activatorScriptName)
-                .onExit(r->this.completeProcessing(jsonFilePath))
-                .parameterForExitCall(jsonFilePath)
+                .onExit(r->this.completeProcessing(fileNames))
+                .parameterForExitCall(fileNames)
                 .build()
                 .run()
                 .onInput(consumer::accept);
         log.info("file written? {}", jsonFile.exists());
     }
 
-    public void completeProcessing(String fileName){
-        log.info("completeProcessing file: {}", fileName);
+    public void completeProcessing(List<String> fileNames){
+        //first file is the processed JSON file, for loading.
+        // second file is the original input XML file to be moved out of the way
+        log.info("completeProcessing file: {}", fileNames.toString());
         try {
-            Product newProduct= getProductFromFile(fileName);
+            Product newProduct= getProductFromFile(fileNames.get(0));
             if(newProduct != null) {
                 ProductEntityService productEntityService = new ProductEntityService();
                 AutowireHelper.getInstance().autowire(productEntityService);
                 productEntityService.create(newProduct);
                 log.info("Product created: {}", newProduct);
-                String destinationPath = processedFilePath + File.separator + fileName;
-                File fullFile = new File(fileName);
+                String destinationPath = processedFilePath + File.separator + getFileName(fileNames.get(1));
+                File fullFile = new File(fileNames.get(1));
                 Files.move(fullFile.toPath(), new File(destinationPath).toPath());
                 log.info("moved file to {}", destinationPath);
             }
         } catch (Exception e) {
-            log.error("error deserializing product", e);
+            log.error("error processing product", e);
         }
     }
     public static String getFileName(String path) {

@@ -18,14 +18,13 @@ Copied from Resolver
 public class ShellCommandRunner {
     List<String> commandParams;
     File startDir = new File("./");
-    Consumer<String> onExitShellRunner;
-    String parameterForExitCall;
+    Consumer<List<String>> onExitShellRunner;
+    List<String> parameterForExitCall;
 
     public static boolean isWindows(){
         boolean isWindows = System.getProperty("os.name")
                 .toLowerCase().startsWith("windows");
         return isWindows;
-
     }
 
     private static class StreamGobbler implements Runnable {
@@ -44,24 +43,24 @@ public class ShellCommandRunner {
         }
     }
 
-    public Monitor run() throws IOException, InterruptedException{
+    public Monitor run() throws IOException{
         log.trace("startDir: " + this.startDir.getAbsolutePath());
         ProcessBuilder builder = new ProcessBuilder();
         builder.command(commandParams.toArray(new String[0]));
         builder.directory(startDir);
         Process process = builder.start();
         Monitor monitor = new Monitor(process);
-        monitor.onExit=this.onExitShellRunner;
-        monitor.exitCommandParameter=this.parameterForExitCall;
+        monitor.onExit = this.onExitShellRunner;
+        monitor.exitCommandParameter = this.parameterForExitCall;
         return monitor;
     }
 
 
     public static class Builder{
-        List<String> commandParams = new ArrayList<String>();
+        List<String> commandParams = new ArrayList<>();
         File startDir=null;
-        Consumer<String>  builderOnExit;
-        String parameterForExitCall;
+        Consumer<List<String>>  builderOnExit;
+        List<String> parameterForExitCall;
 
         public Builder command(String... cmd){
             commandParams= Arrays.stream(cmd)
@@ -79,12 +78,12 @@ public class ShellCommandRunner {
             return this;
         }
 
-        public Builder onExit(Consumer<String> onExit){
+        public Builder onExit(Consumer<List<String>> onExit){
             this.builderOnExit=onExit;
             return this;
         }
 
-        public Builder parameterForExitCall(String p){
+        public Builder parameterForExitCall(List<String> p){
             this.parameterForExitCall=p;
             return this;
         }
@@ -97,7 +96,6 @@ public class ShellCommandRunner {
             scr.parameterForExitCall=this.parameterForExitCall;
             return scr;
         }
-
     }
 
     public static class Monitor{
@@ -107,9 +105,9 @@ public class ShellCommandRunner {
 
         Consumer<String> onIn=null;
         Consumer<String> onErr=(l)-> log.error(l);
-        Consumer<String> onExit=(l)-> log.info("monitor process completed");
+        Consumer<List<String>> onExit=(l)-> log.info("monitor process completed");
 
-        private String exitCommandParameter;
+        private List<String> exitCommandParameter;
 
         private Monitor(Process process){
             this.p=process;
@@ -138,7 +136,7 @@ public class ShellCommandRunner {
             }
         }
 
-        private void _onExit(String result){
+        private void _onExit(List<String> result){
             onExit.accept(result);
         }
 
@@ -166,7 +164,7 @@ public class ShellCommandRunner {
             return this;
         }
 
-        public Monitor onExit(Consumer<String> one){
+        public Monitor onExit(Consumer<List<String>> one){
             this.onExit=one;
             log.info("setting onExit to {}", this.onExit);
             return this;
@@ -177,7 +175,7 @@ public class ShellCommandRunner {
             pw.flush();
             return this;
         }
-        public void exit(String parameter){
+        public void exit(List<String> parameter){
             this.onExit.accept(parameter);
         }
     }
