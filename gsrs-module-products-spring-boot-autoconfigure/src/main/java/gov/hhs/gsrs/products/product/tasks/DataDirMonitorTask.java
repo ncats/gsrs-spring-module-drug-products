@@ -135,9 +135,10 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         (new ShellCommandRunner.Builder())
                 .activeDir(temporaryDirectory)
                 .command(pythonExecutablePath, activatorScriptName)
+                .onExit(r->this.completeProcessing(jsonFilePath))
+                .parameterForExitCall(jsonFilePath)
                 .build()
                 .run()
-                .onExit(r->this.completeProcessing(fileName))
                 .onInput(consumer::accept);
         log.info("file written? {}", jsonFile.exists());
     }
@@ -146,15 +147,16 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         log.info("completeProcessing file: {}", fileName);
         try {
             Product newProduct= getProductFromFile(fileName);
-            ProductEntityService productEntityService = new ProductEntityService();
-            AutowireHelper.getInstance().autowire(productEntityService);
-            productEntityService.create(newProduct);
-            log.info("Product created: {}", newProduct);
-            String destinationPath = processedFilePath + File.separator + fileName;
-            File fullFile = new File(fileName);
-            //Files.move(fullFile.toPath(), new File(destinationPath).toPath());
-            log.info("skipping moving of file to {}", destinationPath);
-
+            if(newProduct != null) {
+                ProductEntityService productEntityService = new ProductEntityService();
+                AutowireHelper.getInstance().autowire(productEntityService);
+                productEntityService.create(newProduct);
+                log.info("Product created: {}", newProduct);
+                String destinationPath = processedFilePath + File.separator + fileName;
+                File fullFile = new File(fileName);
+                Files.move(fullFile.toPath(), new File(destinationPath).toPath());
+                log.info("moved file to {}", destinationPath);
+            }
         } catch (Exception e) {
             log.error("error deserializing product", e);
         }
@@ -172,8 +174,13 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
     }
 
     public static Product getProductFromFile(String filePath) throws IOException {
+        File jsonFile = new File(filePath);
+        if(!jsonFile.exists() || jsonFile.length() == 0) {
+            log.warn("file missing or empty!");
+            return null;
+        }
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper.readValue(new File(filePath), Product.class);
+        return mapper.readValue(jsonFile, Product.class);
     }
 }

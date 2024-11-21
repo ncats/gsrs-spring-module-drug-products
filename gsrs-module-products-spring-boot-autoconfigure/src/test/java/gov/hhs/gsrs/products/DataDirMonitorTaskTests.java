@@ -38,4 +38,13 @@ public class DataDirMonitorTaskTests {
         String expectedManufacturer = "Smith";
         Assertions.assertEquals(product.manufacturerName, expectedManufacturer);
     }
+
+
+    @Test
+    void getNullProductFromFileTest() throws IOException {
+        String fileName = "json/emptyEntity.json";
+        File dataFile = new ClassPathResource(fileName).getFile();
+        Product product = DataDirMonitorTask.getProductFromFile(dataFile.getAbsolutePath());
+        Assertions.assertNull(product);
+    }
 }
