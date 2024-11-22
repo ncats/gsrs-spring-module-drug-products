@@ -24,10 +24,10 @@ public class DataDirMonitorTaskTests {
 
     @Test
     void getProductFromFileTest() throws IOException {
-        String fileName = "json/product.2.json";
+        String fileName = "json/product_Nov-22-2024_10-42-07.json";
         File dataFile = new ClassPathResource(fileName).getFile();
         Product product = DataDirMonitorTask.getProductFromFile(dataFile.getAbsolutePath());
-        String expectedManufacturer = "Smith";
+        String expectedManufacturer = "Heritage Pharmaceuticals Inc. d/b/a Avet Pharmaceuticals Inc.";
         Assertions.assertEquals(product.manufacturerName, expectedManufacturer);
     }
 
