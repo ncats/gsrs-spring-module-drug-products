@@ -122,9 +122,9 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         commandBuilder.append(logFilePath.replace("\\", "\\\\"));
         commandBuilder.append("\", \"");
         commandBuilder.append(jsonFilePath.replace("\\", "\\\\"));
-        commandBuilder.append("\", \"");
-        commandBuilder.append(substanceApiBaseUrl);
-        commandBuilder.append("\")");
+        commandBuilder.append("\", None)");
+        //commandBuilder.append(substanceApiBaseUrl);
+        //commandBuilder.append("\")");
 
         log.info("write processing script to {}", activatorScriptFile.getAbsolutePath());
 

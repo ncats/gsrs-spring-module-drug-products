@@ -148,16 +148,25 @@ def parse_xml_file(file_path, log_file_path, api_base_url):
                             #log_to_file(log_file_path, log_message)
                             #print('applicantIngredName',ingredient_substance.find('.//hl7:name', HL7).text)
                             
-                            if ingredient_substance is not None or quantity is not None or active_moiety is not None:                            
-                                substance_uuid = lookup_uuid(ingredient_substance.find('.//hl7:code',HL7).get('code'), api_base_url)
-                                basis_of_strength_uuid =lookup_uuid(basis_of_strength_unii, api_base_url)
+                            if ingredient_substance is not None or quantity is not None or active_moiety is not None:
+                                if api_base_url is not None:
+                                    substance_id = lookup_uuid(ingredient_substance.find('.//hl7:code',HL7).get('code'), api_base_url)
+                                    substance_id_type = 'UUID'
+                                    basis_of_strength_id =lookup_uuid(basis_of_strength_unii, api_base_url)
+                                    basis_of_strength_id_type = 'UUID'
+                                else:
+                                    substance_id = ingredient_substance.find('.//hl7:code',HL7).get('code')
+                                    substance_id_type = 'APPROVAL_ID'
+                                    basis_of_strength_id =basis_of_strength_unii
+                                    basis_of_strength_id_type = 'APPROVAL_ID'
+
                                 Substance = {
                                     'applicantIngredName': ingredient_substance.find('.//hl7:name', HL7).text,
-                                    'substanceKeyType': 'UUID',
+                                    'substanceKeyType': substance_id_type,
                                     'ingredientType' : ingredientType.upper(),
-                                    'substanceKey': substance_uuid,
-                                    'basisOfStrengthSubstanceKey': basis_of_strength_uuid,
-                                    'basisOfStrengthSubstanceKeyType': 'UUID',
+                                    'substanceKey': substance_id,
+                                    'basisOfStrengthSubstanceKey': basis_of_strength_id,
+                                    'basisOfStrengthSubstanceKeyType': basis_of_strength_id_type,
                                     'originalNumeratorNumber': quantity.find('.//hl7:numerator',HL7).get('value') if quantity is not None else '',
                                     'originalNumeratorUnit': (quantity.find('.//hl7:numerator',HL7).get('unit')).upper() if quantity is not None else '',
                                     'originalDenominatorNumber': quantity.find('.//hl7:denominator',HL7).get('value','na') if quantity is not None else '',
