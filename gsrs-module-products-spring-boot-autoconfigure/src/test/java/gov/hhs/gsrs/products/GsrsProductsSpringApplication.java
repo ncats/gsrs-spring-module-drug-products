@@ -20,13 +20,13 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableBulkSearch
 @EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
 @EnableJpaRepositories(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-public class GsrsSpringApplication {
+public class GsrsProductsSpringApplication {
 
     static {
         System.out.println("Launching Product Test");
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(GsrsSpringApplication.class, args);
+        SpringApplication.run(GsrsProductsSpringApplication.class, args);
     }
 }

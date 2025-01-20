@@ -97,7 +97,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         });
     }
 
-    private void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
+    public void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
         log.info("processOneFile fileName: {}", fileName);
         String logFilePath = File.createTempFile("project_data_processing", ".log").getAbsolutePath();
         StringBuilder commandBuilder = new StringBuilder();
@@ -142,6 +142,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 .run()
                 .onInput(consumer::accept);
         log.info("file written? {}", jsonFile.exists());
+        consumer.accept(String.format("file written to file '%s'", jsonFile.getAbsolutePath()));
     }
 
     public void completeProcessing(List<String> fileNames){
