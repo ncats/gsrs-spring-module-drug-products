@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products.processor;
 
+import gov.hhs.gsrs.products.processor.model.DailyMedXmlFileDataHolder;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class DailyMedXmlFilesProcessor {
                 if (matcher.matches(path.getFileName())) {
                     log.trace("processing file {}", path.getFileName());
                     DailyMedXmlFileDataHolder holder = dailyMedXmlFileProcessor.process(path.toString());
-                    holder.products.forEach((key, value) -> {
+                    holder.getProducts().forEach((key, value) -> {
                         DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
                         gov.hhs.gsrs.products.product.models.Product product = converter.convert(value);
                         converter.printSerialized(product);

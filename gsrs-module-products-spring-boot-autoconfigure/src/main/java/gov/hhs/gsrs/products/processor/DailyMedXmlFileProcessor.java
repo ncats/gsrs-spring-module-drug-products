@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 /*
 Code originally written by Aruna Nishtala
- */
+*/
 @Slf4j
 public class DailyMedXmlFileProcessor {
     // Taking each file and extract/parse each field and populating a data holder object
@@ -36,7 +36,7 @@ public class DailyMedXmlFileProcessor {
 
     public XPathHelper xph = new XPathHelper();
     
-    private final String DISPLAY_NAME = DISPLAY_NAME;
+    public final String DISPLAY_NAME = "displayName";
 
     public DailyMedXmlFileDataHolder process(String path) {
     // This gathers all information from xml to populate a data holder object and returns the object (see DailyMedXmlFilesProcessor.java)

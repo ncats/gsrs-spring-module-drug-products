@@ -2,6 +2,9 @@ package gov.hhs.gsrs.products.product.tasks;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.hhs.gsrs.products.processor.DailyMedXmlDataHolderProductToGsrsProductEntityConverter;
+import gov.hhs.gsrs.products.processor.DailyMedXmlFileProcessor;
+import gov.hhs.gsrs.products.processor.model.DailyMedXmlFileDataHolder;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.services.ProductEntityService;
 import gov.hhs.gsrs.products.product.utils.ShellCommandRunner;
@@ -99,50 +102,17 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
     public void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
         log.info("processOneFile fileName: {}", fileName);
-        String logFilePath = File.createTempFile("project_data_processing", ".log").getAbsolutePath();
-        StringBuilder commandBuilder = new StringBuilder();
-        File scriptFile = new File(firstScriptPath);
-        String scriptFileName = getFileName(firstScriptPath);
-        String activatorScriptName = "central_script.py";
+        DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
+        DailyMedXmlFileDataHolder dataHolder= processor.process(fileName);
+        ProductEntityService productEntityService = new ProductEntityService();
+        AutowireHelper.getInstance().autowire(productEntityService);
 
-        String temporaryDirectory = Files.createTempDirectory("python_processing").toAbsolutePath().toString();
-        log.info("temporaryDirectory: {}", temporaryDirectory);
-        File temporaryScriptFile =new File(temporaryDirectory + File.separator + scriptFileName + ".py");
-        Files.copy(scriptFile.toPath(), temporaryScriptFile.toPath());
-        File activatorScriptFile = new File(temporaryDirectory + File.separator + activatorScriptName);
-        FileWriter writer = new FileWriter(activatorScriptFile);
-        writer.write("from " + scriptFileName + " import *\n");
-
-        File jsonFile = File.createTempFile(fileName,".json");
-        String jsonFilePath = jsonFile.getAbsolutePath();
-
-        commandBuilder.append("process_one_file(\"");
-        commandBuilder.append(fileName.replace("\\", "\\\\"));
-        commandBuilder.append("\", \"");
-        commandBuilder.append(logFilePath.replace("\\", "\\\\"));
-        commandBuilder.append("\", \"");
-        commandBuilder.append(jsonFilePath.replace("\\", "\\\\"));
-        commandBuilder.append("\", None)");
-        //commandBuilder.append(substanceApiBaseUrl);
-        //commandBuilder.append("\")");
-
-        log.info("write processing script to {}", activatorScriptFile.getAbsolutePath());
-
-        String commandInPython = commandBuilder.toString();
-        log.info("commandInPython: {}", commandInPython);
-        writer.write(commandInPython);
-        writer.close();
-        List<String> fileNames = Arrays.asList(jsonFilePath, fileName);
-        (new ShellCommandRunner.Builder())
-                .activeDir(temporaryDirectory)
-                .command(pythonExecutablePath, activatorScriptName)
-                .onExit(r->this.completeProcessing(fileNames))
-                .parameterForExitCall(fileNames)
-                .build()
-                .run()
-                .onInput(consumer::accept);
-        log.info("file written? {}", jsonFile.exists());
-        consumer.accept(String.format("file written to file '%s'", jsonFile.getAbsolutePath()));
+        DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
+        dataHolder.getProducts().forEach((key, value) -> {
+            Product product = converter.convert(value);
+            productEntityService.create(product);
+            log.info("Product created: {}", product);
+        });
     }
 
     public void completeProcessing(List<String> fileNames){
