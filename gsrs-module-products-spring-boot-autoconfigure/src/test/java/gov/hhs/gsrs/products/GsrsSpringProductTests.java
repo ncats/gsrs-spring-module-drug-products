@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
 
 //@Disabled
 //@ActiveProfiles("test")
-@GsrsJpaTest(classes = {GsrsProductsSpringApplication.class, GsrsControllerConfiguration.class, GsrsEntityTestConfiguration.class, ProductRepository.class})
+@GsrsJpaTest(classes = {GsrsSpringApplication.class, GsrsControllerConfiguration.class, GsrsEntityTestConfiguration.class, ProductRepository.class})
 @Import({Product.class, ProductEntityService.class})
 public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
 

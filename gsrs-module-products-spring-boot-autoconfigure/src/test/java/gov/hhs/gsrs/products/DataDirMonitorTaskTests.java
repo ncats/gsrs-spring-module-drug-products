@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @ActiveProfiles("test")
 @GsrsJpaTest(dirtyMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = GsrsProductsSpringApplication.class)
+@ContextConfiguration(classes = GsrsSpringApplication.class)
 public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
 //, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
     // extends AbstractGsrsJpaEntityJunit5Test

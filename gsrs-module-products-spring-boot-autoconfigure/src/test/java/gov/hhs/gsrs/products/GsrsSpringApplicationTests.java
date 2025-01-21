@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 //@ActiveProfiles("test")
-@SpringBootTest(classes = {GsrsProductsSpringApplication.class,  GsrsEntityTestConfiguration.class})
+@SpringBootTest(classes = {GsrsSpringApplication.class,  GsrsEntityTestConfiguration.class})
 class GsrsSpringApplicationTests extends AbstractGsrsJpaEntityJunit5Test {
 
     @MockBean
