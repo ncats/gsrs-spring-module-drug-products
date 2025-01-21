@@ -34,8 +34,6 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
     private String PROCESSED_FILES_DIR = "processed";
 
-    private String pythonExecutablePath;
-
     private String dictionaryCsvSourceFilePath;
 
     private String substanceApiBaseUrl;

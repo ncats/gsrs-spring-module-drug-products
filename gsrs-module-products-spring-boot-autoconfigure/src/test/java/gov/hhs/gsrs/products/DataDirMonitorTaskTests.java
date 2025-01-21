@@ -22,8 +22,6 @@ import java.io.IOException;
 public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
 //, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
     // extends AbstractGsrsJpaEntityJunit5Test
-    @Autowired
-    private TestConfiguration config;
 
     @Test
     void getFileNameTest() {
@@ -58,7 +56,6 @@ public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
         String fileName = "xml/chewing_gum.xml";
         File dataFile = new ClassPathResource(fileName).getFile();
         DataDirMonitorTask task = new DataDirMonitorTask();
-        task.setPythonExecutablePath(config.getPythonExecutablePath());
         String currentPath = System.getProperty("user.dir");
         File currentDir = new File(currentPath);
         String scriptFilePath = currentDir.getParentFile().getParentFile().getParentFile().getAbsolutePath()
