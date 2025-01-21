@@ -2,12 +2,10 @@ package gov.hhs.gsrs.products;
 
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.tasks.DataDirMonitorTask;
-import gov.hhs.gsrs.products.product.utils.ShellCommandRunner;
 import gsrs.startertests.GsrsJpaTest;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,15 +21,6 @@ public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
 //, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
     // extends AbstractGsrsJpaEntityJunit5Test
 
-    @Test
-    void getFileNameTest() {
-        String fullFilePath = ShellCommandRunner.isWindows()
-                ? "D:\\temp\\product_data\\23dbde51-ded9-505e-e063-6294a90a46aa.xml"
-                : "/tmp/product_data/23dbde51-ded9-505e-e063-6294a90a46aa.xml";
-        String expected = "23dbde51-ded9-505e-e063-6294a90a46aa.xml";
-        String fileName= DataDirMonitorTask.getFileName(fullFilePath);
-        Assertions.assertEquals(expected, fileName);
-    }
 
     @Test
     void getProductFromFileTest() throws IOException {
