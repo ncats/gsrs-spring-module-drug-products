@@ -13,6 +13,7 @@ import ix.core.search.text.TextIndexerEntityListener;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -34,6 +35,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 @MappedSuperclass
+@Slf4j
 public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdateDirtyMakerMixin {
 
     @Indexable(facet=true, name="Record Created By")
@@ -68,12 +70,19 @@ public class ProductCommonData extends AbstractGsrsEntity implements ForceUpdate
     @PrePersist
     public void prePersist() {
         try {
-            UserProfile profile = (UserProfile) GsrsSecurityUtils.getCurrentUser();
-            if (profile != null) {
-                Principal p = profile.user;
-                if (p != null) {
-                    this.createdBy = p.username;
-                    this.modifiedBy = p.username;
+            Object currentUser =GsrsSecurityUtils.getCurrentUser();
+            if( currentUser instanceof String ) {
+                log.trace("in prePersist, current user is a string {}", currentUser);
+                this.createdBy = (String) currentUser;
+                this.modifiedBy = (String) currentUser;
+            } else {
+                UserProfile profile = (UserProfile) GsrsSecurityUtils.getCurrentUser();
+                if (profile != null) {
+                    Principal p = profile.user;
+                    if (p != null) {
+                        this.createdBy = p.username;
+                        this.modifiedBy = p.username;
+                    }
                 }
             }
         }catch (Exception ex) {

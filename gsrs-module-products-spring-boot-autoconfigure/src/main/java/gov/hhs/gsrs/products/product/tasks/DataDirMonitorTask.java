@@ -15,11 +15,13 @@ import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @EqualsAndHashCode(callSuper = true)
@@ -59,6 +61,14 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
             return;
         }
         List<String> dataDirs = new ArrayList<>(dataFileDirectories.values());
+        AtomicInteger totalFilesProcessed = new AtomicInteger(0);
+        FilenameFilter filter = new FilenameFilter() {
+
+            public boolean accept(File f, String name)
+            {
+                return name.endsWith(".xml");
+            }
+        };
         dataDirs.forEach(dir -> {
             log.info("files in dir {}", dir);
             File directory = new File(dir);
@@ -71,7 +81,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 log.trace("created {}", processedFilePath);
             }
 
-            for( String fileName : directory.list()) {
+            for( String fileName : directory.list(filter)) {
                 String fullFilePath = directory.getAbsolutePath() + File.separator + fileName;
                 log.info("full file path: {}", fullFilePath);
                 File fullFile = new File(fullFilePath);
@@ -89,10 +99,16 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
                 String currentDirectoryPath = System.getProperty("user.dir");
                 String destinationPath = processedFilePath + File.separator + fileName;
-                //Files.move(fullFile.toPath(), new File(destinationPath).toPath());
-                log.info("skipped move of file to {}", destinationPath);
+                try {
+                    Files.move(fullFile.toPath(), new File(destinationPath).toPath());
+                } catch (IOException e) {
+                    log.error("Error during moving file named {}: {}",fullFile.getAbsolutePath(),  e.getMessage(), e);
+                }
+                totalFilesProcessed.incrementAndGet();
+                log.info("Moved file to {}", destinationPath);
             }
         });
+        log.info("Total files processed: {}", totalFilesProcessed.get());
     }
 
     public void processOneFile(String fileName, Consumer<String> consumer) throws IOException, InterruptedException {
@@ -104,6 +120,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
         DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
         dataHolder.getProducts().forEach((key, value) -> {
+            log.info("processOneFile key: {}, value: {}", key, value);
             Product product = converter.convert(value);
             productEntityService.create(product);
             log.info("Product created: {}", product);

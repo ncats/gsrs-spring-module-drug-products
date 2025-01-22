@@ -1,13 +1,16 @@
-package gov.hhs.gsrs.products;
+package gov.hhs.gsrs.products.api;
 
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.tasks.DataDirMonitorTask;
-import gsrs.startertests.GsrsJpaTest;
+import gsrs.controller.GsrsControllerConfiguration;
+import gsrs.startertests.GsrsEntityTestConfiguration;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -15,8 +18,10 @@ import java.io.File;
 import java.io.IOException;
 
 @ActiveProfiles("test")
-@GsrsJpaTest(dirtyMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = GsrsSpringApplication.class)
+@ContextConfiguration(classes = { GsrsEntityTestConfiguration.class, GsrsControllerConfiguration.class})
+@WithMockUser(username = "admin", roles = "Admin")
+@SpringBootTest(classes = GsrsSpringApplication.class)
+@EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
 public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
 //, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
     // extends AbstractGsrsJpaEntityJunit5Test
