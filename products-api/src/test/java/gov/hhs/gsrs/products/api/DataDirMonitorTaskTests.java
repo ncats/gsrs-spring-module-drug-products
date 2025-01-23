@@ -1,5 +1,7 @@
 package gov.hhs.gsrs.products.api;
 
+import gov.hhs.gsrs.products.processor.DailyMedXmlFileProcessor;
+import gov.hhs.gsrs.products.processor.model.DailyMedXmlFileDataHolder;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.tasks.DataDirMonitorTask;
 import gsrs.controller.GsrsControllerConfiguration;
@@ -20,9 +22,9 @@ import java.io.IOException;
 @ActiveProfiles("test")
 @ContextConfiguration(classes = { GsrsEntityTestConfiguration.class, GsrsControllerConfiguration.class})
 @WithMockUser(username = "admin", roles = "Admin")
-@SpringBootTest(classes = GsrsSpringApplication.class)
+//@SpringBootTest(classes = GsrsSpringApplication.class)
 @EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
+public class DataDirMonitorTaskTests /*extends AbstractGsrsJpaEntityJunit5Test*/ {
 //, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
     // extends AbstractGsrsJpaEntityJunit5Test
 
@@ -43,6 +45,24 @@ public class DataDirMonitorTaskTests extends AbstractGsrsJpaEntityJunit5Test {
         File dataFile = new ClassPathResource(fileName).getFile();
         Product product = DataDirMonitorTask.getProductFromFile(dataFile.getAbsolutePath());
         Assertions.assertNull(product);
+    }
+
+    @Test
+    void readFileTest() throws IOException {
+        String fileName = "xml/chewing_gum.xml";
+        File dataFile = new ClassPathResource(fileName).getFile();
+        DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
+        DailyMedXmlFileDataHolder dataHolder= processor.process(dataFile.getAbsolutePath());
+        Assertions.assertEquals(1, dataHolder.getProducts().size());
+    }
+
+    @Test
+    void readFile2Test() throws IOException {
+        String fileName = "xml/60173abd-c2e6-4100-b465-36c60d879029.xml";
+        File dataFile = new ClassPathResource(fileName).getFile();
+        DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
+        DailyMedXmlFileDataHolder dataHolder= processor.process(dataFile.getAbsolutePath());
+        Assertions.assertEquals(1, dataHolder.getProducts().size());
     }
 
     @Test
