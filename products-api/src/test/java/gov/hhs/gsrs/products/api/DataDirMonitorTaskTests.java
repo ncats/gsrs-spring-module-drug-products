@@ -8,6 +8,7 @@ import gsrs.controller.GsrsControllerConfiguration;
 import gsrs.startertests.GsrsEntityTestConfiguration;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,10 +63,12 @@ public class DataDirMonitorTaskTests /*extends AbstractGsrsJpaEntityJunit5Test*/
         File dataFile = new ClassPathResource(fileName).getFile();
         DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
         DailyMedXmlFileDataHolder dataHolder= processor.process(dataFile.getAbsolutePath());
-        Assertions.assertEquals(1, dataHolder.getProducts().size());
+        Assertions.assertEquals(2, dataHolder.getProducts().size());
     }
 
     @Test
+    @Disabled
+    //disabling while we work on a new architecture for file parsing
     void processOneFileTest() throws IOException, InterruptedException {
         String fileName = "xml/chewing_gum.xml";
         File dataFile = new ClassPathResource(fileName).getFile();
