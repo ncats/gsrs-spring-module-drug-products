@@ -39,3 +39,5 @@ build/
 /gsrs-module-products-spring-boot-autoconfigure/target/
 /products-api/target/
 /gsrs-module-products-spring-boot-starter/target/
+
+gsrs-module-products-tests/target/
