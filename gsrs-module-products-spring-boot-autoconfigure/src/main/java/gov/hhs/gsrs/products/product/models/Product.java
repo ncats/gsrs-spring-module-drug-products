@@ -90,8 +90,9 @@ public class Product extends ProductCommonData {
     }
 
     // get Id
+    @Indexable(sortable = true)
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     // Set Child Class

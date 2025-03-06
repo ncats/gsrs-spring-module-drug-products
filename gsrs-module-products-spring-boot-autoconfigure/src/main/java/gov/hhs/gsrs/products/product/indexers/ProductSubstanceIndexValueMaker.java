@@ -26,6 +26,7 @@ import javax.persistence.Query;
 import java.util.function.Consumer;
 import java.util.Optional;
 import java.util.List;
+import java.lang.Long;
 
 @Component
 @Slf4j
@@ -50,6 +51,10 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
     public void createIndexableValues(Product product, Consumer<IndexableValue> consumer) {
         try {
             int numberOfIngredents = 0;
+
+            if (product.getId() != null) {
+                consumer.accept(IndexableValue.simpleStringValue("root_id", Long.toString(product.id)));
+            }
 
             for (ProductManufactureItem prodManuItems : product.productManufactureItems) {
 
