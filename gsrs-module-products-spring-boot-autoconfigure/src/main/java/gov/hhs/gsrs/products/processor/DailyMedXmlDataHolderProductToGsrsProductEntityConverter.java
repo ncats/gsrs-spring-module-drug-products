@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.gsrs.products.processor.model.ImportProduct;
-import gov.hhs.gsrs.products.product.models.Product;
-import gov.hhs.gsrs.products.product.models.ProductCode;
-import gov.hhs.gsrs.products.product.models.ProductName;
-import gov.hhs.gsrs.products.product.models.ProductProvenance;
+import gov.hhs.gsrs.products.product.models.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -72,6 +69,46 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         productCode.setProductCodeType("NDC code");
         productCodes.add(productCode);
         pv.setProductCodes(productCodes);
+
+        List<ProductCompany> productCompanies = pv.getProductCompanies();
+        ProductCompany productCompany = new ProductCompany();
+        List<ProductCompanyCode> productCompanyCodes = productCompany.getProductCompanyCodes();
+        ProductCompanyCode productCompanyCode= new ProductCompanyCode();
+        productCompanyCode.setCompanyCode(dailyMedProduct.getManufacturerCode());
+        productCompanyCode.setCompanyCodeType("DUNS NUMBER");
+        productCompanyCodes.add(productCompanyCode);
+        productCompany.setProductCompanyCodes(productCompanyCodes);
+        productCompanies.add(productCompany);
+
+        List<ProductDocumentation> productDocumentations = pv.getProductDocumentations();
+        ProductDocumentation productDocumentation = new ProductDocumentation();
+        productDocumentation.setDocumentId(dailyMedProduct.getSetId());
+        productDocumentation.setDocumentType("SET ID");
+        productDocumentations.add(productDocumentation);
+        pv.setProductDocumentations(productDocumentations);
+        Product product = new Product();
+        List<ProductManufactureItem> productManufactureItems = product.getProductManufactureItems();
+        ProductManufactureItem productManufactureItem = new ProductManufactureItem();
+        List<ProductLot> productLots = productManufactureItem.getProductLots();
+        ProductLot productLot = new ProductLot();
+        List<ProductIngredient> productIngredients = productLot.getProductIngredients();
+        for (Ingredient ingredient: dailyMedProduct.getIngredients().values()) {
+            ProductIngredient productIngredient = new ProductIngredient();
+            productIngredient.setSubstanceKey(ingredient.classCode);
+            productIngredient.setSubstanceKey(ingredient.uniiCode);
+            productIngredient.setSubstanceKeyType("UNII");
+            productIngredient.setOriginalNumeratorNumber(ingredient.numerator);
+            productIngredient.setOriginalNumeratorUnit(ingredient.numeratorUnit);
+            productIngredient.setOriginalDenominatorNumber(ingredient.denominator);
+            productIngredient.setOriginalDenominatorUnit(ingredient.denominatorUnit);
+            productIngredient.setSubstanceKey(ingredient.uniiCode);
+            productIngredient.setBasisOfStrengthSubstanceKey(ingredient.uniiCode);
+            productIngredient.setBasisOfStrengthSubstanceKeyType("UNII");
+            productIngredients.add(productIngredient);
+
+            System.out.println("blahblah or something");
+        }
+
         return pv;
     }
 
