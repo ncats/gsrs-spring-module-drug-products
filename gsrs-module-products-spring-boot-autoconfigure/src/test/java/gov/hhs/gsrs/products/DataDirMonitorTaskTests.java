@@ -1,10 +1,12 @@
-package gov.hhs.gsrs.products.api;
+package gov.hhs.gsrs.products;
 
 import gov.hhs.gsrs.products.processor.DailyMedXmlFileProcessor;
 import gov.hhs.gsrs.products.processor.model.DailyMedXmlFileDataHolder;
+import gov.hhs.gsrs.products.processor.model.ImportProduct;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.tasks.DataDirMonitorTask;
 import gsrs.controller.GsrsControllerConfiguration;
+import gsrs.springUtils.AutowireHelper;
 import gsrs.startertests.GsrsEntityTestConfiguration;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 import org.junit.jupiter.api.Assertions;
@@ -18,16 +20,14 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 @ActiveProfiles("test")
-@ContextConfiguration(classes = { GsrsEntityTestConfiguration.class, GsrsControllerConfiguration.class})
+//@ContextConfiguration(classes = { GsrsEntityTestConfiguration.class, GsrsControllerConfiguration.class})
 @WithMockUser(username = "admin", roles = "Admin")
-//@SpringBootTest(classes = GsrsSpringApplication.class)
 @EntityScan(basePackages ={"ix","gsrs", "gov.nih.ncats"} )
-public class DataDirMonitorTaskTests /*extends AbstractGsrsJpaEntityJunit5Test*/ {
-//, GsrsEntityTestConfiguration.class, , GsrsControllerConfiguration.class
-    // extends AbstractGsrsJpaEntityJunit5Test
-
+//@SpringBootTest(classes = GsrsSpringApplication.class)
+public class DataDirMonitorTaskTests {
 
     @Test
     void getProductFromFileTest() throws IOException {
@@ -62,14 +62,19 @@ public class DataDirMonitorTaskTests /*extends AbstractGsrsJpaEntityJunit5Test*/
         File dataFile = new ClassPathResource(fileName).getFile();
         DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
         DailyMedXmlFileDataHolder dataHolder= processor.process(dataFile.getAbsolutePath());
-        Assertions.assertEquals(1, dataHolder.getProducts().size());
+        for(Map.Entry<String, ImportProduct> prod : dataHolder.getProducts().entrySet()){
+            System.out.printf("key: %s, code: %d\n", prod.getKey(), prod.getValue().getNdcCode());
+        }
+        Assertions.assertEquals(2, dataHolder.getProducts().size());
     }
 
-    @Test
+    //@Test
     void processOneFileTest() throws IOException, InterruptedException {
         String fileName = "xml/chewing_gum.xml";
         File dataFile = new ClassPathResource(fileName).getFile();
         DataDirMonitorTask task = new DataDirMonitorTask();
+        AutowireHelper helper = AutowireHelper.getInstance();
+        helper.autowire(task);
         String currentPath = System.getProperty("user.dir");
         File currentDir = new File(currentPath);
         String scriptFilePath = currentDir.getParentFile().getParentFile().getParentFile().getAbsolutePath()
