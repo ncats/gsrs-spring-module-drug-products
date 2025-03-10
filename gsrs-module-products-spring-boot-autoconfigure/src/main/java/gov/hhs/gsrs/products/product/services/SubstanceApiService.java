@@ -118,7 +118,7 @@ public class SubstanceApiService {
     // Substance API, Substance Key Resolver
     public Optional<SubstanceDTO> getSubstanceBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
         if ((substanceKey == null) && (substanceKeyType == null)) {
-            return null;
+            return Optional.empty();
         }
 
         ResponseEntity<String> response = null;
@@ -133,7 +133,7 @@ public class SubstanceApiService {
         }
 
         if (substanceDTO == null || !substanceDTO.isPresent()) {
-            return null;
+            return Optional.empty();
         }
 
         if (substanceDTO.get().getUuid() != null) {
@@ -142,7 +142,7 @@ public class SubstanceApiService {
             log.debug("The SubstanceDTO is not null, but could not retrieve substance uuid");
         }
 
-        return null;
+        return Optional.empty();
     }
 
     // Substance API, get the Names for the Substance
