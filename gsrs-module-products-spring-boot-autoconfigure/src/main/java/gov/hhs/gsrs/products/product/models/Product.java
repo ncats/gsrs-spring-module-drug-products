@@ -32,6 +32,9 @@ import java.util.ArrayList;
 @Table(name="SRSCID_PRODUCT")
 public class Product extends ProductCommonData {
 
+    public static final String HAS_INGREDIENT = "Has Ingredients";
+    public static final String HAS_NO_INGREDIENT = "Has No Ingredient";
+
     @Id
     @SequenceGenerator(name="prodSeq", sequenceName="SRSCID_SQ_PRODUCT_TWO_ID",allocationSize=1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodSeq")
@@ -127,4 +130,27 @@ public class Product extends ProductCommonData {
         }
     }
 
+    @JsonIgnore
+    @Indexable(facet=true, name="Has Ingredients")
+    public String getHasIngredient() {
+        String result = HAS_NO_INGREDIENT;
+
+        for (ProductManufactureItem prodManuItems : this.productManufactureItems) {
+            for (ProductLot prodLot : prodManuItems.productLots) {
+                for (ProductIngredient prodIng : prodLot.productIngredients) {
+
+                    // If Ingredient Object is not null
+                    if (prodIng != null) {
+
+                        // If substanceKey is not null
+                        if (prodIng.substanceKey != null && prodIng.substanceKeyType != null) {
+                            result = HAS_INGREDIENT;
+                        }  // product substance key not null
+                    } // product Ingredient is not null
+
+                }  // for productIngredients
+            } // for productLots
+        } // for productManufactureItems
+        return result;
+    }
 }
