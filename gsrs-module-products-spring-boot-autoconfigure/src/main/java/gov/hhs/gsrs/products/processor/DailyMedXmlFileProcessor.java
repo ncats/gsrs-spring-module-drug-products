@@ -167,7 +167,7 @@ public class DailyMedXmlFileProcessor {
     public void putIngredientFromNode(ImportProduct p, Node iNode) throws XPathExpressionException {
         String classCode = iNode.getAttributes().getNamedItem("classCode").getNodeValue();
         String uniiCode = xph.getElementValueByAttribute(iNode, ".//ingredientSubstance/code", "code");
-        if (uniiCode != null) {
+        if (uniiCode != null && uniiCode.length()> 0) {
             ImportIngredient i = p.getIngredient(uniiCode);
             if (i == null) {
                 p.getIngredients().put(uniiCode, new ImportIngredient());

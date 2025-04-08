@@ -7,9 +7,11 @@ import gov.hhs.gsrs.products.processor.DailyMedXmlFileProcessor;
 import gov.hhs.gsrs.products.processor.model.DailyMedXmlFileDataHolder;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.services.ProductEntityService;
+import gov.nih.ncats.common.util.CachedSupplier;
 import gsrs.scheduledTasks.ScheduledTaskInitializer;
 import gsrs.scheduledTasks.SchedulerPlugin;
 import gsrs.springUtils.AutowireHelper;
+import ix.ginas.utils.validation.ValidatorFactory;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -105,17 +109,29 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         log.info("processOneFile fileName: {}", fileName);
         DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
         DailyMedXmlFileDataHolder dataHolder= processor.process(fileName);
-        //ProductEntityService productEntityService = new ProductEntityService();
-        //AutowireHelper.getInstance().autowire(productEntityService);
-
+        ProductEntityService productEntityService = new ProductEntityService();
+        AutowireHelper.getInstance().autowire(productEntityService);
+        log.trace("inited entity service. context: {}", productEntityService.getContext());
+        String methodName = "initValidator";
+        try {
+            Method initValidatorMethod= productEntityService.getClass().getSuperclass().getDeclaredMethod(methodName);
+            initValidatorMethod.setAccessible(true);
+            initValidatorMethod.invoke(productEntityService);
+        } catch (NoSuchMethodException e) {
+            log.error("no method found {}", methodName);
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            log.error("error running method {}: {}", methodName, e);
+        } catch (IllegalAccessException e) {
+            log.error("access error running method {}: {}", methodName, e);
+            throw new RuntimeException(e);
+        }
         DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
         dataHolder.getProducts().forEach((key, value) -> {
             log.info("processOneFile key: {}, value: {}", key, value);
             Product product = converter.convert(value);
             ObjectMapper mapper = new ObjectMapper();
             try {
-                ProductEntityService productEntityService = new ProductEntityService();
-                AutowireHelper.getInstance().autowire(productEntityService);
                 productEntityService.createEntity(mapper.valueToTree(product));
                 log.info("Product created: {}", product);
             } catch (IOException e) {

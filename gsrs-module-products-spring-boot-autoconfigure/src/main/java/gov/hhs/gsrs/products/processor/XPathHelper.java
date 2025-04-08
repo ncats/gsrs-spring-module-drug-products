@@ -43,12 +43,12 @@ public class XPathHelper {
             NodeList xPathNodeList = (NodeList) xPath.compile(expression).evaluate(startNode, XPathConstants.NODESET);
             return xPathNodeList.item(0).getAttributes().getNamedItem(attributeId).getNodeValue();
         } catch (NullPointerException e) {
-            log.error("Null found for this expression {} ", expression);
+            log.warn("Null found for this expression {} ", expression);
         } catch (XPathExpressionException e) {
-            log.error("XPath exception for this expression: {}", expression);
+            log.warn("XPath exception for this expression: {}", expression);
         }
 
-        return "na";
+        return "";
     }
     public void printElementValueByAttribute(Node startNode, String expression, String attributeId, String label) throws XPathExpressionException {
         System.out.println(label + getElementValueByAttribute(startNode, expression, attributeId));
