@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.gsrs.products.processor.model.ImportIngredient;
 import gov.hhs.gsrs.products.processor.model.ImportProduct;
 import gov.hhs.gsrs.products.product.models.*;
+import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -18,72 +20,54 @@ Code originally written by Aruna Nishtala
 public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
 
     private static final  String COUNTRY_NAME ="United States of America";
-    private static final String LANGUAGE ="English";
+    private static final String DEFAULT_LANGUAGE ="English";
     private static final String COUNTRY_CODE ="USA";
     private static final String DAILY_MED_URL_STEM ="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=";
     private static final String SPL_PROVENANCE = "XML_SPL";
-    private static final String KEY_TYPE_UNII = "UNII";
+    private static final String KEY_TYPE_UNII = SubstanceApiService.SUBSTANCE_KEY_TYPE_APPROVAL_ID;
+    private static final String CODE_TYPE = "DUNS NUMBER";
+    private static final String PRODUCT_NAME_TYPE = "product name";
+    private static final String PRODUCT_GENERIC_NAME_TYPE = "generic name";
+    private static final String PRODUCT_DRUG_CODE = "NDC code";
+    private static final String STANDARD_COMPANY_CODE_TYPE ="DUNS NUMBER";
+    private static final String STANDARD_PRODUCT_DOCUMENTATION_TYPE ="SET ID";
 
     public Product convert(ImportProduct dailyMedProduct) {
         Product product = getProduct(dailyMedProduct);
+        log.trace("about to call getProductProvenance");
         ProductProvenance pv = getProductProvenance(dailyMedProduct);
-        product.productProvenances.add(pv);
-
-        List<ProductCompany> productCompanies = pv.getProductCompanies();
-        ProductCompany productCompany = new ProductCompany();
-        List<ProductCompanyCode> productCompanyCodes = productCompany.getProductCompanyCodes();
-        ProductCompanyCode productCompanyCode= new ProductCompanyCode();
-        productCompanyCode.setCompanyCode(dailyMedProduct.getManufacturerCode());
-        productCompanyCode.setCompanyCodeType("DUNS NUMBER");
-        productCompanyCodes.add(productCompanyCode);
-        productCompany.setProductCompanyCodes(productCompanyCodes);
-        productCompanies.add(productCompany);
-
-        ProductDocumentation productDocumentation = new ProductDocumentation();
-        productDocumentation.setDocumentId(dailyMedProduct.getSetId());
-        productDocumentation.setDocumentType("SET ID");
-        pv.getProductDocumentations().add(productDocumentation);
-
-        ProductManufactureItem productManufactureItem = new ProductManufactureItem();
-        ProductLot productLot = new ProductLot();
-        for (ImportIngredient ingredient: dailyMedProduct.getIngredients().values()) {
-            ProductIngredient productIngredient = getProductIngredient(ingredient);
-            productLot.getProductIngredients().add(productIngredient);
-        }
-        productManufactureItem.getProductLots().add(productLot);
-        productManufactureItem.setDosageForm(dailyMedProduct.getRouteCode());
-        productManufactureItem.setCharColor(dailyMedProduct.getSplColorValue() );
-        productManufactureItem.setCharShape(dailyMedProduct.getSplShapeValue());
-        productManufactureItem.setCharSize(dailyMedProduct.getSplSizeValue());
-        product.getProductManufactureItems().add(productManufactureItem);
-
-        log.trace("done building product");
+        pv.setProductCompanies(Collections.singletonList(getProductCompany(dailyMedProduct)));
+        pv.setProductDocumentations(Collections.singletonList(getProductDocumentation(dailyMedProduct)));
+        product.setProductProvenances(Collections.singletonList(pv));
+        product.setProductManufactureItems(Collections.singletonList(getProductManufactureItem(dailyMedProduct)));
+        ObjectMapper mapper = new ObjectMapper();
+        log.trace("done building product {}", mapper.valueToTree(product).toPrettyString());
         return product;
     }
 
     private static ProductIngredient getProductIngredient(ImportIngredient ingredient) {
         ProductIngredient productIngredient = new ProductIngredient();
-        productIngredient.setSubstanceKey(ingredient.getClassCode());
+        productIngredient.setApplicantIngredName(ingredient.getSubstanceName());
+        productIngredient.setIngredientType(ingredient.getClassCode());
         productIngredient.setSubstanceKey(ingredient.getUniiCode());
         productIngredient.setSubstanceKeyType(KEY_TYPE_UNII);
         productIngredient.setOriginalNumeratorNumber(ingredient.getNumerator());
         productIngredient.setOriginalNumeratorUnit(ingredient.getNumeratorUnit());
         productIngredient.setOriginalDenominatorNumber(ingredient.getDenominator());
         productIngredient.setOriginalDenominatorUnit(ingredient.getDenominatorUnit());
-        productIngredient.setSubstanceKey(ingredient.getUniiCode());
         productIngredient.setBasisOfStrengthSubstanceKey(ingredient.getUniiCode());
         productIngredient.setBasisOfStrengthSubstanceKeyType(KEY_TYPE_UNII);
         return productIngredient;
     }
 
-    private static Product getProduct(ImportProduct dailyMedProduct) {
+    private static Product getProduct(ImportProduct importProduct) {
         Product product = new Product();
-        product.setManufacturerName(dailyMedProduct.getManufacturerName());
-        product.setManufacturerCode(dailyMedProduct.getManufacturerCode());
-        product.setManufacturerCodeType("DUNS NUMBER");
+        product.setManufacturerName(importProduct.getManufacturerName());
+        product.setManufacturerCode(importProduct.getManufacturerCode());
+        product.setManufacturerCodeType(CODE_TYPE);
         product.setCountryCode(COUNTRY_NAME);
-        product.setLanguage(LANGUAGE);
-        product.setRouteAdmin(dailyMedProduct.getRouteCode());
+        product.setLanguage(DEFAULT_LANGUAGE);
+        product.setRouteAdmin(importProduct.getRouteCode());
         return product;
     }
 
@@ -99,26 +83,69 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         pv.setJurisdictions(COUNTRY_CODE);
         pv.setProductUrl(DAILY_MED_URL_STEM + dailyMedProduct.getSetId());
 
-        List<ProductName> productNames = pv.getProductNames();
+        pv.setProductNames(getProductNames(dailyMedProduct));
+
+        pv.setProductCodes(getProductCodes(dailyMedProduct));
+        return pv;
+    }
+
+    private static List<ProductName> getProductNames(ImportProduct dailyMedProduct) {
+        List<ProductName> productNames = new ArrayList<>();
         ProductName productName1 = new ProductName();
         productName1.setProductName(dailyMedProduct.getProductName());
-        productName1.setProductNameType("product name");
+        productName1.setProductNameType(PRODUCT_NAME_TYPE);
         productNames.add(productName1);
         ProductName productName2 = new ProductName();
         productName2.setProductName(dailyMedProduct.getGenericName());
-        productName2.setProductNameType("generic name");
+        productName2.setProductNameType(PRODUCT_GENERIC_NAME_TYPE);
         productNames.add(productName2);
-        pv.setProductNames(productNames);
+        return productNames;
+    }
 
-        List<ProductCode> productCodes = pv.getProductCodes();
+    private static List<ProductCode> getProductCodes(ImportProduct dailyMedProduct) {
+        List<ProductCode> productCodes = new ArrayList<>();
         ProductCode productCode = new ProductCode();
         productCode.setProductCode(dailyMedProduct.getNdcCode());
-        productCode.setProductCodeType("NDC code");
+        productCode.setProductCodeType(PRODUCT_DRUG_CODE);
         productCodes.add(productCode);
-        pv.setProductCodes(productCodes);
+        return productCodes;
+    }
 
-        log.info("done product json structure");
-        return pv;
+    private static ProductCompany getProductCompany(ImportProduct importProduct) {
+        ProductCompany productCompany = new ProductCompany();
+        List<ProductCompanyCode> productCompanyCodes = productCompany.getProductCompanyCodes();
+        ProductCompanyCode productCompanyCode= new ProductCompanyCode();
+        productCompanyCode.setCompanyCode(importProduct.getManufacturerCode());
+        productCompanyCode.setCompanyCodeType(STANDARD_COMPANY_CODE_TYPE);
+        productCompanyCodes.add(productCompanyCode);
+        productCompany.setProductCompanyCodes(productCompanyCodes);
+        return productCompany;
+    }
+
+    private static ProductDocumentation getProductDocumentation(ImportProduct importProduct) {
+        ProductDocumentation productDocumentation = new ProductDocumentation();
+        productDocumentation.setDocumentId(importProduct.getSetId());
+        productDocumentation.setDocumentType(STANDARD_PRODUCT_DOCUMENTATION_TYPE);
+        return productDocumentation;
+    }
+
+    private static ProductManufactureItem getProductManufactureItem( ImportProduct importProduct) {
+        ProductManufactureItem productManufactureItem = new ProductManufactureItem();
+        ProductLot productLot = new ProductLot();
+        List<ProductIngredient> productIngredients = new ArrayList<>();
+        for (ImportIngredient ingredient: importProduct.getIngredients().values()) {
+            ProductIngredient productIngredient = getProductIngredient(ingredient);
+            log.trace("got ingredient {}", productIngredient.applicantIngredName);
+            productIngredients.add(productIngredient);
+        }
+        productLot.setProductIngredients(productIngredients);
+
+        productManufactureItem.setProductLots(Collections.singletonList(productLot));
+        productManufactureItem.setDosageForm(importProduct.getRouteCode());
+        productManufactureItem.setCharColor(importProduct.getSplColorValue() );
+        productManufactureItem.setCharShape(importProduct.getSplShapeValue());
+        productManufactureItem.setCharSize(importProduct.getSplSizeValue());
+        return productManufactureItem;
     }
 
     public void printSerialized(Product product) {

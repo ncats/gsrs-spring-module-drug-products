@@ -41,9 +41,6 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
 
     private String processedFilePath;
 
-    //@Autowired
-    //private ProductEntityService productEntityService;
-
     @Override
     public void run(SchedulerPlugin.JobStats stats, SchedulerPlugin.TaskListener l) {
       log.info("Starting in DataDirMonitorTask. dirs: {}", dataFileDirectories);
@@ -62,13 +59,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         }
         List<String> dataDirs = new ArrayList<>(dataFileDirectories.values());
         AtomicInteger totalFilesProcessed = new AtomicInteger(0);
-        FilenameFilter filter = new FilenameFilter() {
-
-            public boolean accept(File f, String name)
-            {
-                return name.endsWith(".xml");
-            }
-        };
+        FilenameFilter filter = (f, name) -> name.endsWith(".xml");
         dataDirs.forEach(dir -> {
             log.info("files in dir {}", dir);
             File directory = new File(dir);
@@ -97,7 +88,6 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
                 }
                 log.info("results: {}", results);
 
-                String currentDirectoryPath = System.getProperty("user.dir");
                 String destinationPath = processedFilePath + File.separator + fileName;
                 try {
                     Files.move(fullFile.toPath(), new File(destinationPath).toPath());
@@ -115,48 +105,25 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         log.info("processOneFile fileName: {}", fileName);
         DailyMedXmlFileProcessor processor = new DailyMedXmlFileProcessor();
         DailyMedXmlFileDataHolder dataHolder= processor.process(fileName);
-        ProductEntityService productEntityService = new ProductEntityService();
-        AutowireHelper.getInstance().autowire(productEntityService);
+        //ProductEntityService productEntityService = new ProductEntityService();
+        //AutowireHelper.getInstance().autowire(productEntityService);
 
         DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
         dataHolder.getProducts().forEach((key, value) -> {
             log.info("processOneFile key: {}, value: {}", key, value);
             Product product = converter.convert(value);
-            productEntityService.create(product);
-            log.info("Product created: {}", product);
-        });
-    }
-
-    public void completeProcessing(List<String> fileNames){
-        //first file is the processed JSON file, for loading.
-        // second file is the original input XML file to be moved out of the way
-        log.info("completeProcessing file: {}", fileNames.toString());
-        try {
-            Product newProduct= getProductFromFile(fileNames.get(0));
-            if(newProduct != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
                 ProductEntityService productEntityService = new ProductEntityService();
                 AutowireHelper.getInstance().autowire(productEntityService);
-                productEntityService.create(newProduct);
-                log.info("Product created: {}", newProduct);
-                String destinationPath = processedFilePath + File.separator + getFileName(fileNames.get(1));
-                File fullFile = new File(fileNames.get(1));
-                Files.move(fullFile.toPath(), new File(destinationPath).toPath());
-                log.info("moved file to {}", destinationPath);
+                productEntityService.createEntity(mapper.valueToTree(product));
+                log.info("Product created: {}", product);
+            } catch (IOException e) {
+                log.error("Error during processing of product: {}", e.getMessage(), e);
+                consumer.accept("Error creating product: " + e.getMessage());
             }
-        } catch (Exception e) {
-            log.error("error processing product", e);
-        }
-    }
-    public static String getFileName(String path) {
-        if(path == null || path.isEmpty()) {
-            return null;
-        }
-        int pos = path.lastIndexOf(File.separator);
-        if( pos > 0 ){
-            String fullFileName= path.substring(pos+1);
-            return fullFileName.replaceAll(".py", "");
-        }
-        return path;
+
+        });
     }
 
     public static Product getProductFromFile(String filePath) throws IOException {

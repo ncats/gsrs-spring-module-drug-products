@@ -117,12 +117,13 @@ public class SubstanceApiService {
 
     // Substance API, Substance Key Resolver
     public Optional<SubstanceDTO> getSubstanceBySubstanceKeyResolver(String substanceKey, String substanceKeyType) {
+        log.trace("start getSubstanceBySubstanceKeyResolver with key {} and type {}", substanceKey, substanceKeyType);
         if ((substanceKey == null) && (substanceKeyType == null)) {
             return Optional.empty();
         }
 
         ResponseEntity<String> response = null;
-        Optional<SubstanceDTO> substanceDTO = null;
+        Optional<SubstanceDTO> substanceDTO = Optional.empty();
 
         try {
             // Substance API resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)

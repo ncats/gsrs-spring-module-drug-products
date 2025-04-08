@@ -9,6 +9,7 @@ import gsrs.events.AbstractEntityUpdatedEvent;
 import gsrs.repository.GroupRepository;
 import gsrs.service.AbstractGsrsEntityService;
 
+import gsrs.validator.GsrsValidatorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,9 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private GsrsValidatorFactory validatorFactoryService;
 
     @Override
     public Class<Product> getEntityClass() {
