@@ -65,13 +65,13 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         product.setManufacturerName(importProduct.getManufacturerName());
         product.setManufacturerCode(importProduct.getManufacturerCode());
         product.setManufacturerCodeType(CODE_TYPE);
-        product.setCountryCode(COUNTRY_NAME);
+        product.setCountryCode(COUNTRY_CODE);
         product.setLanguage(DEFAULT_LANGUAGE);
         product.setRouteAdmin(importProduct.getRouteCode());
         return product;
     }
 
-    private static ProductProvenance getProductProvenance(ImportProduct dailyMedProduct) {
+    public static ProductProvenance getProductProvenance(ImportProduct dailyMedProduct) {
         ProductProvenance pv = new ProductProvenance();
         pv.setProvenance(SPL_PROVENANCE);
         pv.setProductStatus(dailyMedProduct.getProductStatus());
@@ -82,9 +82,7 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         pv.setIsListed("YES");
         pv.setJurisdictions(COUNTRY_CODE);
         pv.setProductUrl(DAILY_MED_URL_STEM + dailyMedProduct.getSetId());
-
         pv.setProductNames(getProductNames(dailyMedProduct));
-
         pv.setProductCodes(getProductCodes(dailyMedProduct));
         return pv;
     }

@@ -5,6 +5,7 @@ import gov.hhs.gsrs.products.processor.model.ImportIngredient;
 import gov.hhs.gsrs.products.processor.model.ImportProduct;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.models.ProductIngredient;
+import gov.hhs.gsrs.products.product.models.ProductProvenance;
 import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -93,10 +94,23 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverterTests {
 
     @Test
     void testGetProductManufacturerCodeType() {
-        String manufacturerCode = "A19199";
         ImportProduct productToImport = new ImportProduct();
         Product product = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProduct(productToImport);
         Assertions.assertEquals("DUNS NUMBER", product.getManufacturerCodeType());
+    }
+
+    @Test
+    void testGetProductCountryCode() {
+        ImportProduct productToImport = new ImportProduct();
+        Product product = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProduct(productToImport);
+        Assertions.assertEquals("USA", product.getCountryCode());
+    }
+
+    @Test
+    void testGetProductLanguage() {
+        ImportProduct productToImport = new ImportProduct();
+        Product product = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProduct(productToImport);
+        Assertions.assertEquals("English", product.getLanguage());
     }
 
     @Test
@@ -108,4 +122,21 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverterTests {
         Assertions.assertEquals(route, product.getRouteAdmin());
     }
 
+    @Test
+    void testGetProductProvenanceStatus() {
+        String status ="Ready to sell";
+        ImportProduct productToImport = new ImportProduct();
+        productToImport.setProductStatus(status);
+        ProductProvenance productProvenance = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProductProvenance(productToImport);
+        Assertions.assertEquals(status, productProvenance.getProductStatus());
+    }
+
+    @Test
+    void testGetProductProvenanceType() {
+        String type ="Ready to sell";
+        ImportProduct productToImport = new ImportProduct();
+        productToImport.setProductType(type);
+        ProductProvenance productProvenance = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProductProvenance(productToImport);
+        Assertions.assertEquals(type, productProvenance.getProductType());
+    }
 }
