@@ -21,13 +21,13 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
 
     private static final  String COUNTRY_NAME ="United States of America";
     private static final String DEFAULT_LANGUAGE ="English";
-    private static final String COUNTRY_CODE ="USA";
+    private static final String COUNTRY_CODE = "United States (USA)";
     private static final String DAILY_MED_URL_STEM ="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=";
     private static final String SPL_PROVENANCE = "XML_SPL";
     private static final String KEY_TYPE_UNII = SubstanceApiService.SUBSTANCE_KEY_TYPE_APPROVAL_ID;
     private static final String CODE_TYPE = "DUNS NUMBER";
-    private static final String PRODUCT_NAME_TYPE = "product name";
-    private static final String PRODUCT_GENERIC_NAME_TYPE = "generic name";
+    private static final String PRODUCT_NAME_TYPE = "PRODUCT NAME";
+    private static final String PRODUCT_GENERIC_NAME_TYPE = "GENERIC NAME";
     private static final String PRODUCT_DRUG_CODE = "NDC code";
     private static final String STANDARD_COMPANY_CODE_TYPE ="DUNS NUMBER";
     private static final String STANDARD_PRODUCT_DOCUMENTATION_TYPE ="SET ID";
@@ -87,7 +87,7 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         return pv;
     }
 
-    private static List<ProductName> getProductNames(ImportProduct dailyMedProduct) {
+    public static List<ProductName> getProductNames(ImportProduct dailyMedProduct) {
         List<ProductName> productNames = new ArrayList<>();
         ProductName productName1 = new ProductName();
         productName1.setProductName(dailyMedProduct.getProductName());
@@ -100,7 +100,7 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         return productNames;
     }
 
-    private static List<ProductCode> getProductCodes(ImportProduct dailyMedProduct) {
+    public static List<ProductCode> getProductCodes(ImportProduct dailyMedProduct) {
         List<ProductCode> productCodes = new ArrayList<>();
         ProductCode productCode = new ProductCode();
         productCode.setProductCode(dailyMedProduct.getNdcCode());

@@ -5,10 +5,14 @@ import gov.hhs.gsrs.products.processor.model.ImportIngredient;
 import gov.hhs.gsrs.products.processor.model.ImportProduct;
 import gov.hhs.gsrs.products.product.models.Product;
 import gov.hhs.gsrs.products.product.models.ProductIngredient;
+import gov.hhs.gsrs.products.product.models.ProductName;
 import gov.hhs.gsrs.products.product.models.ProductProvenance;
 import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.UUID;
 
 public class DailyMedXmlDataHolderProductToGsrsProductEntityConverterTests {
 
@@ -102,8 +106,9 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverterTests {
     @Test
     void testGetProductCountryCode() {
         ImportProduct productToImport = new ImportProduct();
+        String expectedCountryCode = "United States (USA)";
         Product product = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProduct(productToImport);
-        Assertions.assertEquals("USA", product.getCountryCode());
+        Assertions.assertEquals(expectedCountryCode, product.getCountryCode());
     }
 
     @Test
@@ -138,5 +143,22 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverterTests {
         productToImport.setProductType(type);
         ProductProvenance productProvenance = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProductProvenance(productToImport);
         Assertions.assertEquals(type, productProvenance.getProductType());
+    }
+
+    @Test
+    void testGetProductNamesProductName() {
+        String randomUuid = UUID.randomUUID().toString();
+        String productName ="Name " + randomUuid;
+        String productNameType ="PRODUCT NAME";
+        String genericName = "Generic " + randomUuid;
+        String genericNameType = "GENERIC NAME";
+        ImportProduct productToImport = new ImportProduct();
+        productToImport.setProductName(productName);
+        productToImport.setGenericName(genericName);
+        List<ProductName> names = DailyMedXmlDataHolderProductToGsrsProductEntityConverter.getProductNames(productToImport);
+        Assertions.assertTrue(names.stream()
+                .anyMatch(n-> n.getProductName().equals(productName) && n.getProductNameType().equals(productNameType)));
+        Assertions.assertTrue(names.stream()
+                .anyMatch(n-> n.getProductName().equals(genericName) && n.getProductNameType().equals(genericNameType)));
     }
 }
