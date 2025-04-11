@@ -88,9 +88,7 @@ public class DailyMedXmlFileProcessor {
         }
         log.info("done");
         return holder;
-
     }
-    //processing ends here
 
     public void putProductFromNode(DailyMedXmlFileDataHolder holder, Node pNode) throws XPathExpressionException {
 

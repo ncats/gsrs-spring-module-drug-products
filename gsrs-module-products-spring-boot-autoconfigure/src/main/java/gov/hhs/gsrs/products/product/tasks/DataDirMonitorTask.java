@@ -111,21 +111,7 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         DailyMedXmlFileDataHolder dataHolder= processor.process(fileName);
         ProductEntityService productEntityService = new ProductEntityService();
         AutowireHelper.getInstance().autowire(productEntityService);
-        log.trace("inited entity service. context: {}", productEntityService.getContext());
-        String methodName = "initValidator";
-        try {
-            Method initValidatorMethod= productEntityService.getClass().getSuperclass().getDeclaredMethod(methodName);
-            initValidatorMethod.setAccessible(true);
-            initValidatorMethod.invoke(productEntityService);
-        } catch (NoSuchMethodException e) {
-            log.error("no method found {}", methodName);
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            log.error("error running method {}: {}", methodName, e);
-        } catch (IllegalAccessException e) {
-            log.error("access error running method {}: {}", methodName, e);
-            throw new RuntimeException(e);
-        }
+        setUpValidator(productEntityService);
         DailyMedXmlDataHolderProductToGsrsProductEntityConverter converter = new DailyMedXmlDataHolderProductToGsrsProductEntityConverter();
         dataHolder.getProducts().forEach((key, value) -> {
             log.info("processOneFile key: {}, value: {}", key, value);
@@ -151,5 +137,23 @@ public class DataDirMonitorTask extends ScheduledTaskInitializer {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(jsonFile, Product.class);
+    }
+
+    private void setUpValidator(ProductEntityService productEntityService) {
+        log.trace("instantiated entity service. context: {}", productEntityService.getContext());
+        String methodName = "initValidator";
+        try {
+            Method initValidatorMethod= productEntityService.getClass().getSuperclass().getDeclaredMethod(methodName);
+            initValidatorMethod.setAccessible(true);
+            initValidatorMethod.invoke(productEntityService);
+        } catch (NoSuchMethodException e) {
+            log.error("no method found {}", methodName);
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            log.error("error running method {}: {}", methodName, e);
+        } catch (IllegalAccessException e) {
+            log.error("access error running method {}: {}", methodName, e);
+            throw new RuntimeException(e);
+        }
     }
 }

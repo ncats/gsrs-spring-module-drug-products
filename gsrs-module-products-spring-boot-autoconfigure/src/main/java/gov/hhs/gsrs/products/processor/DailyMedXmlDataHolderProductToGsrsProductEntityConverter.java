@@ -45,7 +45,7 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         return product;
     }
 
-    private static ProductIngredient getProductIngredient(ImportIngredient ingredient) {
+    public static ProductIngredient getProductIngredient(ImportIngredient ingredient) {
         ProductIngredient productIngredient = new ProductIngredient();
         productIngredient.setApplicantIngredName(ingredient.getSubstanceName());
         productIngredient.setIngredientType(ingredient.getClassCode());
@@ -60,7 +60,7 @@ public class DailyMedXmlDataHolderProductToGsrsProductEntityConverter {
         return productIngredient;
     }
 
-    private static Product getProduct(ImportProduct importProduct) {
+    public static Product getProduct(ImportProduct importProduct) {
         Product product = new Product();
         product.setManufacturerName(importProduct.getManufacturerName());
         product.setManufacturerCode(importProduct.getManufacturerCode());

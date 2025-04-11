@@ -16,6 +16,7 @@ Code written by Aruna Nishtala
 public class XPathHelper {
     public XPath xPath;
 
+    public static final String NO_DATA_STRING = "";
     public void setXpath(XPath xPath) {
         this.xPath = xPath;
     }
@@ -26,6 +27,7 @@ public class XPathHelper {
     public NodeList getNodeListByTag(Node startNode, String expression) throws XPathExpressionException {
         return (NodeList)  xPath.compile(expression).evaluate(startNode, XPathConstants.NODESET);
     }
+
     public String getElementValueByTag(Node startNode, String expression) throws XPathExpressionException {
         NodeList xPathNodeList = (NodeList)  xPath.compile(expression).evaluate(startNode, XPathConstants.NODE);
         if(xPathNodeList == null || xPathNodeList.getLength() == 0){
@@ -34,8 +36,9 @@ public class XPathHelper {
         }
         return xPathNodeList.item(0).getTextContent();
     }
+
     public void printElementValueByTag(Node startNode, String expression, String label) throws XPathExpressionException {
-        System.out.println(label + getElementValueByTag(startNode, expression));
+        log.info(label + getElementValueByTag(startNode, expression));
     }
 
     public String getElementValueByAttribute(Node startNode, String expression, String attributeId) {
@@ -47,12 +50,13 @@ public class XPathHelper {
         } catch (XPathExpressionException e) {
             log.warn("XPath exception for this expression: {}", expression);
         }
-
-        return "";
+        return NO_DATA_STRING;
     }
+
     public void printElementValueByAttribute(Node startNode, String expression, String attributeId, String label) throws XPathExpressionException {
         System.out.println(label + getElementValueByAttribute(startNode, expression, attributeId));
     }
+
     public NamedNodeMap getElementAttributes(Node startNode, String expression) throws XPathExpressionException {
         NodeList xPathNodeList = (NodeList)  xPath.compile(expression).evaluate(startNode, XPathConstants.NODESET);
         return xPathNodeList.item(0).getAttributes();
