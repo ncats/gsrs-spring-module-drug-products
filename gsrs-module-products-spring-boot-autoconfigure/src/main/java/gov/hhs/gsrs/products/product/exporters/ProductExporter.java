@@ -24,18 +24,28 @@ enum ProdDefaultColumns implements Column {
     SUBSTANCE_KEY_TYPE,
     INGREDIENT_TYPE,
     ACTIVE_MOIETY_NAME,
-    ACTIVE_MOIETY_UNII,
+    ACTIVE_MOIETY_APPROVAL_ID,
+    AVERAGE,
+    LOW,
+    HIGH,
+    UNIT,
+    ORIGINAL_NUMERATOR_NUMBER,
+    ORIGINAL_NUMERATOR_UNIT,
+    ORIGINAL_DENOMINATOR_NUMBER,
+    ORIGINAL_DENOMINATOR_UNIT,
     PROVENANCE,
-    PRODUCT_ID,
+    PRODUCT_ID_CODE,
     PRODUCT_CODE_TYPE,
     PRODUCT_NAME,
+    PRODUCT_NAME_TYPE,
     PRODUCT_STATUS,
     PRODUCT_TYPE,
+    APPLICATION_TYPE_NUMBER,
+    MARKETING_CATEGORY_NAME,
+    IS_LISTED,
+    PUBLIC_DOMAIN,
     ROUTE_OF_ADMINISTRATOR,
     DOSAGE_FORM_NAME,
-    MARKETING_CATEGORY_NAME,
-    APPLICATION_TYPE_NUMBER,
-    IS_LISTED,
     LABELER_NAME,
     LABELER_CODE,
     LABELER_CODE_TYPE,
@@ -55,6 +65,9 @@ public class ProductExporter implements Exporter<Product> {
 
     private int row = 1;
     private static int ingredientNumber = 0;
+    private static int manufactureItemIndex = 0;
+    private static int lotIndex = 0;
+    private static int ingredientIndex = 0;
 
     private final List<ColumnValueRecipe<Product>> recipeMap;
 
@@ -83,27 +96,69 @@ public class ProductExporter implements Exporter<Product> {
             // Add one more column called "Ingredient Number" at the beginning.  Have it increment by one.
             // Each of these ingredients be new rows. Can duplicate the other product columns on each row.
 
+            int col = 0;
+
+            this.manufactureItemIndex = 0;
+            this.lotIndex = 0;
+            this.ingredientIndex = 0;
+            this.ingredientNumber = 1;
+
             if (p.productManufactureItems.size() > 0) {
-                for (ProductManufactureItem prodManuItem : p.productManufactureItems) {
-                    for (ProductLot prodLot : prodManuItem.productLots) {
+                this.ingredientNumber = 0;
+                for (int i = 0; i < p.productManufactureItems.size(); i++) {
+                    ProductManufactureItem prodManuItem = p.productManufactureItems.get(i);
+                    this.manufactureItemIndex = i;
 
-                        for (int i = 0; i < prodLot.productIngredients.size(); i++) {
+                    for (int j = 0; j < prodManuItem.productLots.size(); j++) {
+                        ProductLot prodLot = prodManuItem.productLots.get(j);
+                        this.lotIndex = j;
 
+                        // This Product has Ingredients
+                        if (prodLot.productIngredients.size() > 0) {
+
+                            for (int k = 0; k < prodLot.productIngredients.size(); k++) {
+                                // Insert Ingredient data into the file
+                                // This is the number of Ingredient in each Product.
+                                // For each Product, insert one Substance data, on each row.
+
+                                Spreadsheet.SpreadsheetRow row = spreadsheet.getRow(this.row++);
+                                this.ingredientIndex = k;
+
+                                this.ingredientNumber++;
+
+                                writeDataInFile(p, row, col);
+
+                            } // loop productIngredients
+                        } // productIngredients.size() > 0
+                        else {
+                            // if there is no Ingredient record
                             Spreadsheet.SpreadsheetRow row = spreadsheet.getRow(this.row++);
-                            int col = 0;
-                            this.ingredientNumber = i;
 
-                            for (ColumnValueRecipe<Product> recipe : recipeMap) {
-                                col += recipe.writeValuesFor(row, col, p);
-                            }
+                            this.ingredientNumber++;
 
-                        } // loop ProductIngredient
-                    }  // loop ProductLot
-                } // loop ProductManufacutureItem
-            } // Ingredient size > 0
+                            writeDataInFile(p, row, col);
+                        }
+                    } // loop productLots
+                } // loop productManufactureItems
+            } // if productManufactureItems.size() > 0
+            else {
+                Spreadsheet.SpreadsheetRow row = spreadsheet.getRow(this.row++);
+                writeDataInFile(p, row, col);
+            }
+
         } // try
         catch (Exception ex) {
             log.error("Error exporting Product record for Product ID: " + p.id, ex);
+        }
+    }
+
+    public void writeDataInFile(Product p, Spreadsheet.SpreadsheetRow row, int col) throws IOException {
+        try {
+            for (ColumnValueRecipe<Product> recipe : recipeMap) {
+                col += recipe.writeValuesFor(row, col, p);
+            }
+        } catch (Exception ex) {
+            log.error("Error writing Data in File when importing Product record for Product ID: " + p.id, ex);
         }
     }
 
@@ -119,20 +174,15 @@ public class ProductExporter implements Exporter<Product> {
         DEFAULT_RECIPE_MAP = new LinkedHashMap<>();
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.INGREDIENT_NUMBER, SingleColumnValueRecipe.create(ProdDefaultColumns.INGREDIENT_NUMBER, (p, cell) -> {
-            int ingredNum = ingredientNumber + 1;
+            int ingredNum = ingredientNumber;
             cell.writeInteger((ingredNum));
         }));
 
         // Get Substance Name, Approval ID (UNII), Active Moiety, Substance Key, Substance Key Type, Ingredient Type
         getSubstanceKeyDetails();
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PROVENANCE, SingleColumnValueRecipe.create(ProdDefaultColumns.PROVENANCE, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.PROVENANCE);
-            cell.writeString(sb.toString());
-        }));
-
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_ID, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_ID, (p, cell) -> {
-            StringBuilder sb = getProductCodeDetails(p, ProdDefaultColumns.PRODUCT_ID);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_ID_CODE, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_ID_CODE, (p, cell) -> {
+            StringBuilder sb = getProductCodeDetails(p, ProdDefaultColumns.PRODUCT_ID_CODE);
             cell.writeString(sb.toString());
         }));
 
@@ -141,92 +191,110 @@ public class ProductExporter implements Exporter<Product> {
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_NAME, (s, cell) -> {
-            StringBuilder sb = getProductNameDetails(s, ProdDefaultColumns.PRODUCT_NAME);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_NAME, (p, cell) -> {
+            StringBuilder sb = getProductNameDetails(p, ProdDefaultColumns.PRODUCT_NAME);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_STATUS, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_STATUS, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.PRODUCT_STATUS);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_NAME_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_NAME_TYPE, (p, cell) -> {
+            StringBuilder sb = getProductNameDetails(p, ProdDefaultColumns.PRODUCT_NAME_TYPE);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_TYPE, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.PRODUCT_TYPE);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PROVENANCE, SingleColumnValueRecipe.create(ProdDefaultColumns.PROVENANCE, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.PROVENANCE);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_STATUS, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_STATUS, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.PRODUCT_STATUS);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PRODUCT_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.PRODUCT_TYPE, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.PRODUCT_TYPE);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.APPLICATION_TYPE_NUMBER, SingleColumnValueRecipe.create(ProdDefaultColumns.APPLICATION_TYPE_NUMBER, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.APPLICATION_TYPE_NUMBER);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.MARKETING_CATEGORY_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.MARKETING_CATEGORY_NAME, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.MARKETING_CATEGORY_NAME);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.IS_LISTED, SingleColumnValueRecipe.create(ProdDefaultColumns.IS_LISTED, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.IS_LISTED);
+            cell.writeString(sb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.PUBLIC_DOMAIN, SingleColumnValueRecipe.create(ProdDefaultColumns.PUBLIC_DOMAIN, (p, cell) -> {
+            StringBuilder sb = getProductProvenanceDetails(p, ProdDefaultColumns.PUBLIC_DOMAIN);
             cell.writeString(sb.toString());
         }));
 
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ROUTE_OF_ADMINISTRATOR, SingleColumnValueRecipe.create(ProdDefaultColumns.ROUTE_OF_ADMINISTRATOR, (p, cell) -> cell.writeString(p.routeAdmin)));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.DOSAGE_FORM_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.DOSAGE_FORM_NAME, (s, cell) -> {
-            StringBuilder sb = getManufactureItemDetails(s, ProdDefaultColumns.DOSAGE_FORM_NAME);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.DOSAGE_FORM_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.DOSAGE_FORM_NAME, (p, cell) -> {
+            StringBuilder sb = getManufactureItemDetails(p, ProdDefaultColumns.DOSAGE_FORM_NAME);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.MARKETING_CATEGORY_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.MARKETING_CATEGORY_NAME, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.MARKETING_CATEGORY_NAME);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_NAME, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_NAME);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.APPLICATION_TYPE_NUMBER, SingleColumnValueRecipe.create(ProdDefaultColumns.APPLICATION_TYPE_NUMBER, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.APPLICATION_TYPE_NUMBER);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CODE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CODE, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_CODE);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.IS_LISTED, SingleColumnValueRecipe.create(ProdDefaultColumns.IS_LISTED, (s, cell) -> {
-            StringBuilder sb = getProductProvenanceDetails(s, ProdDefaultColumns.IS_LISTED);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CODE_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CODE_TYPE, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_CODE_TYPE);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_NAME, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_NAME);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_ADDRESS, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_ADDRESS, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_ADDRESS);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CODE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CODE, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_CODE);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CITY, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CITY, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_CITY);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CODE_TYPE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CODE_TYPE, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_CODE_TYPE);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_STATE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_STATE, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_STATE);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_ADDRESS, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_ADDRESS, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_ADDRESS);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_ZIP, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_ZIP, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_ZIP);
             cell.writeString(sb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_CITY, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_CITY, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_CITY);
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_COUNTRY, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_COUNTRY, (p, cell) -> {
+            StringBuilder sb = getProductCompanyDetails(p, ProdDefaultColumns.LABELER_COUNTRY);
             cell.writeString(sb.toString());
         }));
-
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_STATE, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_STATE, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_STATE);
-            cell.writeString(sb.toString());
-        }));
-
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_ZIP, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_ZIP, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_ZIP);
-            cell.writeString(sb.toString());
-        }));
-
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LABELER_COUNTRY, SingleColumnValueRecipe.create(ProdDefaultColumns.LABELER_COUNTRY, (s, cell) -> {
-            StringBuilder sb = getProductCompanyDetails(s, ProdDefaultColumns.LABELER_COUNTRY);
-            cell.writeString(sb.toString());
-        }));
-    }
+    } // static
 
     private static StringBuilder getProductProvenanceDetails(Product p, ProdDefaultColumns fieldName) {
         StringBuilder sb = new StringBuilder();
 
         if (p.productProvenances.size() > 0) {
-            for (ProductProvenance prodProv : p.productProvenances) {
+            for (int i = 0; i < p.productProvenances.size(); i++) {
+                ProductProvenance prodProv = p.productProvenances.get(i);
 
-                if (sb.length() != 0) {
-                    sb.append("|");
+                if (i > 0) {
+                    if (sb.length() != 0) {
+                        sb.append("|");
+                    }
                 }
 
                 switch (fieldName) {
@@ -244,6 +312,9 @@ public class ProductExporter implements Exporter<Product> {
                         break;
                     case IS_LISTED:
                         sb.append((prodProv.isListed != null) ? prodProv.isListed : "");
+                        break;
+                    case PUBLIC_DOMAIN:
+                        sb.append((prodProv.publicDomain != null) ? prodProv.publicDomain : "");
                         break;
                     case APPLICATION_TYPE_NUMBER:
                         sb.append((prodProv.applicationType != null) ? prodProv.applicationType + " " : "");
@@ -272,6 +343,9 @@ public class ProductExporter implements Exporter<Product> {
                         case PRODUCT_NAME:
                             sb.append((prodName.productName != null) ? prodName.productName : "(No Product Name)");
                             break;
+                        case PRODUCT_NAME_TYPE:
+                            sb.append((prodName.productNameType != null) ? prodName.productNameType : "(No Product Name Type)");
+                            break;
                         default:
                             break;
                     }
@@ -293,11 +367,11 @@ public class ProductExporter implements Exporter<Product> {
                     }
 
                     switch (fieldName) {
-                        case PRODUCT_ID:
-                            sb.append((prodCode.productCode != null) ? prodCode.productCode : "");
+                        case PRODUCT_ID_CODE:
+                            sb.append((prodCode.productCode != null) ? prodCode.productCode : "(No Product Code)");
                             break;
                         case PRODUCT_CODE_TYPE:
-                            sb.append((prodCode.productCodeType != null) ? prodCode.productCodeType : "");
+                            sb.append((prodCode.productCodeType != null) ? prodCode.productCodeType : "(No Product Code Type)");
                             break;
                         default:
                             break;
@@ -321,22 +395,22 @@ public class ProductExporter implements Exporter<Product> {
 
                     switch (fieldName) {
                         case LABELER_NAME:
-                            sb.append((prodComp.companyName != null) ? prodComp.companyName : "");
+                            sb.append((prodComp.companyName != null) ? prodComp.companyName : "(No Labeler Name)");
                             break;
                         case LABELER_ADDRESS:
-                            sb.append((prodComp.companyAddress != null) ? prodComp.companyAddress : "");
+                            sb.append((prodComp.companyAddress != null) ? prodComp.companyAddress : "(No Labeler Address)");
                             break;
                         case LABELER_CITY:
-                            sb.append((prodComp.companyCity != null) ? prodComp.companyCity : "");
+                            sb.append((prodComp.companyCity != null) ? prodComp.companyCity : "(No Labeler City)");
                             break;
                         case LABELER_STATE:
-                            sb.append((prodComp.companyState != null) ? prodComp.companyState : "");
+                            sb.append((prodComp.companyState != null) ? prodComp.companyState : "(No Labeler State)");
                             break;
                         case LABELER_ZIP:
-                            sb.append((prodComp.companyZip != null) ? prodComp.companyZip : "");
+                            sb.append((prodComp.companyZip != null) ? prodComp.companyZip : "(No Labeler Zipcode)");
                             break;
                         case LABELER_COUNTRY:
-                            sb.append((prodComp.companyCountry != null) ? prodComp.companyCountry : "");
+                            sb.append((prodComp.companyCountry != null) ? prodComp.companyCountry : "(No Labeler Country)");
                             break;
                         case LABELER_CODE:
                             for (ProductCompanyCode prodCompCode : prodComp.productCompanyCodes) {
@@ -364,9 +438,14 @@ public class ProductExporter implements Exporter<Product> {
         try {
             if (p.productManufactureItems.size() > 0) {
                 for (ProductManufactureItem prodManuItem : p.productManufactureItems) {
+
+                    if (sb.length() != 0) {
+                        sb.append("|");
+                    }
+
                     switch (fieldName) {
                         case DOSAGE_FORM_NAME:
-                            sb.append((prodManuItem.dosageForm != null) ? prodManuItem.dosageForm : "");
+                            sb.append((prodManuItem.dosageForm != null) ? prodManuItem.dosageForm : "(No Dosage Form)");
                             break;
                         default:
                             break;
@@ -391,6 +470,15 @@ public class ProductExporter implements Exporter<Product> {
         StringBuilder substanceActiveMoietySb = new StringBuilder();
         StringBuilder substanceActiveMoietyApprovalIdSb = new StringBuilder();
 
+        StringBuilder substanceAverageSb = new StringBuilder();
+        StringBuilder substanceLowSb = new StringBuilder();
+        StringBuilder substanceHighSb = new StringBuilder();
+        StringBuilder substanceUnitSb = new StringBuilder();
+        StringBuilder substanceOrgNumeratorNumSb = new StringBuilder();
+        StringBuilder substanceOrgNumeratorUnitSb = new StringBuilder();
+        StringBuilder substanceOrgDenominatorNumSb = new StringBuilder();
+        StringBuilder substanceOrgDenominatorUnitSb = new StringBuilder();
+
         DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.SUBSTANCE_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.SUBSTANCE_NAME, (p, cell) -> {
 
             substanceKeySb.setLength(0);
@@ -400,71 +488,111 @@ public class ProductExporter implements Exporter<Product> {
             substanceApprovalIdSb.setLength(0);
             substanceActiveMoietySb.setLength(0);
             substanceActiveMoietyApprovalIdSb.setLength(0);
+            substanceAverageSb.setLength(0);
+            substanceLowSb.setLength(0);
+            substanceHighSb.setLength(0);
+            substanceUnitSb.setLength(0);
+            substanceOrgNumeratorNumSb.setLength(0);
+            substanceOrgNumeratorUnitSb.setLength(0);
+            substanceOrgDenominatorNumSb.setLength(0);
+            substanceOrgDenominatorUnitSb.setLength(0);
 
             try {
                 if (p.productManufactureItems.size() > 0) {
-                    for (int i = 0; i < p.productManufactureItems.size(); i++) {
-                        ProductManufactureItem prodManuItem = p.productManufactureItems.get(i);
-                        for (int j = 0; j < prodManuItem.productLots.size(); j++) {
-                            ProductLot prodLot = prodManuItem.productLots.get(j);
 
-                            ProductIngredient ingred = prodLot.productIngredients.get(ingredientNumber);
+                    ProductManufactureItem prodManuItem = p.productManufactureItems.get(manufactureItemIndex);
 
-                            // Get Substance Key, Substance Key Type, Ingredient Type
-                            substanceKeySb.append((ingred.substanceKey != null) ? ingred.substanceKey : "");
-                            substanceKeyTypeSb.append((ingred.substanceKeyType != null) ? ingred.substanceKeyType : "");
-                            ingredientTypeSb.append((ingred.ingredientType != null) ? ingred.ingredientType : "");
+                    if (prodManuItem != null) {
+                        if (prodManuItem.productLots.size() > 0) {
+                            ProductLot prodLot = prodManuItem.productLots.get(lotIndex);
 
-                            // Get Substance Details - Substance Name, Approval ID, Active Moiety, and Active Moiety Approval ID
-                            if ((ingred.substanceKey != null) && (ingred.substanceKeyType != null)) {
+                            if (prodLot != null) {
+                                if (prodLot.productIngredients.size() > 0) {
+                                    ProductIngredient ingred = prodLot.productIngredients.get(ingredientIndex);
 
-                                String subName = "";
-                                String approvalId = "";
-                                String activeMoiety = "";
-                                String activeMoietyApprovalId = "";
+                                    if (ingred != null) {
+                                        // Get Substance Key, Substance Key Type, Ingredient Type
+                                        substanceKeySb.append((ingred.substanceKey != null) ? ingred.substanceKey : "");
+                                        substanceKeyTypeSb.append((ingred.substanceKeyType != null) ? ingred.substanceKeyType : "");
+                                        ingredientTypeSb.append((ingred.ingredientType != null) ? ingred.ingredientType : "");
 
-                                // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
-                                Optional<Substance> sub = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(ingred.substanceKey, ingred.substanceKeyType);
+                                        // Strength Details
+                                        substanceAverageSb.append((ingred.average != null) ? ingred.average : "");
+                                        substanceLowSb.append((ingred.low != null) ? ingred.low : "");
+                                        substanceHighSb.append((ingred.high != null) ? ingred.high : "");
+                                        substanceUnitSb.append((ingred.unit != null) ? ingred.unit : "");
 
-                                if (sub.get() != null) {
+                                        substanceOrgNumeratorNumSb.append((ingred.originalNumeratorNumber != null) ? ingred.originalNumeratorNumber : "");
+                                        substanceOrgNumeratorUnitSb.append((ingred.originalNumeratorUnit != null) ? ingred.originalNumeratorUnit : "");
+                                        substanceOrgDenominatorNumSb.append((ingred.originalDenominatorNumber != null) ? ingred.originalDenominatorNumber : "");
+                                        substanceOrgDenominatorUnitSb.append((ingred.originalDenominatorUnit != null) ? ingred.originalDenominatorUnit : "");
 
-                                    // Get Substance Name from Substance
-                                    subName = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getName();
+                                        // Get Substance Details - Substance Name, Approval ID, Active Moiety, and Active Moiety Approval ID
+                                        if ((ingred.substanceKey != null) && (ingred.substanceKeyType != null)) {
 
-                                    // SUBSTANCE NAME: Add Substance/Ingredient Name in the String Builder
-                                    substanceNameSb.append((subName != null) ? subName : "");
+                                            String subName = "";
+                                            String approvalId = "";
+                                            String activeMoiety = "";
+                                            String activeMoietyApprovalId = "";
 
-                                    // APPROVAL ID: Storing in static variable so do not have to call the same Substance API twice just to get
-                                    // approval Id.
-                                    substanceApprovalIdSb.append((sub.get().approvalID != null) ? sub.get().approvalID : "");
+                                            // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+                                            Optional<Substance> sub = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(ingred.substanceKey, ingred.substanceKeyType);
 
-                                    // Get Active Moiety and Active Moiety Approval ID from Substance
-                                    List<Relationship> relationship = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getActiveMoieties();
+                                            if (sub.isPresent()) {
+                                                if (sub.get() != null) {
 
-                                    for (int z = 0; z < relationship.size(); z++) {
-                                        Relationship rel = relationship.get(z);
-                                        if (rel != null) {
-                                            if (rel.relatedSubstance != null) {
-                                                activeMoiety = rel.relatedSubstance.refPname;
-                                                activeMoietyApprovalId = rel.relatedSubstance.approvalID;
-                                            }
+                                                    // Get Substance Name from Substance
+                                                    subName = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getName();
+
+                                                    // SUBSTANCE NAME: Add Substance/Ingredient Name in the String Builder
+                                                    substanceNameSb.append((subName != null) ? subName : "");
+
+                                                    // APPROVAL ID: Storing in static variable so do not have to call the same Substance API twice just to get
+                                                    // approval Id.
+                                                    substanceApprovalIdSb.append((sub.get().approvalID != null) ? sub.get().approvalID : "");
+
+                                                    // Get Active Moiety and Active Moiety Approval ID from Substance
+                                                    List<Relationship> relationship = ((Substance) EntityFetcher.of(sub.get().fetchKey()).call()).getActiveMoieties();
+
+                                                    for (int z = 0; z < relationship.size(); z++) {
+                                                        Relationship rel = relationship.get(z);
+                                                        if (rel != null) {
+                                                            if (rel.relatedSubstance != null) {
+                                                                activeMoiety = rel.relatedSubstance.refPname;
+                                                                activeMoietyApprovalId = rel.relatedSubstance.approvalID;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    substanceActiveMoietySb.append((activeMoiety != null) ? activeMoiety : "");
+                                                    substanceActiveMoietyApprovalIdSb.append((activeMoietyApprovalId != null) ? activeMoietyApprovalId : "");
+
+                                                } // if Substance found in Substance Module and is not null
                                         }
+                                        } // if substance key exists
+
+                                    } else {   // else No Substance Key and Substance Key Type exist
+                                        substanceKeySb.append("");
+                                        substanceKeyTypeSb.append("");
+                                        ingredientTypeSb.append("");
+                                        substanceNameSb.append("");
+                                        substanceApprovalIdSb.append("");
+                                        substanceActiveMoietySb.append("");
+                                        substanceActiveMoietyApprovalIdSb.append("");
+                                        substanceAverageSb.append("");
+                                        substanceLowSb.append("");
+                                        substanceHighSb.append("");
+                                        substanceUnitSb.append("");
+                                        substanceOrgNumeratorNumSb.append("");
+                                        substanceOrgNumeratorUnitSb.append("");
+                                        substanceOrgDenominatorNumSb.append("");
+                                        substanceOrgDenominatorUnitSb.append("");
                                     }
-
-                                    substanceActiveMoietySb.append((activeMoiety != null) ? activeMoiety : "");
-                                    substanceActiveMoietyApprovalIdSb.append((activeMoietyApprovalId != null) ? activeMoietyApprovalId : "");
-
-                                } // if Substance is not null
-
-                            } else {   // else No Substance Key and Substance Key Type exist
-                                substanceNameSb.append("");
-                                substanceApprovalIdSb.append("");
-                                substanceActiveMoietySb.append("");
-                                substanceActiveMoietyApprovalIdSb.append("");
-                            }
-                        } // for loop Product Lot
-                    }
-                }
+                                } // if productIngredients.size() > 0
+                            }  // prodLot exists
+                        } // productLots.size() > 0
+                    } // if prodManuItem exists
+                } // productManufactureItems.size() > 0
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -489,12 +617,44 @@ public class ProductExporter implements Exporter<Product> {
             cell.writeString(ingredientTypeSb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ACTIVE_MOIETY_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.ACTIVE_MOIETY_NAME, (s, cell) -> {
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ACTIVE_MOIETY_NAME, SingleColumnValueRecipe.create(ProdDefaultColumns.ACTIVE_MOIETY_NAME, (p, cell) -> {
             cell.writeString(substanceActiveMoietySb.toString());
         }));
 
-        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ACTIVE_MOIETY_UNII, SingleColumnValueRecipe.create(ProdDefaultColumns.ACTIVE_MOIETY_UNII, (s, cell) -> {
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ACTIVE_MOIETY_APPROVAL_ID, SingleColumnValueRecipe.create(ProdDefaultColumns.ACTIVE_MOIETY_APPROVAL_ID, (p, cell) -> {
             cell.writeString(substanceActiveMoietyApprovalIdSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.AVERAGE, SingleColumnValueRecipe.create(ProdDefaultColumns.AVERAGE, (p, cell) -> {
+            cell.writeString(substanceAverageSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.LOW, SingleColumnValueRecipe.create(ProdDefaultColumns.LOW, (p, cell) -> {
+            cell.writeString(substanceLowSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.HIGH, SingleColumnValueRecipe.create(ProdDefaultColumns.HIGH, (p, cell) -> {
+            cell.writeString(substanceHighSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.UNIT, SingleColumnValueRecipe.create(ProdDefaultColumns.UNIT, (p, cell) -> {
+            cell.writeString(substanceUnitSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ORIGINAL_NUMERATOR_NUMBER, SingleColumnValueRecipe.create(ProdDefaultColumns.ORIGINAL_NUMERATOR_NUMBER, (p, cell) -> {
+            cell.writeString(substanceOrgNumeratorNumSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ORIGINAL_NUMERATOR_UNIT, SingleColumnValueRecipe.create(ProdDefaultColumns.ORIGINAL_NUMERATOR_UNIT, (p, cell) -> {
+            cell.writeString(substanceOrgNumeratorUnitSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ORIGINAL_DENOMINATOR_NUMBER, SingleColumnValueRecipe.create(ProdDefaultColumns.ORIGINAL_DENOMINATOR_NUMBER, (p, cell) -> {
+            cell.writeString(substanceOrgDenominatorNumSb.toString());
+        }));
+
+        DEFAULT_RECIPE_MAP.put(ProdDefaultColumns.ORIGINAL_DENOMINATOR_UNIT, SingleColumnValueRecipe.create(ProdDefaultColumns.ORIGINAL_DENOMINATOR_UNIT, (p, cell) -> {
+            cell.writeString(substanceOrgDenominatorUnitSb.toString());
         }));
     }
 
