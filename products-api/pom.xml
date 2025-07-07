@@ -12,17 +12,22 @@
     <artifactId>products-api</artifactId>
 
     <dependencies>
+        <!-- NCATS GSRS Rest API Dependencies -->
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>gsrs-rest-api</artifactId>
             <version>${gsrs.version}</version>
         </dependency>
 
+        <!-- PRODUCT MODULE Autoconfigure Dependencies -->
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <groupId>gov.nih.ncats</groupId>
+            <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
+            <version>3.1.2-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
+
+        <!-- SPRING BOOT Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -51,21 +56,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- LOMBOK Dependencies -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- JUNIT Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- DATABASE Dependencies -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>
-        <dependency>
-            <groupId>gov.nih.ncats</groupId>
-            <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
-            <version>3.1.2-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
+
     </dependencies>
 
 </project>
