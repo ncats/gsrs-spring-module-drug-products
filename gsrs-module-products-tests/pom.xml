@@ -12,30 +12,7 @@
     <artifactId>gsrs-module-products-tests</artifactId>
 
     <dependencies>
-        <!-- SPRING BOOT DEPENDENCIES -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <!-- SPRING BOOT TEST DEPENDENCIES -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-        </dependency>
-
-        <!-- NCATS DEPENDENCIES BEGIN -->
+        <!-- NCATS STARTER Dependencies -->
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>gsrs-spring-boot-starter</artifactId>
@@ -67,19 +44,41 @@
             <artifactId>gsrs-core-test</artifactId>
             <version>${gsrs.version}</version>
         </dependency>
-        <!-- NCATS DEPENDENCIES BEGIN -->
 
-        <!-- DATABASE DEPENDENCIES -->
+        <!-- SPRING BOOT Dependencies -->
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
         </dependency>
 
+        <!-- LOMBOK Dependencies -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Database Dependencies -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
         </dependency>
 
     </dependencies>
