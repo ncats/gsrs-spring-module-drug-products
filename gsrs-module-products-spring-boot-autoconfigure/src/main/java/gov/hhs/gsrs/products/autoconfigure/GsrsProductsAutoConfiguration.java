@@ -18,8 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @EnableGsrsApi
 @Configuration
 @Import({
-         SubstanceApiService.class,
-         PrivilegeService.class
+         SubstanceApiService.class
 })
 public class GsrsProductsAutoConfiguration {
     private ObjectMapper mapper = new ObjectMapper();
