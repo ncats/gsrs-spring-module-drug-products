@@ -133,11 +133,15 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
     public void createIndexableValuesBySubstanceApiResolver(Consumer<IndexableValue> consumer, String substanceKey, String substanceKeyType) {
 
+        // SUBSTANCE API Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+        Optional<SubstanceDTO> substance = substanceApiService.getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
+
+        if (substance.get() != null) {
+            consumer.accept(IndexableValue.simpleFacetStringValue("Substance Class", substance.get().getSubstanceClass().toString()));
+        }
+
         // If Substance Key Type is APPROVAL_ID, BDNUM, or other key type, get the Substance record by Resolver
         if ((substanceKeyType != null) && (!substanceKeyType.equalsIgnoreCase("UUID"))) {
-            // SUBSTANCE API Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
-            Optional<SubstanceDTO> substance = substanceApiService.getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
-
             if (substance.get() != null) {
                 if (substance.get().getUuid() != null) {
                     consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substance.get().getUuid().toString()));
@@ -181,6 +185,8 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                 consumer.accept(IndexableValue.simpleStringValue("entity_link_substances", substance.get().uuid.toString()));
 
                 consumer.accept(IndexableValue.simpleFacetStringValue("Substance UUID", substance.get().uuid.toString()));
+
+                consumer.accept(IndexableValue.simpleFacetStringValue("Substance Class", substance.get().substanceClass.toString()));
 
                 // Get ALL Substance Names
                 if (substance.get().names.size() > 0) {
