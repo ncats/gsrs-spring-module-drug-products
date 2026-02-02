@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +31,9 @@ public class ProductCompanyDTO {
     private String companyGpsElevation;
     private String companyRole;
     private String companyPublicDomain;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     private Date startMarketingDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     private Date endMarketingDate;
     private String companyProductId;
     private String companyDocumentId;

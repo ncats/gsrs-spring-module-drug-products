@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class ProductDocumentationDTO {
     private String documentId;
     private String documentType;
     private String setIdVersion;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     private Date effectiveTime;
     private String jurisdictions;
 }
