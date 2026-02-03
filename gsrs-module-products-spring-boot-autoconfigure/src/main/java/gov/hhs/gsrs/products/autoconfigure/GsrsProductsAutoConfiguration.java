@@ -7,6 +7,7 @@ import gsrs.api.substances.SubstanceRestApi;
 import gsrs.EnableGsrsApi;
 import gsrs.EnableGsrsJpaEntities;
 
+import gsrs.services.PrivilegeService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
