@@ -133,7 +133,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
     public void createIndexableValuesBySubstanceApiResolver(Consumer<IndexableValue> consumer, String substanceKey, String substanceKeyType) {
 
-        // SUBSTANCE API Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+        // SUBSTANCE API Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, UNII, BDNUM, Other keys
         Optional<SubstanceDTO> substance = substanceApiService.getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
 
         if (substance.isPresent()) {
@@ -141,7 +141,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
                 consumer.accept(IndexableValue.simpleFacetStringValue("Substance Class", substance.get().getSubstanceClass().toString()));
             }
 
-            // If Substance Key Type is UUID, APPROVAL_ID, BDNUM, or other key type, get the Substance record by Resolver
+            // If Substance Key Type is UUID, APPROVAL_ID, UNII, BDNUM, or other key type, get the Substance record by Resolver
             if ((substanceKeyType != null) && (!substanceKeyType.equalsIgnoreCase("UUID"))) {
                 if (substance.get() != null) {
                     if (substance.get().getUuid() != null) {
@@ -156,7 +156,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
         // Call Substance API to get Substance Names by any Substance Key
         Optional<List<NameDTO>> names = substanceApiService.getNamesOfSubstance(substanceKey);
 
-        // get Names by Any Substance Key (UUID, APPROVAL_ID, BDNUM)
+        // get Names by Any Substance Key (UUID, APPROVAL_ID, UNII, BDNUM)
         if (names.isPresent()) {
             names.get().forEach(nameObj -> {
                 if (nameObj.getName() != null) {
@@ -174,7 +174,7 @@ public class ProductSubstanceIndexValueMaker implements IndexValueMaker<Product>
 
     public void createIndexableValuesByEntityManagerResolver(Consumer<IndexableValue> consumer, String substanceKey, String substanceKeyType) {
 
-        // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+        // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, UNII, BDNUM, Other keys
         Optional<Substance> substance = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
 
         if (substance.isPresent()) {
