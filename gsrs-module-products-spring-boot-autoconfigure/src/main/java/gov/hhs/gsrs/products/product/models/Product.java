@@ -37,7 +37,7 @@ public class Product extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodSeq", sequenceName="SRSCID_SQ_PRODUCT_TWO_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodSeq")
     @Column(name="PRODUCT_ID")
     public Long id;
 

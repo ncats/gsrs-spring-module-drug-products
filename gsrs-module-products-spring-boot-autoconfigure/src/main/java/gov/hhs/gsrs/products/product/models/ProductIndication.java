@@ -38,7 +38,7 @@ public class ProductIndication extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name = "prodIndSeq", sequenceName = "SRSCID_SQ_PRODUCT_INDICAT_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodIndSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodIndSeq")
     @Column(name = "PRODUCT_INDICATION_ID")
     public Long id;
 

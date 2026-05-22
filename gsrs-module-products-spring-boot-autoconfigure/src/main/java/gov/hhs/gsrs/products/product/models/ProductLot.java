@@ -27,7 +27,7 @@ public class ProductLot extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodLotSeq", sequenceName="SRSCID_SQ_PRODUCT_LOT_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodLotSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodLotSeq")
     @Column(name="PRODUCT_LOT_ID")
     public Long id;
 
