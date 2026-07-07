@@ -55,9 +55,11 @@
             </plugin>
 
             <!-- FOR MAVEN DEPLOYMENT WITHOUT SNAPSHOT VERSION BEGIN -->
+            <!-- *** IMPORTANT: UNCOMMENT THIS SECTION WHEN DOING DEPLOYMENT TO MAVEN CENTRAL -->
+            <!--
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!--<version>3.5.1</version> -->
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -130,6 +132,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <!-- FOR MAVEN DEPLOYMENT WITHOUT SNAPSHOT VERSION END -->
 
         </plugins>
