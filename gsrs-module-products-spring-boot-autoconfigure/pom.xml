@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
+    <name>gsrs-module-products-spring-boot-autoconfigure</name>
 
     <!--
     <repositories>
