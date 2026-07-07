@@ -44,16 +44,6 @@
     <!-- NEW Maven Central Repository BEGIN - July 2025 -->
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.8.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                </configuration>
-            </plugin>
-
             <!-- FOR MAVEN DEPLOYMENT WITHOUT SNAPSHOT VERSION BEGIN -->
             <!-- *** IMPORTANT: UNCOMMENT THIS SECTION WHEN DOING DEPLOYMENT TO MAVEN CENTRAL -->
             <!--
@@ -65,7 +55,15 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -79,7 +77,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -123,10 +120,10 @@
                             <keyname>${gpgKeyid}</keyname>
                             <passphraseServerId>${gpgPassphrase}</passphraseServerId>
                             <gpgArguments>
-                                <arg>--batch</arg>
-                                <arg>--pinentry-mode</arg>
+                                <arg>- -batch</arg>
+                                <arg>- -pinentry-mode</arg>
                                 <arg>loopback</arg>
-                                <arg>--no-tty</arg>
+                                <arg>- -no-tty</arg>
                             </gpgArguments>
                         </configuration>
                     </execution>
