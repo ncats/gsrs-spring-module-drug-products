@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>products-api</artifactId>
+    <name>gsrs-module-products-spring-boot-autoconfigure</name>
 
     <dependencies>
         <!-- NCATS GSRS Rest API Dependencies -->
