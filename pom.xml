@@ -71,7 +71,6 @@
             <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-    <!-- NEW Maven Central Repository END -->
 
     <profiles>
         <profile>
@@ -155,8 +154,8 @@
                                     <goal>sign</goal>
                                 </goals>
                                 <configuration>
-                                    <keyname>${gpg.keyId}</keyname>
-                                    <passphraseServerId>${gpg.passphrase}</passphraseServerId>
+                                    <keyname>${gpg.keyname}</keyname>
+                                    <passphraseServerId>${gpg.keyname}</passphraseServerId>
                                     <gpgArguments>
                                         <arg>--batch</arg>
                                         <arg>--pinentry-mode</arg>
@@ -169,7 +168,6 @@
                     </plugin>
                 </plugins>
             </build>
-
         </profile>
     </profiles>
 
