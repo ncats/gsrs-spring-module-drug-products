@@ -12,37 +12,6 @@
     <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
     <name>gsrs-module-products-spring-boot-autoconfigure</name>
 
-    <!--
-    <repositories>
-        <repository>
-            <id>oss.sonatype.org-snapshot</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    -->
-
-    <!-- NEW Maven Central Repository -->
-    <!--
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    -->
-
     <dependencies>
         <!-- NCATS Common and STARTER Dependencies -->
         <dependency>
