@@ -71,7 +71,6 @@
             <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-
     <profiles>
         <profile>
             <id>release-signing</id>
