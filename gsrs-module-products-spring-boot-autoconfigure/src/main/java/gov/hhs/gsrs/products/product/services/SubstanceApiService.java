@@ -38,6 +38,7 @@ public class SubstanceApiService {
 
     public static final String SUBSTANCE_KEY_TYPE_UUID = "UUID";
     public static final String SUBSTANCE_KEY_TYPE_APPROVAL_ID = "APPROVAL_ID";
+    public static final String SUBSTANCE_KEY_TYPE_UNII = "UNII";
     public static final String SUBSTANCE_KEY_TYPE_BDNUM = "BDNUM";
 
     @Autowired
@@ -125,7 +126,7 @@ public class SubstanceApiService {
         Optional<SubstanceDTO> substanceDTO = null;
 
         try {
-            // Substance API resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID, BDNUM)
+            // Substance API resolver by Substance Key and substanceKeyType (UUID, APPROVAL_ID,UNII, BDNUM)
             substanceDTO = substanceRestApi.resolveSubstance(substanceKey, substanceKeyType);
 
         } catch (Exception e) {
@@ -214,7 +215,8 @@ public class SubstanceApiService {
 
         // UUID or APPROVAL_ID
         if ((substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UUID)) ||
-                (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID))) {
+                (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID)) ||
+                (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UNII))) {
 
             // Get Substance by Substance Key Resolver
             Optional<SubstanceDTO> substance = getSubstanceBySubstanceKeyResolver(substanceKey, substanceKeyType);
@@ -227,7 +229,8 @@ public class SubstanceApiService {
                     } else {
                         log.debug("The Substance is not null, but could not retrieve uuid from Substance");
                     }
-                } else if (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID)) {
+                } else if ((substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_APPROVAL_ID)) ||
+                        (substanceKeyTypeFromConfig.equalsIgnoreCase(SUBSTANCE_KEY_TYPE_UNII))) {
                     if (substance.get().getApprovalID() != null) {
                         subKey.substanceKey = substance.get().getApprovalID();
                     } else {

@@ -1,11 +1,9 @@
 package gov.hhs.gsrs.products.autoconfigure;
 
 import gov.hhs.gsrs.products.product.services.SubstanceApiService;
-
 import gsrs.api.substances.SubstanceRestApi;
 import gsrs.EnableGsrsApi;
 import gsrs.EnableGsrsJpaEntities;
-
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;

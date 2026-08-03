@@ -1,5 +1,6 @@
 package gov.hhs.gsrs.products.api;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +31,9 @@ public class ProductDTO {
     private String manufacturerName;
     private String manufacturerCode;
     private String manufacturerCodeType;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     private Date effectiveDate;
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="MM/dd/yyyy")
     private Date endDate;
 
     private final List<ProductProvenanceDTO> productProvenances = new ArrayList();

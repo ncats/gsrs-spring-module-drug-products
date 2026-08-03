@@ -517,7 +517,7 @@ public class ProductTextExporter implements Exporter<Product> {
                                         String activeMoiety = "";
                                         String activeMoietyApprovalId = "";
 
-                                        // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, BDNUM, Other keys
+                                        // ENTITY MANAGER Substance Key Resolver, if Substance Key Type is UUID, APPROVAL_ID, UNII, BDNUM, Other keys
                                         Optional<Substance> sub = substanceApiService.getEntityManagerSubstanceBySubstanceKeyResolver(ingred.substanceKey, ingred.substanceKeyType);
 
                                         if (sub.isPresent()) {
