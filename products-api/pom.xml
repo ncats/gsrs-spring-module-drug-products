@@ -10,20 +10,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>products-api</artifactId>
+    <name>gsrs-module-products-spring-boot-autoconfigure</name>
 
     <dependencies>
         <!-- NCATS GSRS Rest API Dependencies -->
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>gsrs-rest-api</artifactId>
-            <version>3.2.5-SNAPSHOT</version>
+            <version>${gsrs.version}</version>
         </dependency>
 
         <!-- PRODUCT MODULE Autoconfigure Dependencies -->
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>gsrs-module-products-spring-boot-autoconfigure</artifactId>
-            <version>3.2.5-SNAPSHOT</version>
+            <version>${gsrs.product.version}</version>
             <scope>test</scope>
         </dependency>
 

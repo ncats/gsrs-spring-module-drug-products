@@ -10,6 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>gsrs-module-products-tests</artifactId>
+    <name>gsrs-module-products-tests</name>
+
+    <!-- See if helps with publishing/warning next time.  -->
+    <!-- Change if classes are added to code. -->
+    <packaging>pom</packaging>
 
     <dependencies>
         <!-- NCATS STARTER Dependencies -->
