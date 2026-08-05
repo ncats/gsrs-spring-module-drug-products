@@ -1,39 +1,16 @@
 package gov.hhs.gsrs.products.product.models;
 
-import gsrs.GsrsEntityProcessorListener;
-import gsrs.model.AbstractGsrsEntity;
-import gsrs.model.AbstractGsrsManualDirtyEntity;
-import ix.core.models.Indexable;
-import ix.core.models.IxModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ix.core.SingleParent;
 import ix.core.models.Indexable;
 import ix.core.models.ParentReference;
-import ix.core.search.text.TextIndexerEntityListener;
-import ix.ginas.models.serialization.GsrsDateDeserializer;
-import ix.ginas.models.serialization.GsrsDateSerializer;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import jakarta.persistence.*;
-
-import java.util.Date;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 @SingleParent
 @Data
@@ -113,8 +90,7 @@ public class ProductProvenance extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductName> productNames = new ArrayList<ProductName>();
 
     public void setProductNames(List<ProductName> productNames) {
@@ -129,8 +105,7 @@ public class ProductProvenance extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCode> productCodes = new ArrayList<ProductCode>();
 
     public void setProductCodes(List<ProductCode> productCodes) {
@@ -145,8 +120,7 @@ public class ProductProvenance extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCompany> productCompanies = new ArrayList<ProductCompany>();
 
     public void setProductCompanyList(List<ProductCompany> productCompanies) {
@@ -161,8 +135,7 @@ public class ProductProvenance extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductDocumentation> productDocumentations = new ArrayList<ProductDocumentation>();
 
     public void setProductDocumentations(List<ProductDocumentation> productDocumentations) {
@@ -177,8 +150,7 @@ public class ProductProvenance extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductIndication> productIndications = new ArrayList<ProductIndication>();
 
     public void setProductIndications(List<ProductIndication> productIndications) {

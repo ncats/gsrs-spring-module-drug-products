@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Primary;
 
 @EnableGsrsJpaEntities
 @EnableGsrsApi
@@ -17,10 +18,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
          SubstanceApiService.class
 })
 public class GsrsProductsAutoConfiguration {
-    private ObjectMapper mapper = new ObjectMapper();
+    @Bean
+    @Primary
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
     @Bean
     public SubstanceRestApi substanceRestApi(SubstancesApiConfiguration substancesApiConfiguration){
-        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(), mapper);
+        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(), objectMapper());
     }
 }

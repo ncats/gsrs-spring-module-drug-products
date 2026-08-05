@@ -7,9 +7,6 @@ import ix.core.SingleParent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -102,8 +99,7 @@ public class ProductCompany extends ProductCommonData {
 
     // Set Child class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCompanyCode> productCompanyCodes = new ArrayList<ProductCompanyCode>();
 
     public void setProductComponentList(List<ProductCompanyCode> productCompanyCodes) {

@@ -1,12 +1,11 @@
 package gov.hhs.gsrs.products.api;
 
 import gsrs.api.AbstractLegacySearchGsrsEntityRestTemplate;
-import gsrs.api.GsrsEntityRestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 
 public class ProductsApi extends AbstractLegacySearchGsrsEntityRestTemplate<ProductDTO, Long> {
     public ProductsApi(RestTemplateBuilder restTemplateBuilder, String baseUrl, ObjectMapper mapper) {

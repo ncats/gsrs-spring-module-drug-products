@@ -6,9 +6,6 @@ import ix.core.SingleParent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,8 +56,7 @@ public class ProductName extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductTermAndPart> productTermAndParts = new ArrayList<ProductTermAndPart>();
 
     public void setProductTermAndParts(List<ProductTermAndPart> productTermAndParts) {
