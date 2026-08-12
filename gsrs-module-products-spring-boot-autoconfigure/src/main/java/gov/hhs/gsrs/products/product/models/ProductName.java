@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class ProductName extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodNameSeq", sequenceName="SRSCID_SQ_PRODUCT_NAME_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodNameSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodNameSeq")
     @Column(name="PRODUCT_NAME_ID")
     public Long id;
 
