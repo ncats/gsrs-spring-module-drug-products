@@ -13,11 +13,6 @@
     <artifactId>gsrs-module-products-spring-boot-starter</artifactId>
     <name>gsrs-module-products-spring-boot-starter</name>
 
-    <!-- See if helps with publishing/warning next time.  -->
-    <!-- Change if classes are added to code. -->
-
-    <packaging>pom</packaging>
-
     <dependencies>
         <!-- PRODUCT MODULE Autoconfigure Dependencies -->
         <dependency>
