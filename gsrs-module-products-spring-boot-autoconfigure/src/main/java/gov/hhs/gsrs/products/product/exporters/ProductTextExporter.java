@@ -18,8 +18,8 @@ import java.io.IOException;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 
 enum ProdTextDefaultColumns implements Column {
     INGREDIENT_NUMBER,

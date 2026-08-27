@@ -14,7 +14,7 @@ import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Query;
+import jakarta.persistence.Query;
 
 enum ProdDefaultColumns implements Column {
     INGREDIENT_NUMBER,

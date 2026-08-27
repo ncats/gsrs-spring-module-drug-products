@@ -1,25 +1,17 @@
 package gov.hhs.gsrs.products.product.models;
 
-import gsrs.BackupEntityProcessorListener;
-import gsrs.GsrsEntityProcessorListener;
-import gsrs.indexer.IndexerEntityListener;
 import ix.core.models.Backup;
 import ix.core.models.IndexableRoot;
 import ix.core.models.Indexable;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
@@ -37,7 +29,7 @@ public class Product extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodSeq", sequenceName="SRSCID_SQ_PRODUCT_TWO_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodSeq")
     @Column(name="PRODUCT_ID")
     public Long id;
 
@@ -100,8 +92,7 @@ public class Product extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductProvenance> productProvenances = new ArrayList<ProductProvenance>();
 
     public void setProductProvenances(List<ProductProvenance> productProvenances) {
@@ -116,8 +107,7 @@ public class Product extends ProductCommonData {
 
     // Set Child Class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductManufactureItem> productManufactureItems = new ArrayList<ProductManufactureItem>();
 
     public void setProductManufactureItems(List<ProductManufactureItem> productManufactureItems) {
