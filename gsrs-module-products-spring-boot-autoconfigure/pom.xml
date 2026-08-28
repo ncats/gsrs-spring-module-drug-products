@@ -17,7 +17,7 @@
         <dependency>
             <groupId>gov.nih.ncats</groupId>
             <artifactId>ncats-common</artifactId>
-            <version>0.3.6</version>
+            <version>0.3.7</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.logging.log4j</groupId>
