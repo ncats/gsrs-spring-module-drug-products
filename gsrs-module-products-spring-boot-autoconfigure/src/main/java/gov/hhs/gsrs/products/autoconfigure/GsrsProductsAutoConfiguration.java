@@ -1,6 +1,5 @@
 package gov.hhs.gsrs.products.autoconfigure;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.hhs.gsrs.products.product.services.SubstanceApiService;
 import gsrs.api.substances.SubstanceRestApi;
 import gsrs.EnableGsrsApi;
@@ -28,6 +27,7 @@ public class GsrsProductsAutoConfiguration {
     @Bean
     public SubstanceRestApi substanceRestApi(SubstancesApiConfiguration substancesApiConfiguration){
         //temporarily using ObjectMapper
-        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(), new ObjectMapper());
+        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(),
+                JsonMapper.builderWithJackson2Defaults().build());
     }
 }
