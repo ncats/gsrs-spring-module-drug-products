@@ -1,38 +1,23 @@
 package gov.hhs.gsrs.products.product.models;
 
-import gsrs.GsrsEntityProcessorListener;
-import gsrs.security.GsrsSecurityUtils;
-import gsrs.model.AbstractGsrsEntity;
-import gsrs.model.AbstractGsrsManualDirtyEntity;
 import gsrs.ForceUpdateDirtyMakerMixin;
-import ix.core.models.*;
-import ix.core.models.Principal;
+import gsrs.model.AbstractGsrsEntity;
+import gsrs.security.GsrsSecurityUtils;
 import ix.core.models.Indexable;
-import ix.core.models.IxModel;
-import ix.core.search.text.TextIndexerEntityListener;
+import ix.core.models.Principal;
+import ix.core.models.UserProfile;
 import ix.ginas.models.serialization.GsrsDateDeserializer;
 import ix.ginas.models.serialization.GsrsDateSerializer;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
-
 import jakarta.persistence.*;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
-import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @MappedSuperclass
 @Slf4j

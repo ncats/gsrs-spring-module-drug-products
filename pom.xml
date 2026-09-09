@@ -39,6 +39,9 @@
         <log4j2.version>2.22.1</log4j2.version>
         <!-- TO BE REMOVE -->
         <gsrs.substance.version>3.2.6-SNAPSHOT</gsrs.substance.version>
+        <jackson.annotations.version>3.1.6</jackson.annotations.version>
+        <jackson.databind.version>3.1.6</jackson.databind.version>
+        <jackson.core.version>3.1.6</jackson.core.version>
     </properties>
 
     <repositories>

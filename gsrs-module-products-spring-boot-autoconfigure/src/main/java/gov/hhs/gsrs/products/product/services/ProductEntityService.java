@@ -15,13 +15,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
 
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.databind.json.JsonMapper;
 
-import ix.utils.Util;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +36,7 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
     private ProductRepository repository;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper mapper;
 
     @Autowired
     private GroupRepository groupRepository;
@@ -54,8 +52,8 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
     }
 
     @Override
-    protected Product fromNewJson(JsonNode json) throws IOException {
-        return objectMapper.convertValue(json, Product.class);
+    protected Product fromNewJson(JsonNode json){
+        return mapper.convertValue(json, Product.class);
     }
 
     @Override
@@ -100,24 +98,24 @@ public class ProductEntityService extends AbstractGsrsEntityService<Product, Lon
     }
 
     @Override
-    protected List<Product> fromNewJsonList(JsonNode list) throws IOException {
+    protected List<Product> fromNewJsonList(JsonNode list)  {
         return null;
     }
 
     @Override
-    protected Product fromUpdatedJson(JsonNode json) throws IOException {
+    protected Product fromUpdatedJson(JsonNode json)  {
         //TODO should we make any edits to remove fields?
-        return objectMapper.convertValue(json, Product.class);
+        return mapper.convertValue(json, Product.class);
     }
 
     @Override
-    protected List<Product> fromUpdatedJsonList(JsonNode list) throws IOException {
+    protected List<Product> fromUpdatedJsonList(JsonNode list) {
         return null;
     }
 
     @Override
-    protected JsonNode toJson(Product product) throws IOException {
-        return objectMapper.valueToTree(product);
+    protected JsonNode toJson(Product product) {
+        return mapper.valueToTree(product);
     }
 
     @Override
