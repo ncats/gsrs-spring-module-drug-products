@@ -11,17 +11,12 @@ import gsrs.startertests.GsrsJpaTest;
 import gsrs.startertests.jupiter.AbstractGsrsJpaEntityJunit5Test;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.context.annotation.Import;
 
-//@Disabled
-//@ActiveProfiles("test")
 @GsrsJpaTest(classes = {GsrsSpringApplication.class, GsrsControllerConfiguration.class, GsrsEntityTestConfiguration.class, ProductRepository.class})
 @Import({Product.class, ProductEntityService.class})
 public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
@@ -36,10 +31,11 @@ public class GsrsSpringProductTests extends AbstractGsrsJpaEntityJunit5Test {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeEach
+ /* commenting this out because it does compile 4 August 2026 MAM
+ @BeforeEach
     public void setup() {
         JacksonTester.initFields(this, objectMapper);
-    }
+    }*/
 
     /*
     @Test

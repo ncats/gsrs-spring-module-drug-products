@@ -25,7 +25,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ProductDocumentation extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name = "prodDocSeq", sequenceName = "SRSCID_SQ_PRODUCT_DOCUMENT_ID", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodDocSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodDocSeq")
     @Column(name = "PRODUCT_DOCUMENTATION_ID")
     public Long id;
 

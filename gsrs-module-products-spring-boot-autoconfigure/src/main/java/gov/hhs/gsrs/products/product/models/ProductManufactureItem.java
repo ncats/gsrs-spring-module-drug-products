@@ -6,14 +6,11 @@ import ix.core.SingleParent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ public class ProductManufactureItem extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodCompSeq", sequenceName="SRSCID_SQ_PRODUCT_COMPONENT_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodCompSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodCompSeq")
     @Column(name="PRODUCT_COMPONENT_ID")
     public Long id;
 
@@ -91,8 +88,7 @@ public class ProductManufactureItem extends ProductCommonData {
 
     // Set Child class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductManufacturer> productManufacturers = new ArrayList<ProductManufacturer>();
 
     public void setProductManufacturers(List<ProductManufacturer> productManufacturers) {
@@ -107,8 +103,7 @@ public class ProductManufactureItem extends ProductCommonData {
 
     // Set Child class
     @ToString.Exclude
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "owner")
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductLot> productLots = new ArrayList<ProductLot>();
 
     public void setProductLots(List<ProductLot> productLots) {

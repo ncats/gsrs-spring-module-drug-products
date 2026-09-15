@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @SingleParent
 @Data
@@ -20,7 +20,7 @@ public class ProductTermAndPart extends ProductCommonData {
 
     @Id
     @SequenceGenerator(name="prodTermSeq", sequenceName="SRSCID_SQ_PRODUCT_TERM_ID",allocationSize=1)
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "prodTermSeq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "prodTermSeq")
     @Column(name="PRODUCT_TERM_ID")
     public Long id;
 
