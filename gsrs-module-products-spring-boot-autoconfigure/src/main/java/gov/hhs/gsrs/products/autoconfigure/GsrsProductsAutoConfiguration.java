@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Bean;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.context.annotation.Primary;
 
 @EnableGsrsJpaEntities
@@ -20,12 +20,14 @@ import org.springframework.context.annotation.Primary;
 public class GsrsProductsAutoConfiguration {
     @Bean
     @Primary
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
+    public JsonMapper objectMapper() {
+        return JsonMapper.builderWithJackson2Defaults().build();
     }
 
     @Bean
     public SubstanceRestApi substanceRestApi(SubstancesApiConfiguration substancesApiConfiguration){
-        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(), objectMapper());
+        //temporarily using ObjectMapper
+        return new SubstanceRestApi(substancesApiConfiguration.createNewRestTemplateBuilder(), substancesApiConfiguration.getBaseURL(),
+                JsonMapper.builderWithJackson2Defaults().build());
     }
 }

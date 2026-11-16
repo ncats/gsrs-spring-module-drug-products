@@ -17,6 +17,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.io.IOException;
 
@@ -30,9 +31,6 @@ public class GsrsSpringProductApiTest {
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
 
-    //@Autowired
-    private ObjectMapper mapper;
-
     @Autowired
     private MockRestServiceServer mockRestServiceServer;
 
@@ -40,7 +38,7 @@ public class GsrsSpringProductApiTest {
     static class Testconfig{
         @Bean
         public ProductsApi productsApi(RestTemplateBuilder restTemplateBuilder){
-            return new ProductsApi(restTemplateBuilder, "http://testing.com", new ObjectMapper());
+            return new ProductsApi(restTemplateBuilder, "http://testing.com", JsonMapper.builderWithJackson2Defaults().build());
         }
     }
 
