@@ -121,6 +121,21 @@ public class ProductProvenance extends ProductCommonData {
     // Set Child Class
     @ToString.Exclude
     @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
+    public List<ProductApplication> productApplications = new ArrayList<ProductApplication>();
+
+    public void setProductApplications(List<ProductApplication> productApplications) {
+        this.productApplications = productApplications;
+        if(productApplications != null) {
+            for (ProductApplication prod : productApplications)
+            {
+                prod.setOwner(this);
+            }
+        }
+    }
+
+    // Set Child Class
+    @ToString.Exclude
+    @OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "owner")
     public List<ProductCompany> productCompanies = new ArrayList<ProductCompany>();
 
     public void setProductCompanyList(List<ProductCompany> productCompanies) {
